@@ -1,0 +1,264 @@
+---
+title: "OISST"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+# NOAA 0.25-degree Daily Optimum Interpolation Sea Surface Temperature (OISST), Version 2.1
+
+Les données de l'organisation sont accessibles via [NOAA National Centers for Environmental Information](https://www.ncei.noaa.gov/metadata/geoportal/#searchPanel)]
+
+D'autres données sont accessibles [ici](https://www.ncei.noaa.gov/data/?C=N;O=A)
+
+On y trouve par exemple les données [SST](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C01606/html) qui permettent d'avoir accès aux données qui ont permis de générer les graphes temporels tels que [Daily Sea Surface Temperature](https://climatereanalyzer.org/clim/sst_daily/).
+
+
+
+
+
+```{r}
+#| label: load_libraries
+
+libs <- c(
+  "httr",
+  "tidyverse",
+  "terra",
+  "ncdf4",
+  "tictoc"
+)
+
+# install missing libraries
+installed_libs <- libs %in% rownames(installed.packages())
+if (any(installed_libs == FALSE)) {
+  install.packages(libs[!installed_libs])
+}
+
+#load libraries
+invisible(lapply(libs, library, character.only = TRUE))
+
+```
+
+### Visite d'un fichier netCDF (exemple trouvé [ici](https://pjbartlein.github.io/REarthSysSci/netCDF.html))
+
+```{r}
+#| label: download_oisst_files
+
+root_access <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"
+# generate directory strings from "198109" until now
+start_date <- ymd("1981-09-01")
+# periode <- period(1, unit = "months")
+
+(valid_number_of_dl_files <- interval(start_date, Sys.Date()) %/% days(1))
+
+
+
+yyyymm <- function(date) {
+  annee <- year(date)
+  mois <- month(date)
+  paste0(annee, if_else(mois > 9, as.character(mois), paste0("0", mois)))
+}
+yyyymmdd <- function(date) {
+  annee <- year(date)
+  mois <- month(date)
+  jour <- day(date)
+  paste0(
+    annee,
+    if_else(mois > 9, as.character(mois), paste0("0", mois)),
+    if_else(jour > 9, as.character(jour), paste0("0", jour))
+  )
+}
+
+seq_days <- seq(
+  start_date,
+  Sys.Date() - days(15),
+  by = "days"
+)
+
+# liste des fichiers à télécharger
+# 
+# possibilité 1 - par concaténation
+
+oisst_file_concat <- function(date) {
+  root_access <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"
+  dir <- yyyymm(date)
+  file_prefixe <- "oisst-avhrr-v02r01"
+  file_suffixe <- "nc"
+  file <- paste(file_prefixe, yyyymmdd(date), file_suffixe, sep = ".")
+  paste(root_access, dir, file, sep = "/")
+}
+
+tic(msg = "sequence de fichiers version 1")
+seq_oisst_files_v1 <- vapply(seq_days, oisst_file_concat, character(1))
+toc()
+
+# possibilité 2 - par substitution (expressions régulières)
+
+oisst_file_sub <- function(date) {
+  chaine_matrice <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&.nc"
+  sub("@", yyyymm(date), sub("&", yyyymmdd(date), chaine_matrice))
+}
+
+tic(msg = "sequence de fichiers version 2")
+seq_oisst_files_v2 <- vapply(seq_days, oisst_file_sub, character(1))
+toc()
+
+get_oisst_data <- function(date) {
+  link <- oisst_file_sub(date)
+  link_split <- strsplit(link, '/')[[1]]
+  file_name <- link_split[length(link_split)]
+  res <- httr::GET(
+    link,
+    write_disk(
+      paste("DATA", file_name, sep = "/"),
+      overwrite = TRUE),
+    progress()
+  )
+}
+
+#walk(seq_days, get_oisst_data)
+
+```
+
+
+
+
+
+
+```{r}
+#| label: load_nc_file
+# open netCDF file
+nc <- nc_open("DATA/oisst-avhrr-v02r01.20240106.nc")
+```
+
+```{r}
+#| label: info_dimensions
+# get info about latitudes
+lat <- ncvar_get(nc, "lat")
+lat_units <- ncatt_get(nc, "lat", "units")
+# get info about longitudes
+lon <- ncvar_get(nc, "lon")
+lon_units <- ncatt_get(nc, "lon", "units")
+# get info about time
+time <- ncvar_get(nc, "time")
+time_units <- ncatt_get(nc, "time", "units")
+time_as_date <- as.Date(time, origin = "1978-01-01 12:00:0", tz = "UTC")
+# get info about zlev
+zlev <- ncvar_get(nc, "zlev")
+zlev_units <- ncatt_get(nc, "zlev", "units")
+```
+
+
+```{r}
+#| label: info_variables
+nc_var <- names(nc$var)
+print(paste("Variables disponibles :", paste(nc_var, collapse = ',')))
+
+# get info about variable attribute
+get_var_attribute <- function(var, attribute) {
+  nc_var <- names(nc$var)
+  if (!(var %in% nc_var)) {
+    message(paste("la variable", var, "est inexistante"))
+  } else {
+  ln <- ncatt_get(nc, var, attname = attribute)
+  ifelse(ln$hasatt, ln$value, paste("pas d'attribut ", attribute))
+  }
+}
+
+# long names
+get_var_long_name <- function() {
+  vapply(
+  nc_var, 
+  get_var_attribute, 
+  FUN.VALUE = character(1), 
+  "long_name"
+  )
+}
+print(get_var_long_name())
+
+# source
+get_var_units <- function() {
+  vapply(
+  nc_var, 
+  get_var_attribute, 
+  FUN.VALUE = character(1), 
+  "units"
+  )
+}
+print(get_var_units())
+
+# fill value
+get_var_fill_value <- function() {
+  vapply(
+  nc_var, 
+  get_var_attribute, 
+  FUN.VALUE = numeric(1), 
+  "_FillValue"
+  )
+}
+print(get_var_fill_value())
+
+```
+
+```{r}
+#| label: info_attributs_globaux
+att <- c("title", "institution", "source", "references", "history", "Conventions") 
+get_global_attribute <- function(att) {
+  ncatt_get(nc, 0, att)$value
+}
+global_attributes <- vapply(att, get_global_attribute, FUN.VALUE = character(1))
+print(global_attributes)
+
+```
+
+```{r}
+#| label: load_variables
+
+nc_var <- names(nc$var)
+
+nc_charge_var <- function(var) {
+  nc_var <- ncvar_get(nc = nc, varid = var )
+  envir <- globalenv()
+  assign(var, nc_var, envir = envir)
+}
+
+walk(nc_var, nc_charge_var)
+
+```
+
+
+
+```{r}
+#| label: conversion_to_dataframe
+lonlat <- expand.grid(lon, lat)
+tmp_sst <- as.vector(sst)
+df_sst <- cbind(lonlat, tmp_sst)
+names(df_sst) <- c("lon", "lat", "sst")
+head(df_sst)
+df_sst |> 
+  ggplot(aes(x = lon, y = lat, color = sst)) + geom_point(size = 0.5)
+```
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+
+list_raster <- map(nc_var, \(x) rast(t(get(x))))
+```
+
+```{r}
+walk(list_raster, \(x) plot(flip(x, direction = "vertical")))
+```
+
+```{r}
+
+```
+

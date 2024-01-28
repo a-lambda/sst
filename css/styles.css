@@ -1,0 +1,30 @@
+.rmdnote, .rstudio-tip, .rmdwarning {
+  padding: 1em;
+  margin: 1em 0;
+  padding-left: 100px;
+  background-size: 70px;
+  background-repeat: no-repeat;
+  background-position: 15px 1.5em;
+  min-height: 120px;
+  background-color: #ecf0f9;
+  max-width: 100%;
+  font-size: 0.85em;
+  letter-spacing: 1pt;
+}
+
+.rmdnote {
+  background-image: url("../images/globe.png");
+}
+
+.sourceCode {
+      font-family: 'Fira Code';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 1.9rem;
+}
+
+.output {
+  font-family: 'Fira Code';
+  color: green;
+  background-color: black;
+}

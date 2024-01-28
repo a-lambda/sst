@@ -1,0 +1,48 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  reader-mode: true
+  page-navigation: true
+  title: "Fichiers NetCDF"
+  subtitle: "Exemple tiré de la NOAA"
+  author: 
+    - name: "Alain CORVISIER"
+      email: alain.corvisier@proton.me
+  date: today
+  sidebar: 
+    style: floating
+  #repo-url: https://github.com/a-lambda/sst/
+  #repo-actions: [edit]
+  search: true
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - href: oisst.qmd
+      text: Données SST
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    cover-image: cover.png
+    theme: 
+      light: 
+        - cosmo
+        - css/fira-code.css
+        - css/light.css
+      dark:
+        - slate
+        - css/dark.css
+    code-link: true
+    toc: true
+    monofont: Fira Code
+    number-depth: 2
+  pdf:
+    documentclass: scrreprt
+
+
+

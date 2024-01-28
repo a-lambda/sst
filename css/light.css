@@ -1,0 +1,33 @@
+/*-- scss:defaults --*/
+
+/*-- Define colors for later use --*/
+
+/*--
+$link-color: #248CFC;
+--*/
+$secondary: #F3DFA2;
+
+/*-- Define Bootstrap color variables --*/
+
+/*-- 
+// Background color of inline code
+$code-bg: "gray";
+--*/
+// Background color of chunk code
+$code-block-fg: #000000;
+$code-block-bg: #04040408;
+
+
+/*-- scss:rules --*/
+.light-mode { display: block; }
+.dark-mode { display: none; }
+
+.output {
+  font-size: 0.8rem;
+  font-style: italic;
+  font-weight: 300;
+  color: #E02020;
+  background-color: #F0FFFF;
+/*--  column-width: 120; --*/
+  column-width: 100;
+}
