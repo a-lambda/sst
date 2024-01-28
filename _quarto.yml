@@ -13,7 +13,7 @@ book:
   date: today
   sidebar: 
     style: floating
-  #repo-url: https://github.com/a-lambda/sst/
+  repo-url: https://github.com/a-lambda/sst/
   #repo-actions: [edit]
   search: true
   chapters:
