@@ -25,7 +25,7 @@ libs <- c(
   "tictoc"
 )
 
-# install missing libraries
+#install missing libraries
 installed_libs <- libs %in% rownames(installed.packages())
 if (any(installed_libs == FALSE)) {
   install.packages(libs[!installed_libs])

@@ -4,13 +4,15 @@
 
 Le NOAA^[National Oceanic and Atmospheric Administration] présente au travail du [portail du NCEI](https://www.ncei.noaa.gov/metadata/geoportal/#searchPanel)^[National Centers for Environmental Information] un ensemble de données environnementales.
 
-Nous allons ici considérer les relevés de température quotidiens de la température de l'eau de mer au niveau mondial.
+Nous allons ici considérer les relevés quotidiens de la température de surface de l'eau de mer au niveau mondial.
 
-Ces données sont collectées et mises à disposition sur le site de la NOAA sour forme de fichiers NetCDF.
+Les données brutes recensées par différentes sondes (satellites, navires, bouées) sur un maillage régulier de 0,25° par 0,25° sont combinées et les lacunes sont comblées par interpolation.
+
+Ces données traitées sont ensuite mises à disposition sur le site de la NOAA sour forme de fichiers NetCDF.
 
 Elles sont accessibles [ici](https://www.ncei.noaa.gov/data/?C=N;O=A) sous la rubrique [sea-surface-temperature-optimum-interpolation](https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr)
 
 Des informations complémentaires sur cet ensemble de données sont disponibles [ici](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C01606/html).
 
-Nous allons tenter de générer le même type de graphes temporels disponibles sur le site de [Climate Reanalyzer](https://climatereanalyzer.org/) et accessibles sur la page [Daily Sea Surface Temperature](https://climatereanalyzer.org/clim/sst_daily/).
+Nous allons tenter de générer le même type de graphes temporels que ceux disponibles sur le site de [Climate Reanalyzer](https://climatereanalyzer.org/) et accessibles sur la page [Daily Sea Surface Temperature](https://climatereanalyzer.org/clim/sst_daily/).
 

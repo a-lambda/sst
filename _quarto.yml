@@ -14,7 +14,7 @@ book:
   sidebar: 
     style: floating
   repo-url: https://github.com/a-lambda/sst/
-  #repo-actions: [edit]
+  repo-actions: [edit]
   search: true
   chapters:
     - index.qmd

@@ -152,7 +152,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#présentation-des-données-exploitées" id="toc-présentation-des-données-exploitées" class="nav-link active" data-scroll-target="#présentation-des-données-exploitées"><span class="header-section-number">1.1</span> Présentation des données exploitées</a></li>
   </ul>
-</nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/a-lambda/sst/edit/main/intro.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -177,11 +177,12 @@ ul.task-list li input[type="checkbox"] {
 <section id="présentation-des-données-exploitées" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="présentation-des-données-exploitées"><span class="header-section-number">1.1</span> Présentation des données exploitées</h2>
 <p>Le NOAA<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> présente au travail du <a href="https://www.ncei.noaa.gov/metadata/geoportal/#searchPanel">portail du NCEI</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> un ensemble de données environnementales.</p>
-<p>Nous allons ici considérer les relevés de température quotidiens de la température de l’eau de mer au niveau mondial.</p>
-<p>Ces données sont collectées et mises à disposition sur le site de la NOAA sour forme de fichiers NetCDF.</p>
+<p>Nous allons ici considérer les relevés quotidiens de la température de surface de l’eau de mer au niveau mondial.</p>
+<p>Les données brutes recensées par différentes sondes (satellites, navires, bouées) sur un maillage régulier de 0,25° par 0,25° sont combinées et les lacunes sont comblées par interpolation.</p>
+<p>Ces données traitées sont ensuite mises à disposition sur le site de la NOAA sour forme de fichiers NetCDF.</p>
 <p>Elles sont accessibles <a href="https://www.ncei.noaa.gov/data/?C=N;O=A">ici</a> sous la rubrique <a href="https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr">sea-surface-temperature-optimum-interpolation</a></p>
 <p>Des informations complémentaires sur cet ensemble de données sont disponibles <a href="https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C01606/html">ici</a>.</p>
-<p>Nous allons tenter de générer le même type de graphes temporels disponibles sur le site de <a href="https://climatereanalyzer.org/">Climate Reanalyzer</a> et accessibles sur la page <a href="https://climatereanalyzer.org/clim/sst_daily/">Daily Sea Surface Temperature</a>.</p>
+<p>Nous allons tenter de générer le même type de graphes temporels que ceux disponibles sur le site de <a href="https://climatereanalyzer.org/">Climate Reanalyzer</a> et accessibles sur la page <a href="https://climatereanalyzer.org/clim/sst_daily/">Daily Sea Surface Temperature</a>.</p>
 
 
 </section>
