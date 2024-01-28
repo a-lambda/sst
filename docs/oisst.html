@@ -112,7 +112,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Fichiers NetCDF</a> 
-        <div class="sidebar-tools-main">
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/a-lambda/sst/" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -167,12 +168,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li>
-<a href="#noaa-0.25-degree-daily-optimum-interpolation-sea-surface-temperature-oisst-version-2.1" id="toc-noaa-0.25-degree-daily-optimum-interpolation-sea-surface-temperature-oisst-version-2.1" class="nav-link active" data-scroll-target="#noaa-0.25-degree-daily-optimum-interpolation-sea-surface-temperature-oisst-version-2.1"><span class="header-section-number">3</span> NOAA 0.25-degree Daily Optimum Interpolation Sea Surface Temperature (OISST), Version 2.1</a>
-  <ul class="collapse">
-<li><a href="#visite-dun-fichier-netcdf-exemple-trouv%C3%A9-ici" id="toc-visite-dun-fichier-netcdf-exemple-trouvé-ici" class="nav-link" data-scroll-target="#visite-dun-fichier-netcdf-exemple-trouv%C3%A9-ici">Visite d’un fichier netCDF (exemple trouvé ici)</a></li>
-  </ul>
-</li>
+<li><a href="#les-paquets-charg%C3%A9s-sont" id="toc-les-paquets-chargés-sont" class="nav-link active" data-scroll-target="#les-paquets-charg%C3%A9s-sont">Les paquets chargés sont :</a></li>
+  <li><a href="#visite-dun-fichier-netcdf-exemple-trouv%C3%A9-ici" id="toc-visite-dun-fichier-netcdf-exemple-trouvé-ici" class="nav-link" data-scroll-target="#visite-dun-fichier-netcdf-exemple-trouv%C3%A9-ici">Visite d’un fichier netCDF (exemple trouvé ici)</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -192,11 +189,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
-</header><section id="noaa-0.25-degree-daily-optimum-interpolation-sea-surface-temperature-oisst-version-2.1" class="level1" data-number="3"><h1 data-number="3">
-<span class="header-section-number">3</span> NOAA 0.25-degree Daily Optimum Interpolation Sea Surface Temperature (OISST), Version 2.1</h1>
-<p>Les données de l’organisation sont accessibles via <a href="https://www.ncei.noaa.gov/metadata/geoportal/#searchPanel">NOAA National Centers for Environmental Information</a>]</p>
-<p>D’autres données sont accessibles <a href="https://www.ncei.noaa.gov/data/?C=N;O=A">ici</a></p>
-<p>On y trouve par exemple les données <a href="https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C01606/html">SST</a> qui permettent d’avoir accès aux données qui ont permis de générer les graphes temporels tels que <a href="https://climatereanalyzer.org/clim/sst_daily/">Daily Sea Surface Temperature</a>.</p>
+</header><section id="les-paquets-chargés-sont" class="level3"><h3 class="anchored" data-anchor-id="les-paquets-chargés-sont">Les paquets chargés sont :</h3>
+<ul>
+<li>
+<code>httr</code> pour le téléchargement des fichiers de données</li>
+<li>
+<code>tidyverse</code> pour les fonctionnalités offertes par
+<ol type="1">
+<li>
+<code>ggplot2</code>,</li>
+<li>
+<code>purrr</code>, entre autres.</li>
+</ol>
+</li>
+<li>
+<code>terra</code>,</li>
+<li>
+<code>ncdf4</code> pour la gestion des fichiers NetCDF,</li>
+<li>
+<code>tictoc</code> pour des tests de vitesse</li>
+</ul>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">libs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"httr"</span>,</span>
@@ -214,40 +226,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span></span>
 <span><span class="co">#load libraries</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">libs</span>, <span class="va">library</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.2     ✔ readr     2.1.4
-✔ forcats   1.0.0     ✔ stringr   1.5.0
-✔ ggplot2   3.4.2     ✔ tibble    3.2.1
-✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-✔ purrr     1.0.1     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
-terra 1.7.39
-
-
-Attachement du package : 'terra'
-
-
-L'objet suivant est masqué depuis 'package:tidyr':
-
-    extract
-
-
-
-Attachement du package : 'tictoc'
-
-
-Les objets suivants sont masqués depuis 'package:terra':
-
-    shift, size</code></pre>
 </div>
-</div>
-<section id="visite-dun-fichier-netcdf-exemple-trouvé-ici" class="level3"><h3 class="anchored" data-anchor-id="visite-dun-fichier-netcdf-exemple-trouvé-ici">Visite d’un fichier netCDF (exemple trouvé <a href="https://pjbartlein.github.io/REarthSysSci/netCDF.html">ici</a>)</h3>
+</section><section id="visite-dun-fichier-netcdf-exemple-trouvé-ici" class="level3"><h3 class="anchored" data-anchor-id="visite-dun-fichier-netcdf-exemple-trouvé-ici">Visite d’un fichier netCDF (exemple trouvé <a href="https://pjbartlein.github.io/REarthSysSci/netCDF.html">ici</a>)</h3>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">root_access</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">root_access</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"</span></span>
 <span><span class="co"># generate directory strings from "198109" until now</span></span>
 <span><span class="va">start_date</span> <span class="op">&lt;-</span> <span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span></span>
 <span><span class="co"># periode &lt;- period(1, unit = "months")</span></span>
@@ -256,7 +238,7 @@ Les objets suivants sont masqués depuis 'package:terra':
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 15489</code></pre>
 </div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">yyyymm</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">yyyymm</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">annee</span> <span class="op">&lt;-</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
 <span>  <span class="va">mois</span> <span class="op">&lt;-</span> <span class="fu">month</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">annee</span>, <span class="fu">if_else</span><span class="op">(</span><span class="va">mois</span> <span class="op">&gt;</span> <span class="fl">9</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">mois</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"0"</span>, <span class="va">mois</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -295,9 +277,9 @@ Les objets suivants sont masqués depuis 'package:terra':
 <span><span class="va">seq_oisst_files_v1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">seq_days</span>, <span class="va">oisst_file_concat</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>sequence de fichiers version 1: 5.83 sec elapsed</code></pre>
+<pre><code>sequence de fichiers version 1: 5.82 sec elapsed</code></pre>
 </div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># possibilité 2 - par substitution (expressions régulières)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># possibilité 2 - par substitution (expressions régulières)</span></span>
 <span></span>
 <span><span class="va">oisst_file_sub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">chaine_matrice</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&amp;.nc"</span></span>
@@ -308,9 +290,9 @@ Les objets suivants sont masqués depuis 'package:terra':
 <span><span class="va">seq_oisst_files_v2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">seq_days</span>, <span class="va">oisst_file_sub</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>sequence de fichiers version 2: 5.79 sec elapsed</code></pre>
+<pre><code>sequence de fichiers version 2: 5.72 sec elapsed</code></pre>
 </div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_oisst_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_oisst_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">link</span> <span class="op">&lt;-</span> <span class="fu">oisst_file_sub</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
 <span>  <span class="va">link_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="va">link</span>, <span class="st">'/'</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="va">file_name</span> <span class="op">&lt;-</span> <span class="va">link_split</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">link_split</span><span class="op">)</span><span class="op">]</span></span>
@@ -326,11 +308,11 @@ Les objets suivants sont masqués depuis 'package:terra':
 <span><span class="co">#walk(seq_days, get_oisst_data)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># open netCDF file</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># open netCDF file</span></span>
 <span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="st">"DATA/oisst-avhrr-v02r01.20240106.nc"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about latitudes</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about latitudes</span></span>
 <span><span class="va">lat</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"lat"</span><span class="op">)</span></span>
 <span><span class="va">lat_units</span> <span class="op">&lt;-</span> <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"lat"</span>, <span class="st">"units"</span><span class="op">)</span></span>
 <span><span class="co"># get info about longitudes</span></span>
@@ -345,12 +327,12 @@ Les objets suivants sont masqués depuis 'package:terra':
 <span><span class="va">zlev_units</span> <span class="op">&lt;-</span> <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"zlev"</span>, <span class="st">"units"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Variables disponibles :"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">nc_var</span>, collapse <span class="op">=</span> <span class="st">','</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Variables disponibles : sst,anom,err,ice"</code></pre>
 </div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about variable attribute</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about variable attribute</span></span>
 <span><span class="va">get_var_attribute</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span>, <span class="va">attribute</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">var</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">nc_var</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -381,7 +363,7 @@ Les objets suivants sont masqués depuis 'package:terra':
                                                  ice 
                              "Sea ice concentration" </code></pre>
 </div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># source</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># source</span></span>
 <span><span class="va">get_var_units</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span></span>
 <span>  <span class="va">nc_var</span>, </span>
@@ -395,7 +377,7 @@ Les objets suivants sont masqués depuis 'package:terra':
 <pre><code>      sst      anom       err       ice 
 "Celsius" "Celsius" "Celsius"       "%" </code></pre>
 </div>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># fill value</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># fill value</span></span>
 <span><span class="va">get_var_fill_value</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span></span>
 <span>  <span class="va">nc_var</span>, </span>
@@ -411,7 +393,7 @@ Les objets suivants sont masqués depuis 'package:terra':
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">att</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"title"</span>, <span class="st">"institution"</span>, <span class="st">"source"</span>, <span class="st">"references"</span>, <span class="st">"history"</span>, <span class="st">"Conventions"</span><span class="op">)</span> </span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">att</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"title"</span>, <span class="st">"institution"</span>, <span class="st">"source"</span>, <span class="st">"references"</span>, <span class="st">"history"</span>, <span class="st">"Conventions"</span><span class="op">)</span> </span>
 <span><span class="va">get_global_attribute</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">att</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="fl">0</span>, <span class="va">att</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
 <span><span class="op">}</span></span>
@@ -433,7 +415,7 @@ Les objets suivants sont masqués depuis 'package:terra':
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nc_charge_var</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span>nc <span class="op">=</span> <span class="va">nc</span>, varid <span class="op">=</span> <span class="va">var</span> <span class="op">)</span></span>
@@ -444,7 +426,7 @@ Les objets suivants sont masqués depuis 'package:terra':
 <span><span class="fu">walk</span><span class="op">(</span><span class="va">nc_var</span>, <span class="va">nc_charge_var</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lonlat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lonlat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span>
 <span><span class="va">tmp_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="va">sst</span><span class="op">)</span></span>
 <span><span class="va">df_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">lonlat</span>, <span class="va">tmp_sst</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_sst</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span>, <span class="st">"sst"</span><span class="op">)</span></span>
@@ -458,17 +440,17 @@ Les objets suivants sont masqués depuis 'package:terra':
 5 1.125 -89.875  NA
 6 1.375 -89.875  NA</code></pre>
 </div>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lon</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="oisst_files/figure-html/conversion_to_dataframe-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">list_raster</span> <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="va">nc_var</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">rast</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">list_raster</span> <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="va">nc_var</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">rast</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">walk</span><span class="op">(</span><span class="va">list_raster</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">flip</span><span class="op">(</span><span class="va">x</span>, direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">walk</span><span class="op">(</span><span class="va">list_raster</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">flip</span><span class="op">(</span><span class="va">x</span>, direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="oisst_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -484,7 +466,7 @@ Les objets suivants sont masqués depuis 'package:terra':
 </div>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");

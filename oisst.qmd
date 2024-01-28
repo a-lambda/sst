@@ -1,24 +1,21 @@
 ---
 title: "OISST"
 format: html
-editor_options: 
-  chunk_output_type: console
 ---
 
-# NOAA 0.25-degree Daily Optimum Interpolation Sea Surface Temperature (OISST), Version 2.1
+### Les paquets chargés sont :
 
-Les données de l'organisation sont accessibles via [NOAA National Centers for Environmental Information](https://www.ncei.noaa.gov/metadata/geoportal/#searchPanel)]
-
-D'autres données sont accessibles [ici](https://www.ncei.noaa.gov/data/?C=N;O=A)
-
-On y trouve par exemple les données [SST](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C01606/html) qui permettent d'avoir accès aux données qui ont permis de générer les graphes temporels tels que [Daily Sea Surface Temperature](https://climatereanalyzer.org/clim/sst_daily/).
-
-
-
-
+- `httr` pour le téléchargement des fichiers de données
+- `tidyverse` pour les fonctionnalités offertes par 
+  1. `ggplot2`, 
+  2. `purrr`, entre autres.
+- `terra`,
+- `ncdf4` pour la gestion des fichiers NetCDF,
+- `tictoc` pour des tests de vitesse
 
 ```{r}
 #| label: load_libraries
+#| message: false
 
 libs <- c(
   "httr",
@@ -38,6 +35,13 @@ if (any(installed_libs == FALSE)) {
 invisible(lapply(libs, library, character.only = TRUE))
 
 ```
+
+
+
+
+
+
+
 
 ### Visite d'un fichier netCDF (exemple trouvé [ici](https://pjbartlein.github.io/REarthSysSci/netCDF.html))
 
