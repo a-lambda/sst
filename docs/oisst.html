@@ -168,8 +168,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#les-paquets-charg%C3%A9s-sont" id="toc-les-paquets-chargés-sont" class="nav-link active" data-scroll-target="#les-paquets-charg%C3%A9s-sont">Les paquets chargés sont :</a></li>
-  <li><a href="#visite-dun-fichier-netcdf-exemple-trouv%C3%A9-ici" id="toc-visite-dun-fichier-netcdf-exemple-trouvé-ici" class="nav-link" data-scroll-target="#visite-dun-fichier-netcdf-exemple-trouv%C3%A9-ici">Visite d’un fichier netCDF (exemple trouvé ici)</a></li>
+<li><a href="#chargement-de-packages-n%C3%A9cessaires" id="toc-chargement-de-packages-nécessaires" class="nav-link active" data-scroll-target="#chargement-de-packages-n%C3%A9cessaires"><span class="header-section-number">2.1</span> Chargement de packages nécessaires</a></li>
+  <li><a href="#comptage-des-fichiers-exploitables" id="toc-comptage-des-fichiers-exploitables" class="nav-link" data-scroll-target="#comptage-des-fichiers-exploitables"><span class="header-section-number">2.2</span> Comptage des fichiers exploitables</a></li>
+  <li>
+<a href="#t%C3%A9l%C3%A9chargement-des-fichiers-de-donn%C3%A9es" id="toc-téléchargement-des-fichiers-de-données" class="nav-link" data-scroll-target="#t%C3%A9l%C3%A9chargement-des-fichiers-de-donn%C3%A9es"><span class="header-section-number">2.3</span> Téléchargement des fichiers de données</a>
+  <ul class="collapse">
+<li><a href="#visite-dun-fichier-netcdf-exemple-trouv%C3%A9-ici" id="toc-visite-dun-fichier-netcdf-exemple-trouvé-ici" class="nav-link" data-scroll-target="#visite-dun-fichier-netcdf-exemple-trouv%C3%A9-ici">Visite d’un fichier netCDF (exemple trouvé ici)</a></li>
+  </ul>
+</li>
   </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/a-lambda/sst/edit/main/oisst.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
 <!-- main -->
@@ -189,7 +195,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
-</header><section id="les-paquets-chargés-sont" class="level3"><h3 class="anchored" data-anchor-id="les-paquets-chargés-sont">Les paquets chargés sont :</h3>
+</header><section id="chargement-de-packages-nécessaires" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="chargement-de-packages-nécessaires">
+<span class="header-section-number">2.1</span> Chargement de packages nécessaires</h2>
 <ul>
 <li>
 <code>httr</code> pour le téléchargement des fichiers de données</li>
@@ -198,6 +205,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>
 <code>ggplot2</code>,</li>
+<li>
+<code>lubridate</code> pour la gestion du temps,</li>
 <li>
 <code>purrr</code>, entre autres.</li>
 </ol>
@@ -218,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="st">"tictoc"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># install missing libraries</span></span>
+<span><span class="co">#install missing libraries</span></span>
 <span><span class="va">installed_libs</span> <span class="op">&lt;-</span> <span class="va">libs</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="va">installed_libs</span> <span class="op">==</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">libs</span><span class="op">[</span><span class="op">!</span><span class="va">installed_libs</span><span class="op">]</span><span class="op">)</span></span>
@@ -227,23 +236,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#load libraries</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">libs</span>, <span class="va">library</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="visite-dun-fichier-netcdf-exemple-trouvé-ici" class="level3"><h3 class="anchored" data-anchor-id="visite-dun-fichier-netcdf-exemple-trouvé-ici">Visite d’un fichier netCDF (exemple trouvé <a href="https://pjbartlein.github.io/REarthSysSci/netCDF.html">ici</a>)</h3>
+</section><section id="comptage-des-fichiers-exploitables" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="comptage-des-fichiers-exploitables">
+<span class="header-section-number">2.2</span> Comptage des fichiers exploitables</h2>
+<p>Les fichiers de données exploitables sont les fichiers ne comportant le suffixe “.nc”. Les fichiers de données en cours de finalisation comportent le suffixe “_preliminary.nc”. Le premier fichier NetCDF exploitable date du 1er septembre 1981. En date du <code><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date()</a></code> nous allons déterminer quel est le dernier fichier exploitable.</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">root_access</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"</span></span>
-<span><span class="co"># generate directory strings from "198109" until now</span></span>
-<span><span class="va">start_date</span> <span class="op">&lt;-</span> <span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span></span>
-<span><span class="co"># periode &lt;- period(1, unit = "months")</span></span>
-<span></span>
-<span><span class="op">(</span><span class="va">valid_number_of_dl_files</span> <span class="op">&lt;-</span> <span class="fu">interval</span><span class="op">(</span><span class="va">start_date</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html">%/%</a></span> <span class="fu">days</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 15489</code></pre>
-</div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">yyyymm</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">yyyymm</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span> <span class="co"># transform Date '1981-06-25' to string '198106' </span></span>
 <span>  <span class="va">annee</span> <span class="op">&lt;-</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
 <span>  <span class="va">mois</span> <span class="op">&lt;-</span> <span class="fu">month</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">annee</span>, <span class="fu">if_else</span><span class="op">(</span><span class="va">mois</span> <span class="op">&gt;</span> <span class="fl">9</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">mois</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"0"</span>, <span class="va">mois</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="va">yyyymmdd</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
+<span></span>
+<span><span class="va">yyyymmdd</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span> <span class="co"># transform Date '1981-06-25' to string '19810625'</span></span>
 <span>  <span class="va">annee</span> <span class="op">&lt;-</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
 <span>  <span class="va">mois</span> <span class="op">&lt;-</span> <span class="fu">month</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
 <span>  <span class="va">jour</span> <span class="op">&lt;-</span> <span class="fu">day</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
@@ -254,65 +257,139 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">seq_days</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span></span>
+<span><span class="va">sst_file_link</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span>, <span class="va">ready</span> <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">chaine_matrice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span></span>
+<span>    <span class="va">ready</span>, </span>
+<span>    <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&amp;.nc"</span>,</span>
+<span>    <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&amp;_preliminary.nc"</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/grep.html">sub</a></span><span class="op">(</span><span class="st">"@"</span>, <span class="fu">yyyymm</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">sub</a></span><span class="op">(</span><span class="st">"&amp;"</span>, <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="va">chaine_matrice</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">get_last_valid_sst_date</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">valide</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
+<span>  <span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">2</span> <span class="co"># to be sure to have a preliminary file to test</span></span>
+<span>  <span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">valide</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu">status_code</span><span class="op">(</span><span class="fu">GET</span><span class="op">(</span><span class="fu">sst_file_link</span><span class="op">(</span><span class="va">date</span>, ready <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">200</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">date</span> <span class="op">&lt;-</span> <span class="va">date</span> <span class="op">-</span> <span class="fl">1</span></span>
+<span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>      <span class="kw">if</span> <span class="op">(</span><span class="fu">status_code</span><span class="op">(</span><span class="fu">GET</span><span class="op">(</span><span class="fu">sst_file_link</span><span class="op">(</span><span class="va">date</span>, ready <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">200</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">valide</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
+<span>      <span class="op">}</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="va">date</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">last_valid_sst_date</span> <span class="op">&lt;-</span> <span class="fu">get_last_valid_sst_date</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-27</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-26</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-25</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-24</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-23</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-22</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-21</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-20</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-19</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-18</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-17</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-16</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-15</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-01-14</code></pre>
+</div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"last valid sst date : "</span>, <span class="va">last_valid_sst_date</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "last valid sst date : 2024-01-14"</code></pre>
+</div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">start_date</span> <span class="op">&lt;-</span> <span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span> <span class="co"># date for the first sst file</span></span>
+<span></span>
+<span><span class="va">number_of_sst_files</span> <span class="op">&lt;-</span> <span class="fu">interval</span><span class="op">(</span><span class="va">start_date</span>, <span class="va">last_valid_sst_date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html">%/%</a></span> <span class="fu">days</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"number of sst files to consider : "</span>, <span class="va">number_of_sst_files</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "number of sst files to consider : 15476"</code></pre>
+</div>
+</div>
+</section><section id="téléchargement-des-fichiers-de-données" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="téléchargement-des-fichiers-de-données">
+<span class="header-section-number">2.3</span> Téléchargement des fichiers de données</h2>
+<div class="cell">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">seq_days</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span></span>
 <span>  <span class="va">start_date</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fu">days</span><span class="op">(</span><span class="fl">15</span><span class="op">)</span>,</span>
+<span>  <span class="va">last_valid_sst_date</span>,</span>
 <span>  by <span class="op">=</span> <span class="st">"days"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># liste des fichiers à télécharger</span></span>
+<span></span>
+<span><span class="va">root_access</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"</span></span>
+<span><span class="va">string1</span> <span class="op">&lt;-</span> <span class="fu">yyyymm</span><span class="op">(</span><span class="va">seq_days</span><span class="op">)</span></span>
+<span><span class="va">file_prefixe</span> <span class="op">&lt;-</span> <span class="st">"oisst-avhrr-v02r01"</span></span>
+<span><span class="va">file_suffixe</span> <span class="op">&lt;-</span> <span class="st">"nc"</span></span>
+<span><span class="va">string2</span> <span class="op">&lt;-</span> <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">seq_days</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">seq_oisst_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">root_access</span>, <span class="va">string1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">file_prefixe</span>, <span class="va">string2</span>, <span class="va">file_suffixe</span>, sep <span class="op">=</span> <span class="st">"."</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># téléchargement de tous les fichiers depuis la date d'origine des mesures</span></span>
 <span><span class="co"># </span></span>
-<span><span class="co"># possibilité 1 - par concaténation</span></span>
-<span></span>
-<span><span class="va">oisst_file_concat</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">root_access</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"</span></span>
-<span>  <span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu">yyyymm</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
-<span>  <span class="va">file_prefixe</span> <span class="op">&lt;-</span> <span class="st">"oisst-avhrr-v02r01"</span></span>
-<span>  <span class="va">file_suffixe</span> <span class="op">&lt;-</span> <span class="st">"nc"</span></span>
-<span>  <span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">file_prefixe</span>, <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="va">file_suffixe</span>, sep <span class="op">=</span> <span class="st">"."</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">root_access</span>, <span class="va">dir</span>, <span class="va">file</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="fu">tic</span><span class="op">(</span>msg <span class="op">=</span> <span class="st">"sequence de fichiers version 1"</span><span class="op">)</span></span>
-<span><span class="va">seq_oisst_files_v1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">seq_days</span>, <span class="va">oisst_file_concat</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>sequence de fichiers version 1: 5.82 sec elapsed</code></pre>
-</div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># possibilité 2 - par substitution (expressions régulières)</span></span>
-<span></span>
-<span><span class="va">oisst_file_sub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">sst_file_link</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">chaine_matrice</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&amp;.nc"</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/grep.html">sub</a></span><span class="op">(</span><span class="st">"@"</span>, <span class="fu">yyyymm</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">sub</a></span><span class="op">(</span><span class="st">"&amp;"</span>, <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="va">chaine_matrice</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="fu">tic</span><span class="op">(</span>msg <span class="op">=</span> <span class="st">"sequence de fichiers version 2"</span><span class="op">)</span></span>
-<span><span class="va">seq_oisst_files_v2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">seq_days</span>, <span class="va">oisst_file_sub</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>sequence de fichiers version 2: 5.72 sec elapsed</code></pre>
-</div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_oisst_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">link</span> <span class="op">&lt;-</span> <span class="fu">oisst_file_sub</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
+<span><span class="va">get_oisst_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">link</span> <span class="op">&lt;-</span> <span class="fu">sst_file_link</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
 <span>  <span class="va">link_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="va">link</span>, <span class="st">'/'</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="va">file_name</span> <span class="op">&lt;-</span> <span class="va">link_split</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">link_split</span><span class="op">)</span><span class="op">]</span></span>
-<span>  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span></span>
-<span>    <span class="va">link</span>,</span>
-<span>    <span class="fu">write_disk</span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"DATA"</span>, <span class="va">file_name</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>,</span>
-<span>      overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>  <span class="va">file_to_write</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"DATA"</span>, <span class="va">file_name</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.exists</a></span><span class="op">(</span><span class="va">file_to_write</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="va">file_name</span><span class="op">)</span></span>
+<span>    <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span></span>
+<span>      <span class="va">link</span>,</span>
+<span>      <span class="fu">write_disk</span><span class="op">(</span></span>
+<span>        <span class="va">file_to_write</span>,</span>
+<span>        overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>      <span class="op">)</span>,</span>
 <span>    <span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co">#walk(seq_days, get_oisst_data)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">walk</span><span class="op">(</span><span class="va">seq_days</span>, <span class="va">get_oisst_data</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="visite-dun-fichier-netcdf-exemple-trouvé-ici" class="level3"><h3 class="anchored" data-anchor-id="visite-dun-fichier-netcdf-exemple-trouvé-ici">Visite d’un fichier netCDF (exemple trouvé <a href="https://pjbartlein.github.io/REarthSysSci/netCDF.html">ici</a>)</h3>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># open netCDF file</span></span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># open netCDF file</span></span>
 <span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="st">"DATA/oisst-avhrr-v02r01.20240106.nc"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about latitudes</span></span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about latitudes</span></span>
 <span><span class="va">lat</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"lat"</span><span class="op">)</span></span>
 <span><span class="va">lat_units</span> <span class="op">&lt;-</span> <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"lat"</span>, <span class="st">"units"</span><span class="op">)</span></span>
 <span><span class="co"># get info about longitudes</span></span>
@@ -327,12 +404,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="va">zlev_units</span> <span class="op">&lt;-</span> <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"zlev"</span>, <span class="st">"units"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Variables disponibles :"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">nc_var</span>, collapse <span class="op">=</span> <span class="st">','</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Variables disponibles : sst,anom,err,ice"</code></pre>
 </div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about variable attribute</span></span>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about variable attribute</span></span>
 <span><span class="va">get_var_attribute</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span>, <span class="va">attribute</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">var</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">nc_var</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -363,7 +440,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                                                  ice 
                              "Sea ice concentration" </code></pre>
 </div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># source</span></span>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># source</span></span>
 <span><span class="va">get_var_units</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span></span>
 <span>  <span class="va">nc_var</span>, </span>
@@ -377,7 +454,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>      sst      anom       err       ice 
 "Celsius" "Celsius" "Celsius"       "%" </code></pre>
 </div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># fill value</span></span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># fill value</span></span>
 <span><span class="va">get_var_fill_value</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span></span>
 <span>  <span class="va">nc_var</span>, </span>
@@ -393,7 +470,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">att</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"title"</span>, <span class="st">"institution"</span>, <span class="st">"source"</span>, <span class="st">"references"</span>, <span class="st">"history"</span>, <span class="st">"Conventions"</span><span class="op">)</span> </span>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">att</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"title"</span>, <span class="st">"institution"</span>, <span class="st">"source"</span>, <span class="st">"references"</span>, <span class="st">"history"</span>, <span class="st">"Conventions"</span><span class="op">)</span> </span>
 <span><span class="va">get_global_attribute</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">att</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="fl">0</span>, <span class="va">att</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
 <span><span class="op">}</span></span>
@@ -415,7 +492,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nc_charge_var</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span>nc <span class="op">=</span> <span class="va">nc</span>, varid <span class="op">=</span> <span class="va">var</span> <span class="op">)</span></span>
@@ -426,7 +503,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu">walk</span><span class="op">(</span><span class="va">nc_var</span>, <span class="va">nc_charge_var</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lonlat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lonlat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span>
 <span><span class="va">tmp_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="va">sst</span><span class="op">)</span></span>
 <span><span class="va">df_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">lonlat</span>, <span class="va">tmp_sst</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_sst</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span>, <span class="st">"sst"</span><span class="op">)</span></span>
@@ -440,33 +517,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 5 1.125 -89.875  NA
 6 1.375 -89.875  NA</code></pre>
 </div>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lon</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="oisst_files/figure-html/conversion_to_dataframe-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">list_raster</span> <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="va">nc_var</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">rast</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">list_raster</span> <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="va">nc_var</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">rast</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">walk</span><span class="op">(</span><span class="va">list_raster</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">flip</span><span class="op">(</span><span class="va">x</span>, direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">walk</span><span class="op">(</span><span class="va">list_raster</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">flip</span><span class="op">(</span><span class="va">x</span>, direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="oisst_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<p><img src="oisst_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="oisst_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+<p><img src="oisst_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="oisst_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid" width="672"></p>
+<p><img src="oisst_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="oisst_files/figure-html/unnamed-chunk-10-4.png" class="img-fluid" width="672"></p>
+<p><img src="oisst_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
 
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
