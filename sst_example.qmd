@@ -39,16 +39,16 @@ Grâce à elle nous pouvons déjà voir quel type d'informations sont enregistr�
 
 ### Les dimensions
 
-les variables principales sont discriminée suivant plusieurs dimension.
+les variables principales sont discriminées suivant plusieurs dimensions.
 
 Ici, ce sont :
 
 - lon : la longitude (de taille 1440)
 - lat : la latitude (de taille 720)
-- zlev : La hauteur de la surface de l'eau
+- zlev : La hauteur de la surface de l'eau de mer
 - time : temps central de la journée
 
-Il est possible d'avoir accès aux données des dimensions via la fonction `ncvar_get`
+Il est possible d'avoir accès aux données des dimensions via la fonction `ncvar_get` et l'accès aux attributs avec la fonction `ncatt_get`
 
 ```{r}
 #| label: info_dimensions
@@ -138,7 +138,7 @@ get_global_attribute <- function(att) {
 
 ```
 
-## Exploration des variables :
+## Exploration des variables
 
 ```{r}
 #| label: load_variables
@@ -155,15 +155,30 @@ walk(nc_var, nc_charge_var)
 
 ```
 
+La variable sst est enregistrée en tant que `r class(sst)` avec les dimensions `r dim(sst)` 
 
+La valeur enregistrée aux coordonnées [800, 500] vaut `r sst[800, 500]`
+
+Elle correspond normalement à la température pour la longitude `r lon[800]` et la latitude `r lat[500]`
 
 ```{r}
 #| label: conversion_to_dataframe
+lon_800 <- lon[800]
+lat_500 <- lat[500]
 lonlat <- expand.grid(lon, lat)
 tmp_sst <- as.vector(sst)
 df_sst <- cbind(lonlat, tmp_sst)
 names(df_sst) <- c("lon", "lat", "sst")
 head(df_sst)
+df_sst |> dplyr::filter(lon == lon_800 & lat == lat_500)
+
+```
+
+## Affichage de la carte des données sst
+
+
+
+```{r}
 df_sst |> 
   ggplot(aes(x = lon, y = lat, color = sst)) + geom_point(size = 0.5)
 ```
