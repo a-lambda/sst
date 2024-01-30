@@ -157,9 +157,9 @@ walk(nc_var, nc_charge_var)
 
 La variable sst est enregistrée en tant que `r class(sst)` avec les dimensions `r dim(sst)` 
 
-La valeur enregistrée aux coordonnées [800, 500] vaut `r sst[800, 500]`
+La valeur enregistrée aux coordonnées [800, 500] vaut sst[800, 500] = `r sst[800, 500]`
 
-Elle correspond normalement à la température pour la longitude `r lon[800]` et la latitude `r lat[500]`
+Elle correspond normalement à la température pour la longitude lon[800] = `r lon[800]` et la latitude lat[500] = `r lat[500]`
 
 ```{r}
 #| label: conversion_to_dataframe
@@ -170,17 +170,24 @@ tmp_sst <- as.vector(sst)
 df_sst <- cbind(lonlat, tmp_sst)
 names(df_sst) <- c("lon", "lat", "sst")
 head(df_sst)
-df_sst |> dplyr::filter(lon == lon_800 & lat == lat_500)
+df_sst |> dplyr::filter(lon == lon_800 & lat == lat_500) -> df_sst_800_500
 
 ```
 
 ## Affichage de la carte des données sst
 
+Avec positionnement en rouge du point de test donné en exemple :
 
 
 ```{r}
 df_sst |> 
-  ggplot(aes(x = lon, y = lat, color = sst)) + geom_point(size = 0.5)
+  ggplot(aes(x = lon, y = lat, color = sst)) + 
+  geom_point(size = 0.5) +
+  geom_point(
+    data = df_sst_800_500, 
+    aes(x = lon, y = lat),
+    color = "red",
+    size = 2)
 ```
 
 
