@@ -19,9 +19,10 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
-    - href: oisst.qmd
+    - href: sst_dl.qmd
       text: Données SST
-    - summary.qmd
+    - href: sst_example.qmd
+      text: Un fichier SST 
     - references.qmd
 
 bibliography: references.bib
