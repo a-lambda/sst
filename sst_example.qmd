@@ -12,7 +12,8 @@ format: html
 libs <- c(
   "ncdf4",
   "tidyverse",
-  "terra"
+  "terra",
+  "sf"
 )
 
 #install missing libraries
@@ -180,15 +181,52 @@ Avec positionnement en rouge du point de test donné en exemple :
 
 
 ```{r}
+#|label: plot_sst
+#|fig-width: 11
+#|fig-height: 8
+
 df_sst |> 
   ggplot(aes(x = lon, y = lat, color = sst)) + 
   geom_point(size = 0.5) +
+  scale_colour_distiller(palette = "RdBu") +
   geom_point(
     data = df_sst_800_500, 
     aes(x = lon, y = lat),
     color = "red",
-    size = 2)
+    size = 2) +
+  labs(
+    title = "Sea Surface Temperature",
+    subtitle = "15 janvier 2024",
+    caption = "Dataset: NOAA OISST V2.1",
+    color = "°C"
+  )
 ```
+
+Si nous souhaitons centrer la carte sur le méridien de Greenwich, il est nécessaire de translater les longitudes.
+
+```{r}
+#|label: plot_sst_greenwich
+#|fig-width: 11
+#|fig-height: 8
+
+df_sst |> 
+  mutate(lon = if_else(lon > 180, lon - 360, lon)) |> 
+  ggplot(aes(x = lon, y = lat, color = sst)) + 
+  geom_point(size = 0.5) +
+  scale_colour_distiller(palette = "RdBu") +
+  labs(
+    title = "Sea Surface Temperature",
+    subtitle = "15 janvier 2024",
+    caption = "Dataset: NOAA OISST V2.1",
+    color = "°C"
+  ) +
+  theme_bw()
+```
+
+
+
+
+
 
 
 ```{r}

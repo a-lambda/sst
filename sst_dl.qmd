@@ -40,7 +40,6 @@ Les fichiers de données en cours de finalisation comportent le suffixe "_prelim
 Le premier fichier NetCDF exploitable date du 1er septembre 1981.
 En date du `Sys.Date()` nous allons déterminer quel est le dernier fichier exploitable.
 
-
 ```{r}
 #| label: get_last_valid_sst_date
 
@@ -91,6 +90,20 @@ start_date <- ymd("1981-09-01") # date for the first sst file
 
 number_of_sst_files <- interval(start_date, last_valid_sst_date) %/% days(1) + 1
 paste0("number of sst files to consider : ", number_of_sst_files)
+
+```
+
+```{r}
+#| label: last_sst_dl_dir
+#| echo: false
+#| include: false
+
+httr::GET(
+  paste0(
+    "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/", 
+    yyyymm(Sys.Date())
+  )
+)
 
 ```
 

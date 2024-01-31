@@ -284,10 +284,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] "number of sst files to consider : 15477"</code></pre>
 </div>
 </div>
+<p>Pour information, voici le dossier des données relatif au dernier mois en cours :</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
+<span>    <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/"</span>, </span>
+<span>    <span class="fu">yyyymm</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Response [https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202401/]
+  Date: 2024-01-31 10:10
+  Status: 200
+  Content-Type: text/html;charset=UTF-8
+  Size: 6.37 kB
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;Index of /data/sea-surface-temperature-optimum-interpolation/v2.1/ac...
+ &lt;/head&gt;
+ &lt;body&gt;
+&lt;h1&gt;Index of /data/sea-surface-temperature-optimum-interpolation/v2.1/access/...
+  &lt;table&gt;
+   &lt;tr&gt;&lt;th&gt;&lt;a href="?C=N;O=D"&gt;Name&lt;/a&gt;&lt;/th&gt;&lt;th&gt;&lt;a href="?C=M;O=A"&gt;Last modifi...
+   &lt;tr&gt;&lt;th colspan="4"&gt;&lt;hr&gt;&lt;/th&gt;&lt;/tr&gt;
+...</code></pre>
+</div>
+</div>
 </section><section id="téléchargement-des-fichiers-de-données" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="téléchargement-des-fichiers-de-données">
 <span class="header-section-number">2.3</span> Téléchargement des fichiers de données</h2>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">seq_days</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">seq_days</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span></span>
 <span>  <span class="va">start_date</span>,</span>
 <span>  <span class="va">last_valid_sst_date</span>,</span>
 <span>  by <span class="op">=</span> <span class="st">"days"</span></span>
