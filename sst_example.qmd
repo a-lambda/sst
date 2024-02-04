@@ -182,12 +182,11 @@ Avec positionnement en rouge du point de test donné en exemple :
 
 ```{r}
 #|label: plot_sst
-#|fig-width: 11
-#|fig-height: 8
 
 df_sst |> 
   ggplot(aes(x = lon, y = lat, color = sst)) + 
   geom_point(size = 0.5) +
+  coord_fixed(expand = FALSE) +
   scale_colour_distiller(palette = "RdBu") +
   geom_point(
     data = df_sst_800_500, 
@@ -195,11 +194,68 @@ df_sst |>
     color = "red",
     size = 2) +
   labs(
+    x = NULL,
+    y = NULL,
     title = "Sea Surface Temperature",
     subtitle = "15 janvier 2024",
     caption = "Dataset: NOAA OISST V2.1",
     color = "°C"
   )
+```
+
+
+## Calcul de moyenne globale
+
+Il semble qu'il faille appliquer un poids fonction de $\alpha$ en radians pour pondérer les mesures de surface en fonction de la latitude considérée.
+
+Pour calculer ces poids j'ai construit tous les polygones "carrés" de 0.25° de côté suivant un même méridien.
+
+Ces polygones ont pour centre les coordonnées (longitude et latitude) de la mesure SST correspondante.
+
+J'ai ensuite calculé les aires de ces polygones avec le système de coordonnées de référence EPSG:4326 (WGS84).
+
+Les poids relatifs à chaque mesure ont été fixés comme étant les ratio des aires obtenues avec celle de la plus grande aire (aire du polygone situé à l'équateur).
+
+### Calcul des poids à affecter aux mesures suivant la latitude associée
+
+```{r}
+#| label: calculate_weights
+
+# fonction génératrice de "carré géographique" de n degrés de côté
+# le point de base (lon, lat) est le point inférieur gauche. 
+
+polygone_geo <- function(lon, lat, n) {
+  polygon_list <- list(rbind(
+    c(lon, lat),
+    c(lon + n, lat),
+    c(lon + n, lat + n),
+    c(lon, lat + n),
+    c(lon, lat)
+  ))
+  st_polygon(polygon_list)
+}
+
+polygone_sfc <- seq(-90, 89.75, by = 0.25) |>
+  map(\(x) polygone_geo(lon = 0, lat = x, n = 0.25)) |> 
+  st_sfc(crs = "EPSG:4326")
+
+area_weights <- as.numeric(st_area(polygone_sfc) / max(st_area(polygone_sfc)))
+head(area_weights)
+```
+
+
+```{r}
+#| label: weighted_mean_sst
+
+df_area_weights <- expand.grid(lon, area_weights)
+names(df_area_weights) <- c("lon", "w")
+w <- df_area_weights$w
+df_sst_weights <- cbind(df_sst, w)
+df_sst_60S_60N <- df_sst_weights |> 
+  filter(lat >= -60 & lat <= 60) |> 
+  summarize(wm_sst = weighted.mean(sst, w, na.rm = TRUE)) -> 
+  sst_weighted_mean
+sst_weighted_mean
 ```
 
 Si nous souhaitons centrer la carte sur le méridien de Greenwich, il est nécessaire de translater les longitudes.
@@ -223,9 +279,13 @@ df_sst |>
     x = NULL,
     y = NULL,
     title = "Sea Surface Temperature",
-    subtitle = "15 janvier 2024",
+    subtitle = paste0(
+      "15 janvier 2024 - mean temperature = ",
+      round(sst_weighted_mean, 3),
+      " °Celsius"
+    ),
     caption = "Dataset: NOAA OISST V2.1",
-    color = "°C",
+    fill = "°C",
   ) +
   theme(
     axis.text = element_blank(),
@@ -234,6 +294,7 @@ df_sst |>
     # plot.background = element_rect(fill = "black")
   )
 ```
+
 
 
 

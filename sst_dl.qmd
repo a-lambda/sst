@@ -147,7 +147,7 @@ get_oisst_data <- function(date) {
         file_to_write,
         overwrite = TRUE
       ),
-    # progress()
+      progress()
     )
   }
 }

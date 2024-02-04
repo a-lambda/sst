@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script>
+}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 </head>
 <body class="nav-sidebar floating">
 
@@ -178,6 +178,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
   <li><a href="#exploration-des-variables" id="toc-exploration-des-variables" class="nav-link" data-scroll-target="#exploration-des-variables"><span class="header-section-number">3.2</span> Exploration des variables</a></li>
   <li><a href="#affichage-de-la-carte-des-donn%C3%A9es-sst" id="toc-affichage-de-la-carte-des-données-sst" class="nav-link" data-scroll-target="#affichage-de-la-carte-des-donn%C3%A9es-sst"><span class="header-section-number">3.3</span> Affichage de la carte des données sst</a></li>
+  <li>
+<a href="#calcul-de-moyenne-globale" id="toc-calcul-de-moyenne-globale" class="nav-link" data-scroll-target="#calcul-de-moyenne-globale"><span class="header-section-number">3.4</span> Calcul de moyenne globale</a>
+  <ul class="collapse">
+<li><a href="#calcul-des-poids-%C3%A0-affecter-aux-mesures-suivant-la-latitude-associ%C3%A9e" id="toc-calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée" class="nav-link" data-scroll-target="#calcul-des-poids-%C3%A0-affecter-aux-mesures-suivant-la-latitude-associ%C3%A9e">Calcul des poids à affecter aux mesures suivant la latitude associée</a></li>
+  </ul>
+</li>
   </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/a-lambda/sst/edit/main/sst_example.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
 <!-- main -->
@@ -503,12 +509,11 @@ $value
 <p>Avec positionnement en rouge du point de test donné en exemple :</p>
 <div class="cell">
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|label: plot_sst</span></span>
-<span><span class="co">#|fig-width: 11</span></span>
-<span><span class="co">#|fig-height: 8</span></span>
 <span></span>
 <span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lon</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_fixed</span><span class="op">(</span>expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_colour_distiller</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">df_sst_800_500</span>, </span>
@@ -516,6 +521,8 @@ $value
 <span>    color <span class="op">=</span> <span class="st">"red"</span>,</span>
 <span>    size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Sea Surface Temperature"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"15 janvier 2024"</span>,</span>
 <span>    caption <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
@@ -525,49 +532,113 @@ $value
 <p><img src="sst_example_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section><section id="calcul-de-moyenne-globale" class="level2" data-number="3.4"><h2 data-number="3.4" class="anchored" data-anchor-id="calcul-de-moyenne-globale">
+<span class="header-section-number">3.4</span> Calcul de moyenne globale</h2>
+<p>Il semble qu’il faille appliquer un poids fonction de <span class="math inline">\(\alpha\)</span> en radians pour pondérer les mesures de surface en fonction de la latitude considérée.</p>
+<p>Pour calculer ces poids j’ai construit tous les polygones “carrés” de 0.25° de côté suivant un même méridien.</p>
+<p>Ces polygones ont pour centre les coordonnées (longitude et latitude) de la mesure SST correspondante.</p>
+<p>J’ai ensuite calculé les aires de ces polygones avec le système de coordonnées de référence EPSG:4326 (WGS84).</p>
+<p>Les poids relatifs à chaque mesure ont été fixés comme étant les ratio des aires obtenues avec celle de la plus grande aire (aire du polygone situé à l’équateur).</p>
+<section id="calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée" class="level3"><h3 class="anchored" data-anchor-id="calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée">Calcul des poids à affecter aux mesures suivant la latitude associée</h3>
+<div class="cell">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># fonction génératrice de "carré géographique" de n degrés de côté</span></span>
+<span><span class="co"># le point de base (lon, lat) est le point inférieur gauche. </span></span>
+<span></span>
+<span><span class="va">polygone_geo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">n</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">polygon_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">+</span> <span class="va">n</span>, <span class="va">lat</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">+</span> <span class="va">n</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">n</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">n</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">st_polygon</span><span class="op">(</span><span class="va">polygon_list</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">polygone_sfc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span>, <span class="fl">89.75</span>, by <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">map</span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">polygone_geo</span><span class="op">(</span>lon <span class="op">=</span> <span class="fl">0</span>, lat <span class="op">=</span> <span class="va">x</span>, n <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">st_sfc</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">area_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">polygone_sfc</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">polygone_sfc</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">area_weights</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.002181655 0.006544922 0.010908066 0.015271001 0.019633646 0.023995917</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_area_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">area_weights</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_area_weights</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"w"</span><span class="op">)</span></span>
+<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="va">df_area_weights</span><span class="op">$</span><span class="va">w</span></span>
+<span><span class="va">df_sst_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">df_sst</span>, <span class="va">w</span><span class="op">)</span></span>
+<span><span class="va">df_sst_60S_60N</span> <span class="op">&lt;-</span> <span class="va">df_sst_weights</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&gt;=</span> <span class="op">-</span><span class="fl">60</span> <span class="op">&amp;</span> <span class="va">lat</span> <span class="op">&lt;=</span> <span class="fl">60</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">summarize</span><span class="op">(</span>wm_sst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span><span class="op">(</span><span class="va">sst</span>, <span class="va">w</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> </span>
+<span>  <span class="va">sst_weighted_mean</span></span>
+<span><span class="va">sst_weighted_mean</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    wm_sst
+1 21.03401</code></pre>
+</div>
+</div>
 <p>Si nous souhaitons centrer la carte sur le méridien de Greenwich, il est nécessaire de translater les longitudes.</p>
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|label: plot_sst_greenwich</span></span>
-<span><span class="co">#|fig-width: 11</span></span>
-<span><span class="co">#|fig-height: 8</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|label: plot_sst_greenwich</span></span>
 <span></span>
 <span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>lon <span class="op">=</span> <span class="fu">if_else</span><span class="op">(</span><span class="va">lon</span> <span class="op">&gt;</span> <span class="fl">180</span>, <span class="va">lon</span> <span class="op">-</span> <span class="fl">360</span>, <span class="va">lon</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lon</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_colour_distiller</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"Sea Surface Temperature"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"15 janvier 2024"</span>,</span>
-<span>    caption <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
-<span>    color <span class="op">=</span> <span class="st">"°C"</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lon</span>, y <span class="op">=</span> <span class="va">lat</span>, fill <span class="op">=</span> <span class="va">sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_raster</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_gradient2</span><span class="op">(</span></span>
+<span>    low <span class="op">=</span> <span class="st">"darkblue"</span>,</span>
+<span>    mid <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>    high <span class="op">=</span> <span class="st">"darkred"</span>,</span>
+<span>    midpoint <span class="op">=</span> <span class="fl">15</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="sst_example_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">list_raster</span> <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="va">nc_var</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">rast</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">walk</span><span class="op">(</span><span class="va">list_raster</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">flip</span><span class="op">(</span><span class="va">x</span>, direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">coord_fixed</span><span class="op">(</span>expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co">#scale_colour_distiller(palette = "RdBu") +</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Sea Surface Temperature"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
+<span>      <span class="st">"15 janvier 2024 - mean temperature = "</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">sst_weighted_mean</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>      <span class="st">" °Celsius"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">"°C"</span>,</span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span></span>
+<span>    axis.text <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    axis.ticks <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    <span class="co"># panel.background = element_rect(fill = "black"),</span></span>
+<span>    <span class="co"># plot.background = element_rect(fill = "black")</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="sst_example_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">list_raster</span> <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="va">nc_var</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">rast</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">walk</span><span class="op">(</span><span class="va">list_raster</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">flip</span><span class="op">(</span><span class="va">x</span>, direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="sst_example_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+<p><img src="sst_example_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="sst_example_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
+<p><img src="sst_example_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="sst_example_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid" width="672"></p>
+<p><img src="sst_example_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="sst_example_files/figure-html/unnamed-chunk-13-4.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
 
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
