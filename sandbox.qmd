@@ -1,0 +1,467 @@
+---
+title: "Données SST du 15 janvier 2024"
+format: html
+---
+
+## Exploration du fichier NetCDF (comme décrit [ici](https://pjbartlein.github.io/REarthSysSci/netCDF.html))
+
+```{r}
+#| label: load_libraries
+#| message: false
+
+libs <- c(
+  "ncdf4",
+  "tidyverse",
+  "terra",
+  "sf"
+)
+
+#install missing libraries
+installed_libs <- libs %in% rownames(installed.packages())
+if (any(installed_libs == FALSE)) {
+  install.packages(libs[!installed_libs])
+}
+
+#load libraries
+invisible(lapply(libs, library, character.only = TRUE))
+
+```
+
+La connexion au fichier NetCDF s'opère via la commande nc_open.
+
+Grâce à elle nous pouvons déjà voir quel type d'informations sont enregistrées.
+
+```{r}
+#| label: load_nc_file
+
+(nc <- nc_open("DATA/oisst-avhrr-v02r01.20240115.nc"))
+
+```
+
+### Les dimensions
+
+les variables principales sont discriminées suivant plusieurs dimensions.
+
+Ici, ce sont :
+
+- lon : la longitude (de taille 1440)
+- lat : la latitude (de taille 720)
+- zlev : La hauteur de la surface de l'eau de mer
+- time : temps central de la journée
+
+Il est possible d'avoir accès aux données des dimensions via la fonction `ncvar_get` et l'accès aux attributs avec la fonction `ncatt_get`
+
+```{r}
+#| label: info_dimensions
+# get info about latitudes
+lat <- ncvar_get(nc, "lat")
+(lat_units <- ncatt_get(nc, "lat", "units"))
+# get info about longitudes
+lon <- ncvar_get(nc, "lon")
+(lon_units <- ncatt_get(nc, "lon", "units"))
+# get info about time
+time <- ncvar_get(nc, "time")
+(time_units <- ncatt_get(nc, "time", "units"))
+time_as_date <- as.Date(time, origin = "1978-01-01 12:00:0", tz = "UTC")
+# get info about zlev
+zlev <- ncvar_get(nc, "zlev")
+(zlev_units <- ncatt_get(nc, "zlev", "units"))
+```
+
+### Les variables principales
+
+Nous avons quatre variables stockées dans le fichier :
+
+- sst : la température quotidienne de la surface de l'eau
+- anom : les anomalies quotidiennes de température de surface de l'eau
+- err : estimated error standard deviation of analysed_sst
+- ice : la concentration en glace
+
+```{r}
+#| label: info_variables
+(nc_var <- names(nc$var))
+
+# get info about variable attribute
+get_var_attribute <- function(var, attribute) {
+  nc_var <- names(nc$var)
+  if (!(var %in% nc_var)) {
+    message(paste("la variable", var, "est inexistante"))
+  } else {
+  ln <- ncatt_get(nc, var, attname = attribute)
+  ifelse(ln$hasatt, ln$value, paste("pas d'attribut ", attribute))
+  }
+}
+
+# long names
+get_var_long_name <- function() {
+  vapply(
+  nc_var, 
+  get_var_attribute, 
+  FUN.VALUE = character(1), 
+  "long_name"
+  )
+}
+((get_var_long_name()))
+
+# source
+get_var_units <- function() {
+  vapply(
+  nc_var, 
+  get_var_attribute, 
+  FUN.VALUE = character(1), 
+  "units"
+  )
+}
+((get_var_units()))
+
+# fill value
+get_var_fill_value <- function() {
+  vapply(
+  nc_var, 
+  get_var_attribute, 
+  FUN.VALUE = numeric(1), 
+  "_FillValue"
+  )
+}
+((get_var_fill_value()))
+
+```
+
+### Les attributs globaux du fichier
+
+```{r}
+#| label: info_attributs_globaux
+att <- c("title", "institution", "source", "references", "history", "Conventions") 
+get_global_attribute <- function(att) {
+  ncatt_get(nc, 0, att)$value
+}
+(global_attributes <- vapply(att, get_global_attribute, FUN.VALUE = character(1)))
+
+```
+
+## Exploration des variables
+
+```{r}
+#| label: load_variables
+
+nc_var <- names(nc$var)
+
+nc_charge_var <- function(var) {
+  nc_var <- ncvar_get(nc = nc, varid = var )
+  envir <- globalenv()
+  assign(var, nc_var, envir = envir)
+}
+
+walk(nc_var, nc_charge_var)
+
+```
+
+La variable sst est enregistrée en tant que `r class(sst)` avec les dimensions `r dim(sst)` 
+
+La valeur enregistrée aux coordonnées [800, 500] vaut sst[800, 500] = `r sst[800, 500]`
+
+Elle correspond normalement à la température pour la longitude lon[800] = `r lon[800]` et la latitude lat[500] = `r lat[500]`
+
+```{r}
+#| label: conversion_to_dataframe
+lon_800 <- lon[800]
+lat_500 <- lat[500]
+lonlat <- expand.grid(lon, lat)
+tmp_sst <- as.vector(sst)
+
+df_sst <- cbind(lonlat, tmp_sst)
+names(df_sst) <- c("lon", "lat", "sst")
+head(df_sst)
+
+sf_points <- expand.grid(lon, lat) |>
+  set_names("lon", "lat") |> 
+  st_as_sf(coords = c("lon", "lat"), crs = "EPSG:4326")
+df_sst_points <- cbind(sf_points, tmp_sst)
+head(df_sst_points)
+
+df_sst_800_500 <- df_sst |> 
+  dplyr::filter(lon == lon_800 & lat == lat_500) 
+
+```
+
+## Affichage de la carte des données sst
+
+Avec positionnement en rouge du point de test donné en exemple :
+
+
+```{r}
+#|label: plot_sst
+
+df_sst |> 
+  ggplot(aes(x = lon, y = lat, color = sst)) + 
+  geom_point(size = 0.5) +
+  coord_fixed(expand = FALSE) +
+  scale_colour_distiller(palette = "RdBu") +
+  geom_point(
+    data = df_sst_800_500, 
+    aes(x = lon, y = lat),
+    color = "red",
+    size = 2) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Sea Surface Temperature",
+    subtitle = "15 janvier 2024",
+    caption = "Dataset: NOAA OISST V2.1",
+    color = "°C"
+  )
+```
+
+
+```{r}
+#|label: plot_sst
+
+df_sst_greenwich <- df_sst |> 
+  mutate(lon = if_else(lon > 180, lon - 360, lon))
+
+ggplot() +
+geom_raster(
+  data = df_sst_greenwich,
+  #%>% 
+  #st_as_sf(coords = c("lon", "lat"), crs = "EPSG:4326"),
+  aes(x = lon, y = lat, fill = sst)
+) +
+  scale_fill_gradientn(
+    colours = c(
+      "purple", "lightblue", "lightyellow",
+      "lightgreen", "orange", "red"),
+    na.value = "#FFFFFF00"
+  ) +
+  coord_fixed(expand = FALSE) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Sea Surface Temperature",
+    subtitle = "15 janvier 2024",
+    caption = "Dataset: NOAA OISST V2.1",
+    color = "°C"
+  ) +
+  geom_sf(data = world, fill = "red", alpha = 0.1) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white")
+  )
+
+```
+
+
+
+
+## Calcul de moyenne globale
+
+Il semble qu'il faille appliquer un poids fonction de $\alpha$ en radians pour pondérer les mesures de surface en fonction de la latitude considérée.
+
+Pour calculer ces poids j'ai construit tous les polygones "carrés" de 0.25° de côté suivant un même méridien.
+
+Ces polygones ont pour centre les coordonnées (longitude et latitude) de la mesure SST correspondante.
+
+J'ai ensuite calculé les aires de ces polygones avec le système de coordonnées de référence EPSG:4326 (WGS84).
+
+Les poids relatifs à chaque mesure ont été fixés comme étant les ratio des aires obtenues avec celle de la plus grande aire (aire du polygone situé à l'équateur).
+
+### Calcul des poids à affecter aux mesures suivant la latitude associée
+
+```{r}
+#| label: calculate_weights
+
+# fonction génératrice de "carré géographique" de n degrés de côté
+# le point de base (lon, lat) est le point inférieur gauche. 
+
+polygone_geo <- function(lon, lat, n) {
+  polygon_list <- list(rbind(
+    c(lon, lat),
+    c(lon + n, lat),
+    c(lon + n, lat + n),
+    c(lon, lat + n),
+    c(lon, lat)
+  ))
+  st_polygon(polygon_list)
+}
+
+polygone_sfc <- seq(-90, 89.75, by = 0.25) |>
+  map(\(x) polygone_geo(lon = 0, lat = x, n = 0.25)) |> 
+  st_sfc(crs = "EPSG:4326")
+
+area_weights <- as.numeric(st_area(polygone_sfc) / max(st_area(polygone_sfc)))
+head(area_weights)
+```
+
+
+```{r}
+#| label: weighted_mean_sst
+
+df_area_weights <- expand.grid(lon, area_weights)
+names(df_area_weights) <- c("lon", "w")
+w <- df_area_weights$w
+df_sst_weights <- cbind(df_sst, w)
+df_sst_60S_60N <- df_sst_weights |> 
+  filter(lat >= -60 & lat <= 60) |> 
+  summarize(wm_sst = weighted.mean(sst, w, na.rm = TRUE)) -> 
+  sst_weighted_mean
+sst_weighted_mean
+```
+
+Si nous souhaitons centrer la carte sur le méridien de Greenwich, il est nécessaire de translater les longitudes.
+
+```{r}
+#|label: plot_sst_greenwich
+
+df_sst |> 
+  mutate(lon = if_else(lon > 180, lon - 360, lon)) |> 
+  ggplot(aes(x = lon, y = lat, fill = sst)) + 
+  geom_raster() +
+  scale_fill_gradient2(
+    low = "darkblue",
+    mid = "white",
+    high = "darkred",
+    midpoint = 15
+  ) +
+  coord_fixed(expand = FALSE) +
+  #scale_colour_distiller(palette = "RdBu") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Sea Surface Temperature",
+    subtitle = paste0(
+      "15 janvier 2024 - mean temperature = ",
+      round(sst_weighted_mean, 3),
+      " °Celsius"
+    ),
+    caption = "Dataset: NOAA OISST V2.1",
+    fill = "°C",
+  ) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    # panel.background = element_rect(fill = "black"),
+    # plot.background = element_rect(fill = "black")
+  )
+```
+
+### Essais de projections différentes
+
+
+```{r}
+df_sst_points_moll <- st_transform(df_sst_points, crs = "+proj=moll")
+```
+
+```{r}
+ggplot() + 
+  geom_sf(data = df_sst_points_moll, size = 0.1, aes(color = tmp_sst)) +
+  scale_colour_distiller(palette = "RdBu")
+#geom_sf(data = world_moll, fill = "blue", alpha = 0.1)
+
+```
+
+
+
+
+```{r}
+world_alea <- st_transform(
+  world,  
+  crs = "+proj=laea +x_0=0 +y_0=0 +lon_0=-74 +lat_0=40"
+)
+df_sst_points_alea <- st_transform(
+  df_sst_points, 
+  crs = "+proj=laea +x_0=0 +y_0=0 +lon_0=-74 +lat_0=40"
+)
+
+ggplot() + 
+  geom_sf(data = df_sst_points_alea, size = 0.1, aes(color = tmp_sst)) +
+  scale_colour_distiller(palette = "RdBu")
+```
+
+
+
+
+
+
+
+```{r}
+df_sst_points_alea_np <- st_transform(
+  df_sst_points, 
+  crs = "+proj=laea +x_0=0 +y_0=0 +lon_0=0 +lat_0=90"
+)
+
+ggplot() + 
+  geom_sf(data = df_sst_points_alea_np, size = 0.1, aes(color = tmp_sst)) +
+  scale_colour_distiller(palette = "RdBu")
+
+
+
+```
+
+
+```{r}
+df_sst_points_alea_sp <- st_transform(
+  df_sst_points, 
+  crs = "+proj=laea +x_0=0 +y_0=0 +lon_0=0 +lat_0=-90"
+)
+
+ggplot() + 
+  geom_sf(data = df_sst_points_alea_sp, size = 0.1, aes(color = tmp_sst)) +
+  scale_colour_distiller(palette = "RdBu")
+
+
+
+```
+
+
+```{r}
+df_sst_40_40 <- df_sst |> 
+  filter((lon >= 200 & lon <= 204) & (lat >= 0 & lat <= 4))
+
+p1 <- ggplot() +
+geom_raster(
+  data = df_sst,
+  aes(x = lon, y = lat, fill = sst)
+) +
+coord_fixed(expand = FALSE)
+
+p2 <- ggplot() +
+geom_raster(
+  data = df_sst,
+  aes(x = lon, y = lat, fill = sst)
+) + 
+coord_sf(crs = "EPSG:4326")
+
+p3 <- ggplot() +
+geom_sf(
+  data = df_sst |> 
+    st_as_sf(coords = c("lon", "lat"), crs = "EPSG:4326"),
+  aes(color = sst)
+)
+
+p4 <- ggplot() +
+geom_sf(
+  data = df_sst |> 
+    st_as_sf(coords = c("lon", "lat")),
+  aes(color = sst)
+)
+
+
+ggsave(plot = p1, filename = "p1.png")
+ggsave(plot = p2, filename = "p2.png")
+ggsave(plot = p3, filename = "p3.png")
+ggsave(plot = p4, filename = "p4.png")
+```
+
+
+
+
+
+
+```{r}
+list_raster <- map(nc_var, \(x) rast(t(get(x))))
+```
+
+```{r}
+walk(list_raster, \(x) plot(flip(x, direction = "vertical")))
+```
