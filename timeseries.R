@@ -3,8 +3,7 @@
 libs <- c(
   "ncdf4",
   "tidyverse",
-  "terra",
-  "sf"
+  "data.table"
 )
 #install missing libraries
 installed_libs <- libs %in% rownames(installed.packages())
@@ -14,46 +13,39 @@ if (any(installed_libs == FALSE)) {
 #load libraries
 invisible(lapply(libs, library, character.only = TRUE))
 
-### get sst data from all NOAA NetCDF files
-
-message(length(list.files(path = "DATA")))
-files <- list.files(path = "DATA", pattern = "*.nc", full.names = TRUE)
-
-get_sst_weighted_mean <- function(sst) {
-  
-  
-  df_area_weights <- expand.grid(lon, area_weights)
-  names(df_area_weights) <- c("lon", "w")
-  w <- df_area_weights$w
-  df_sst_weights <- cbind(df_sst, w)
-  df_sst_60S_60N <- df_sst_weights |> 
-    filter(lat >= -60 & lat <= 60) |> 
-    summarize(wm_sst = weighted.mean(sst, w, na.rm = TRUE)) -> 
-    sst_weighted_mean
-  sst_weighted_mean
-}
-
-area_weights <- read_delim(
-  file = "area_weights.csv",
-  col_types = c("i", "d")
-) |> 
-  pull( w )
-
-tib_sst <- tibble(
-  n = numeric(0),
-  sst_wmean = numeric(0)
-)
-
-for (file in files[1:10]) {
+# get weighted mean of one variable 
+# between lat -60 and lat +60 from one NetCDF file
+get_var_weighted_mean <- function(file, var) {
+  # open Netcdf file
   nc <- nc_open(file)
+  # get time and var
   time <- ncvar_get(nc, varid = "time")
-  lon <- ncvar_get(nc, varid = "lon")
-  lat <- ncvar_get(nc, varid = "lat")
-  sst <- ncvar_get(nc, varid = "sst")
-  expand.grid(lon, lat) |> 
-    cbind(as.vector(sst)) |> 
-    cbind()
-  
-  message(dim(sst))
+  var <- ncvar_get(nc, varid = var)
   nc_close(nc)
+  w <- matrix(rep(area_weights, 1440), ncol = 720, byrow = TRUE)
+  wm_var_60S_60N <- weighted.mean(var[,121:600], w[,121:600], na.rm = TRUE)
+  c(time, wm_var_60S_60N)
 }
+
+# get all weighted mean for one variable for all NetCDF files available
+get_var_all_weighted_mean <- function(var) {
+  files <- list.files(path = "DATA", pattern = "*.nc", full.names = TRUE)
+  origin_date <- ymd("1978-01-01")
+  wm_matrix <- matrix(numeric(0), nrow = length(files), ncol = 2)
+  area_weights <- fread(
+    file = "area_weights.csv",
+    dec = ","
+  ) |> 
+    pull( w )
+  for (i in seq_along(files)) { 
+    result <- get_var_weighted_mean(files[i], "sst")
+    wm_matrix[i, 1] <- result[1]
+    wm_matrix[i, 2] <- result[2]
+  }
+  df_wm_var <- as_tibble(wm_matrix) |>
+    set_names("time", paste0("wm_", var)) |> 
+    mutate(date = lubridate::as_date(time, origin = origin_date))
+}
+  
+df_wm_sst <- get_var_all_weighted_mean("sst")
+saveRDS(df_wm_sst, "weighted_mean_sst.RDS")

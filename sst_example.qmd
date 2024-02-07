@@ -34,7 +34,7 @@ Grâce à elle nous pouvons déjà voir quel type d'informations sont enregistr�
 ```{r}
 #| label: load_nc_file
 
-(nc <- nc_open("DATA/oisst-avhrr-v02r01.20240115.nc"))
+(nc <- nc_open("DATA/oisst-avhrr-v02r01.20240106.nc"))
 
 ```
 
@@ -252,9 +252,9 @@ names(df_area_weights) <- c("lon", "w")
 w <- df_area_weights$w
 df_sst_weights <- cbind(df_sst, w)
 df_sst_60S_60N <- df_sst_weights |> 
-  filter(lat >= -60 & lat <= 60) |> 
-  summarize(wm_sst = weighted.mean(sst, w, na.rm = TRUE)) -> 
-  sst_weighted_mean
+  filter(lat >= -60 & lat <= 60)
+sst_weighted_mean <- df_sst_60S_60N |> 
+  summarize(wm_sst = weighted.mean(sst, w, na.rm = TRUE))
 sst_weighted_mean
 ```
 
