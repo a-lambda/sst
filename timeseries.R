@@ -87,6 +87,103 @@ saveRDS(df_wm_ice_90S_90N, "weighted_mean_ice_90S_90N.RDS")
 
 link <- "https://climatereanalyzer.org/clim/sst_daily/json/oisst2.1_world2_sst_day.json"
 df_wm_sst_60S_60N_json <- jsonlite::fromJSON(link)
+saveRDS(df_wm_sst_60S_60N_json, "df_wm_sst_60S_60N_json.json")
+sst_60S_60N_json <- readRDS("df_wm_sst_60S_60N_json.json") |>
+  unnest_longer(col = "data", values_to = "wm_sst", indices_to = "yday") |>
+  mutate(year = name) |> 
+  select(year, yday, wm_sst) |> 
+  filter(year %in% 1981:2024) |> # eliminate sigma and general mean data
+  mutate(year = as.integer(year)) |>
+  drop_na()
+
+sst_60S_60N_json |> 
+  summarize(.by = year, totday = n()) -> result
+
+sst_60S_60N <- readRDS("weighted_mean_sst_60S_60N.RDS") |> 
+  mutate(
+    year = year(date),
+    yday = yday(date),
+    month = month(date)
+    ) 
+
+sst_join <- inner_join(
+  sst_60S_60N_json,
+  sst_60S_60N,
+  by = c("year", "yday") 
+) |> 
+  mutate(
+    wm_sst_round = round(wm_sst.y, 2),
+    diff = wm_sst.x - wm_sst_round
+  ) 
+
+sst_join |> 
+  filter(abs(diff) > 0) |> 
+  summarize(
+    sum_diff_neg = sum(if_else(diff < 0, diff, 0)),
+    sum_diff_pos = sum(if_else(diff > 0, diff, 0))
+  )
 
 
+ggplot(data = sst_60S_60N |> filter(year < 2023),
+       aes(x = yday, y = wm_sst, group = year)) +
+  geom_line(aes(color = factor(year))) +
+  scale_color_grey(start = 0.8, end = 0.2) +
+  geom_line(
+    data = sst_60S_60N |> filter(year == 2023),
+    aes(x = yday, y = wm_sst),
+    color = "orange",
+    linewidth = 1) +
+  geom_line(
+    data = sst_60S_60N |> filter(year == 2024),
+    aes(x = yday, y = wm_sst, group = year),
+    color = "black", 
+    linewidth = 1) +
+  labs(
+    title = "Daily Sea Surface Temperature, World (60°S-60°N, 0-360°E)",
+    subtitle = "Dataset: NOAA OISST V2.1",
+    color = NULL,
+    x = NULL,
+    y = NULL
+  ) +
+  #scale_y_discrete(breaks = c(19.5, 20.0, 20.5, 21.0)) +
+  theme(
+    legend.position = "bottom",
+    #panel.background = element_rect(fill = "white"),
+    #plot.background = element_rect(fill = "white")
+  )
+  
+ggplot(data = sst_60S_60N,
+       aes(x = date, y = wm_sst)) +
+  geom_line() +
+  geom_smooth(
+    method = "lm",
+    se = FALSE
+  ) + 
+  geom_smooth(
+    data = sst_60S_60N |> 
+      filter(year > 2000),
+    method = "lm",
+    se = FALSE, colour = "#FFA050"
+  ) +
+  geom_smooth(
+    data = sst_60S_60N |> 
+      filter(year > 2010),
+    method = "lm",
+    se = FALSE, colour = "#FF0000"
+  )
+  
+
+ts_sst_60S_60N <- as_tsibble(sst_60S_60N)
+autoplot(ts_sst_60S_60N, wm_sst)
+gg_season(ts_sst_60S_60N, wm_sst, period = "year")
+
+
+sst_90S_90N <- readRDS("weighted_mean_sst_90S_90N.RDS") |> 
+  mutate(year = year(date))
+ggplot(data = sst_90S_90N) +
+  geom_line(aes(x = date, y = wm_sst, group = year, color = year))
+
+ts_sst_90S_90N <- as_tsibble(sst_90S_90N)
+autoplot(ts_sst_90S_90N, wm_sst)
+gg_season(ts_sst_90S_90N, wm_sst)
 
