@@ -148,9 +148,21 @@ ggplot(data = sst_60S_60N |> filter(year < 2023),
   #scale_y_discrete(breaks = c(19.5, 20.0, 20.5, 21.0)) +
   theme(
     legend.position = "bottom",
-    #panel.background = element_rect(fill = "white"),
-    #plot.background = element_rect(fill = "white")
+    legend.margin = unit(0, "mm")
   )
+  #   legend.text = element_text(
+  #     colour = "black", 
+  #     size = 10,
+  #     face = "bold")
+  #   #panel.background = element_rect(fill = "white"),
+  #   #plot.background = element_rect(fill = "white")
+  # guides(
+  #   fill = guide_legend(
+  #     ncol = 7,
+  #     byrow = TRUE
+  #   )
+  # )  
+    
   
 ggplot(data = sst_60S_60N,
        aes(x = date, y = wm_sst)) +
