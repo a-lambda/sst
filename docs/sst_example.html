@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Fichiers NetCDF - 3&nbsp; Données SST du 15 janvier 2024</title>
+<title>Fichiers NetCDF - 4&nbsp; Données SST du 6 janvier 2024</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./references.html" rel="next">
-<link href="./sst_dl.html" rel="prev">
+<link href="./timeseries.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -100,7 +100,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sst_example.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Un fichier SST</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sst_example.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Un fichier SST</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -150,8 +150,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./timeseries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Données temporelles</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./sst_example.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Un fichier SST</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Un fichier SST</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -169,17 +175,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
 <li>
-<a href="#exploration-du-fichier-netcdf-comme-d%C3%A9crit-ici" id="toc-exploration-du-fichier-netcdf-comme-décrit-ici" class="nav-link active" data-scroll-target="#exploration-du-fichier-netcdf-comme-d%C3%A9crit-ici"><span class="header-section-number">3.1</span> Exploration du fichier NetCDF (comme décrit ici)</a>
+<a href="#exploration-du-fichier-netcdf-comme-d%C3%A9crit-ici" id="toc-exploration-du-fichier-netcdf-comme-décrit-ici" class="nav-link active" data-scroll-target="#exploration-du-fichier-netcdf-comme-d%C3%A9crit-ici"><span class="header-section-number">4.1</span> Exploration du fichier NetCDF (comme décrit ici)</a>
   <ul class="collapse">
 <li><a href="#les-dimensions" id="toc-les-dimensions" class="nav-link" data-scroll-target="#les-dimensions">Les dimensions</a></li>
   <li><a href="#les-variables-principales" id="toc-les-variables-principales" class="nav-link" data-scroll-target="#les-variables-principales">Les variables principales</a></li>
   <li><a href="#les-attributs-globaux-du-fichier" id="toc-les-attributs-globaux-du-fichier" class="nav-link" data-scroll-target="#les-attributs-globaux-du-fichier">Les attributs globaux du fichier</a></li>
   </ul>
 </li>
-  <li><a href="#exploration-des-variables" id="toc-exploration-des-variables" class="nav-link" data-scroll-target="#exploration-des-variables"><span class="header-section-number">3.2</span> Exploration des variables</a></li>
-  <li><a href="#affichage-de-la-carte-des-donn%C3%A9es-sst" id="toc-affichage-de-la-carte-des-données-sst" class="nav-link" data-scroll-target="#affichage-de-la-carte-des-donn%C3%A9es-sst"><span class="header-section-number">3.3</span> Affichage de la carte des données sst</a></li>
+  <li><a href="#exploration-des-variables" id="toc-exploration-des-variables" class="nav-link" data-scroll-target="#exploration-des-variables"><span class="header-section-number">4.2</span> Exploration des variables</a></li>
+  <li><a href="#affichage-de-la-carte-des-donn%C3%A9es-sst" id="toc-affichage-de-la-carte-des-données-sst" class="nav-link" data-scroll-target="#affichage-de-la-carte-des-donn%C3%A9es-sst"><span class="header-section-number">4.3</span> Affichage de la carte des données sst</a></li>
   <li>
-<a href="#calcul-de-moyenne-globale" id="toc-calcul-de-moyenne-globale" class="nav-link" data-scroll-target="#calcul-de-moyenne-globale"><span class="header-section-number">3.4</span> Calcul de moyenne globale</a>
+<a href="#calcul-de-moyenne-globale" id="toc-calcul-de-moyenne-globale" class="nav-link" data-scroll-target="#calcul-de-moyenne-globale"><span class="header-section-number">4.4</span> Calcul de moyenne globale</a>
   <ul class="collapse">
 <li><a href="#calcul-des-poids-%C3%A0-affecter-aux-mesures-suivant-la-latitude-associ%C3%A9e" id="toc-calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée" class="nav-link" data-scroll-target="#calcul-des-poids-%C3%A0-affecter-aux-mesures-suivant-la-latitude-associ%C3%A9e">Calcul des poids à affecter aux mesures suivant la latitude associée</a></li>
   </ul>
@@ -189,7 +195,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Données SST du 15 janvier 2024</span>
+<span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Données SST du 6 janvier 2024</span>
 </h1>
 </div>
 
@@ -203,8 +209,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
-</header><section id="exploration-du-fichier-netcdf-comme-décrit-ici" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="exploration-du-fichier-netcdf-comme-décrit-ici">
-<span class="header-section-number">3.1</span> Exploration du fichier NetCDF (comme décrit <a href="https://pjbartlein.github.io/REarthSysSci/netCDF.html">ici</a>)</h2>
+</header><section id="exploration-du-fichier-netcdf-comme-décrit-ici" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="exploration-du-fichier-netcdf-comme-décrit-ici">
+<span class="header-section-number">4.1</span> Exploration du fichier NetCDF (comme décrit <a href="https://pjbartlein.github.io/REarthSysSci/netCDF.html">ici</a>)</h2>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">libs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"ncdf4"</span>,</span>
@@ -225,9 +231,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>La connexion au fichier NetCDF s’opère via la commande nc_open.</p>
 <p>Grâce à elle nous pouvons déjà voir quel type d’informations sont enregistrées.</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="st">"DATA/oisst-avhrr-v02r01.20240115.nc"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="st">"DATA/oisst-avhrr-v02r01.20240106.nc"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>File DATA/oisst-avhrr-v02r01.20240115.nc (NC_FORMAT_NETCDF4):
+<pre><code>File DATA/oisst-avhrr-v02r01.20240106.nc (NC_FORMAT_NETCDF4):
 
      4 variables (excluding dimension variables):
         short sst[lon,lat,zlev,time]   (Chunking: [1440,720,1,1])  (Compression: shuffle,level 4)
@@ -286,13 +292,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         title: NOAA/NCEI 1/4 Degree Daily Optimum Interpolation Sea Surface Temperature (OISST) Analysis, Version 2.1 - Final
         references: Reynolds, et al.(2007) Daily High-Resolution-Blended Analyses for Sea Surface Temperature (available at https://doi.org/10.1175/2007JCLI1824.1). Banzon, et al.(2016) A long-term record of blended satellite and in situ sea-surface temperature for climate monitoring, modeling and environmental studies (available at https://doi.org/10.5194/essd-8-165-2016). Huang et al. (2020) Improvements of the Daily Optimum Interpolation Sea Surface Temperature (DOISST) Version v02r01, submitted.Climatology is based on 1971-2000 OI.v2 SST. Satellite data: Pathfinder AVHRR SST, Navy AVHRR SST, and NOAA ACSPO SST. Ice data: NCEP Ice and GSFC Ice.
         source: ICOADS, NCEP_GTS, GSFC_ICE, NCEP_ICE, Pathfinder_AVHRR, Navy_AVHRR, NOAA_ACSP
-        id: oisst-avhrr-v02r01.20240115.nc
+        id: oisst-avhrr-v02r01.20240106.nc
         naming_authority: gov.noaa.ncei
         summary: NOAAs 1/4-degree Daily Optimum Interpolation Sea Surface Temperature (OISST) (sometimes referred to as Reynolds SST, which however also refers to earlier products at different resolution), currently available as version v02r01, is created by interpolating and extrapolating SST observations from different sources, resulting in a smoothed complete field. The sources of data are satellite (AVHRR) and in situ platforms (i.e., ships and buoys), and the specific datasets employed may change over time. At the marginal ice zone, sea ice concentrations are used to generate proxy SSTs.  A preliminary version of this file is produced in near-real time (1-day latency), and then replaced with a final version after 2 weeks. Note that this is the AVHRR-ONLY DOISST, available from Oct 1981, but there is a companion DOISST product that includes microwave satellite data, available from June 2002
         cdm_data_type: Grid
         history: Final file created using preliminary as first guess, and 3 days of AVHRR data. Preliminary uses only 1 day of AVHRR data.
-        date_modified: 2024-01-30T09:12:00Z
-        date_created: 2024-01-30T09:12:00Z
+        date_modified: 2024-01-21T09:12:00Z
+        date_created: 2024-01-21T09:12:00Z
         product_version: Version v02r01
         processing_level: NOAA Level 4
         institution: NOAA/National Centers for Environmental Information
@@ -313,8 +319,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         geospatial_lat_resolution: 0.25
         geospatial_lon_units: degrees_east
         geospatial_lon_resolution: 0.25
-        time_coverage_start: 2024-01-15T00:00:00Z
-        time_coverage_end: 2024-01-15T23:59:59Z
+        time_coverage_start: 2024-01-06T00:00:00Z
+        time_coverage_end: 2024-01-06T23:59:59Z
         metadata_link: https://doi.org/10.25921/RE9P-PT57
         ncei_template_version: NCEI_NetCDF_Grid_Template_v2.0
         comment: Data was converted from NetCDF-3 to NetCDF-4 format with metadata updates in November 2017.
@@ -469,8 +475,8 @@ $value
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "CF-1.6, ACDD-1.3" </code></pre>
 </div>
 </div>
-</section></section><section id="exploration-des-variables" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="exploration-des-variables">
-<span class="header-section-number">3.2</span> Exploration des variables</h2>
+</section></section><section id="exploration-des-variables" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="exploration-des-variables">
+<span class="header-section-number">4.2</span> Exploration des variables</h2>
 <div class="cell">
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
 <span></span>
@@ -483,7 +489,7 @@ $value
 <span><span class="fu">walk</span><span class="op">(</span><span class="va">nc_var</span>, <span class="va">nc_charge_var</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La variable sst est enregistrée en tant que matrix, array avec les dimensions 1440, 720</p>
-<p>La valeur enregistrée aux coordonnées [800, 500] vaut sst[800, 500] = 15.7199996</p>
+<p>La valeur enregistrée aux coordonnées [800, 500] vaut sst[800, 500] = 15.3599997</p>
 <p>Elle correspond normalement à la température pour la longitude lon[800] = 199.875 et la latitude lat[500] = 34.875</p>
 <div class="cell">
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lon_800</span> <span class="op">&lt;-</span> <span class="va">lon</span><span class="op">[</span><span class="fl">800</span><span class="op">]</span></span>
@@ -504,8 +510,8 @@ $value
 </div>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_sst</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">==</span> <span class="va">lon_800</span> <span class="op">&amp;</span> <span class="va">lat</span> <span class="op">==</span> <span class="va">lat_500</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">df_sst_800_500</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="affichage-de-la-carte-des-données-sst" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="affichage-de-la-carte-des-données-sst">
-<span class="header-section-number">3.3</span> Affichage de la carte des données sst</h2>
+</section><section id="affichage-de-la-carte-des-données-sst" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="affichage-de-la-carte-des-données-sst">
+<span class="header-section-number">4.3</span> Affichage de la carte des données sst</h2>
 <p>Avec positionnement en rouge du point de test donné en exemple :</p>
 <div class="cell">
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|label: plot_sst</span></span>
@@ -532,8 +538,8 @@ $value
 <p><img src="sst_example_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section><section id="calcul-de-moyenne-globale" class="level2" data-number="3.4"><h2 data-number="3.4" class="anchored" data-anchor-id="calcul-de-moyenne-globale">
-<span class="header-section-number">3.4</span> Calcul de moyenne globale</h2>
+</section><section id="calcul-de-moyenne-globale" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="calcul-de-moyenne-globale">
+<span class="header-section-number">4.4</span> Calcul de moyenne globale</h2>
 <p>Il semble qu’il faille appliquer un poids fonction de <span class="math inline">\(\alpha\)</span> en radians pour pondérer les mesures de surface en fonction de la latitude considérée.</p>
 <p>Pour calculer ces poids j’ai construit tous les polygones “carrés” de 0.25° de côté suivant un même méridien.</p>
 <p>Ces polygones ont pour centre les coordonnées (longitude et latitude) de la mesure SST correspondante.</p>
@@ -571,13 +577,13 @@ $value
 <span><span class="va">w</span> <span class="op">&lt;-</span> <span class="va">df_area_weights</span><span class="op">$</span><span class="va">w</span></span>
 <span><span class="va">df_sst_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">df_sst</span>, <span class="va">w</span><span class="op">)</span></span>
 <span><span class="va">df_sst_60S_60N</span> <span class="op">&lt;-</span> <span class="va">df_sst_weights</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&gt;=</span> <span class="op">-</span><span class="fl">60</span> <span class="op">&amp;</span> <span class="va">lat</span> <span class="op">&lt;=</span> <span class="fl">60</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">summarize</span><span class="op">(</span>wm_sst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span><span class="op">(</span><span class="va">sst</span>, <span class="va">w</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> </span>
-<span>  <span class="va">sst_weighted_mean</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&gt;=</span> <span class="op">-</span><span class="fl">60</span> <span class="op">&amp;</span> <span class="va">lat</span> <span class="op">&lt;=</span> <span class="fl">60</span><span class="op">)</span></span>
+<span><span class="va">sst_weighted_mean</span> <span class="op">&lt;-</span> <span class="va">df_sst_60S_60N</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">summarize</span><span class="op">(</span>wm_sst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span><span class="op">(</span><span class="va">sst</span>, <span class="va">w</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">sst_weighted_mean</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    wm_sst
-1 21.03401</code></pre>
+1 21.03032</code></pre>
 </div>
 </div>
 <p>Si nous souhaitons centrer la carte sur le méridien de Greenwich, il est nécessaire de translater les longitudes.</p>
@@ -986,8 +992,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./sst_dl.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Données SST</span></span>
+      <a href="./timeseries.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Données temporelles</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

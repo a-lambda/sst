@@ -21,8 +21,10 @@ book:
     - intro.qmd
     - href: sst_dl.qmd
       text: Données SST
+    - href: timeseries.qmd
+      text: Données temporelles
     - href: sst_example.qmd
-      text: Un fichier SST 
+      text: Un fichier SST
     - references.qmd
 
 bibliography: references.bib
