@@ -34,7 +34,7 @@ Grâce à elle nous pouvons déjà voir quel type d'informations sont enregistr�
 ```{r}
 #| label: load_nc_file
 
-(nc <- nc_open("DATA/oisst-avhrr-v02r01.20240106.nc"))
+(nc <- nc_open("DATA/oisst-avhrr-v02r01.20240401.nc"))
 
 ```
 
@@ -197,7 +197,7 @@ df_sst |>
     x = NULL,
     y = NULL,
     title = "Sea Surface Temperature",
-    subtitle = "15 janvier 2024",
+    subtitle = "1er avril 2024",
     caption = "Dataset: NOAA OISST V2.1",
     color = "°C"
   )
@@ -280,7 +280,7 @@ df_sst |>
     y = NULL,
     title = "Sea Surface Temperature",
     subtitle = paste0(
-      "15 janvier 2024 - mean temperature = ",
+      "1er avril 2024 - mean temperature = ",
       round(sst_weighted_mean, 3),
       " °Celsius"
     ),

@@ -1,7 +1,4 @@
----
-title: "Récupération des données SST"
-format: html
----
+# Récupération des données SST
 
 ## Chargement de packages nécessaires
 
@@ -18,8 +15,11 @@ format: html
 #| message: false
 
 libs <- c(
+  "glue",
   "httr",
-  "tidyverse"
+  "tidyverse",
+  "terra",
+  "ncdf4"
 )
 
 #install missing libraries
@@ -47,71 +47,65 @@ En date du `Sys.Date()` nous allons déterminer :
 - le nombre total de fichiers temporaires
 
 ```{r}
-#| label: get_last_valid_sst_date
+#| label: get_last_sst_dates
 
 yyyymm <- function(date) { # transform Date '1981-06-25' to string '198106' 
-  annee <- year(date)
-  mois <- month(date)
-  paste0(annee, if_else(mois > 9, as.character(mois), paste0("0", mois)))
+  return(paste0(year(date), sprintf("%02d", month(date))))
 }
 
 yyyymmdd <- function(date) { # transform Date '1981-06-25' to string '19810625'
-  annee <- year(date)
-  mois <- month(date)
-  jour <- day(date)
-  paste0(
-    annee,
-    if_else(mois > 9, as.character(mois), paste0("0", mois)),
-    if_else(jour > 9, as.character(jour), paste0("0", jour))
+  return(
+    paste0(
+      year(date), 
+      sprintf("%02d", month(date)), 
+      sprintf("%02d", mday(date))
+    )
   )
 }
 
-sst_file_link <- function(date, ready = TRUE) {
-  chaine_matrice <- ifelse(
-    ready, 
+sst_data_url <- function(date, data_regular = TRUE) {
+  # we use the constant part of the url and replace
+  # - @ with 'yyyymm' part of the date
+  # - & with 'yyyymmdd' part of the date
+  # to get all the url links
+  base_regex_url <- ifelse(
+    data_regular, 
     "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&.nc",
     "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&_preliminary.nc"
   )
-  sub("@", yyyymm(date), sub("&", yyyymmdd(date), chaine_matrice))
+  sub("@", yyyymm(date), sub("&", yyyymmdd(date), base_regex_url))
 }
 
-get_last_valid_data_dates <- function() {
-  valide <- FALSE
-  last_tempo_date <- Sys.Date() - 1
+get_last_data_dates <- function() {
+  
+  http_200_status_OK <- FALSE
+  get_last_data_date <- function(date, data_regular) {
+    while (!http_200_status_OK) { 
+      http_status_code <- status_code(
+        GET(sst_data_url(date = date, data_regular = data_regular))
+      )
+      if (http_status_code == 404) {
+        date <- date - 1  
+      } else {
+        if (http_status_code == 200) {
+          http_200_status_OK <- TRUE
+        }
+      }
+    }
+    return(date)
+  }
   # get last date for preliminary file
-  while (!valide) { 
-    http_status_code <- status_code(
-      GET(sst_file_link(last_tempo_date, ready = FALSE))
-    )
-    if (http_status_code == 404) {
-      last_tempo_date <- last_tempo_date - 1  
-    } else {
-      if (http_status_code == 200) {
-        valide <- TRUE
-      }
-    }
-  }
-  valide <- FALSE
-  last_valid_date <- last_tempo_date - 13 # supposed to be preliminary data
-  while (!valide) {
-    http_status_code <- status_code(
-      GET(sst_file_link(last_valid_date, ready = TRUE))
-    )
-    if (http_status_code == 404) {
-      last_valid_date <- last_valid_date - 1
-    } else {
-      if (http_status_code == 200) {
-        valide <- TRUE
-      }
-    }
-  }
+  last_tempo_date <- get_last_data_date(Sys.Date(), data_regular = FALSE)
+  # get last date for data with status OK
+  date <- last_tempo_date - 13 # supposed to be also "preliminary data" date
+  last_valid_date <- get_last_data_date(date, data_regular = TRUE)
   c(last_valid_date, last_tempo_date)
 }
 
-last_valid_date <- get_last_valid_data_dates()[[1]]
+last_valid_date <- get_last_data_dates()[[1]]
 paste0("Dernier fichier finalisé daté du : ", last_valid_date)
 
-last_tempo_date <- get_last_valid_data_dates()[[2]]
+last_tempo_date <- get_last_data_dates()[[2]]
 paste0("Dernier fichier temporaire daté du : ", last_tempo_date)
 
 #--- date du premier fichier finalisé disponible
@@ -125,127 +119,128 @@ paste0("Nombre de fichiers temporaires : ", number_of_tempo_files)
 
 ```
 
-## Téléchargement des fichiers de données
+## Remplissage de la table des fichiers de données
+
+Création d'un tibble `tib_sst` composée des colonnes suivantes :
+
+- date : date de récupération des données
+- data_file : nom local du fichier de données
+- data_url : url permettant d'accéder aux données pour une date donnée
+
+Remarque :
+
+La problématique consiste à mettre à jour au fil de l'eau les données qui sont initialement enregistrées dans un fichier avec l'extension **preliminary.nc" le temps que les données soient "régularisées". Cette opération se déroule sur un délai d'approximativement 2 semaines à partir de la récupération initiale.
 
 ```{r}
-#| label: download_nc_files
+#| label: tib_sst
 
-# séquence des jours associés aux fichiers nc
-seq_days_nc_files <- seq(
-  start_date,
-  last_tempo_date,
-  by = "days"
+# Récupération dans tib_sst de toutes les dates associées au fichiers .nc
+
+tib_sst <- tibble(date = seq(start_date, last_tempo_date, by = "days"))
+
+# Récupération dans tib_sst des noms de fichiers à stocker dans data
+
+get_url_variable_parts <- function(start_date, end_date, data_regular) {
+  
+  file_prefixe <- "oisst-avhrr-v02r01."
+  file_suffixe_regular <- ".nc"
+  file_suffixe_preliminary <- "_preliminary.nc"
+  
+  seq_days <- seq(start_date, end_date, by = "days")
+  url_dir_part <- yyyymm(seq_days)
+  file_suffixe <- if_else(
+    data_regular, 
+    file_suffixe_regular,
+    file_suffixe_preliminary
+  )
+  url_file_part <- paste0(file_prefixe, yyyymmdd(seq_days), file_suffixe)
+  return(list(url_dir_part, url_file_part))
+  
+}
+  
+url_regular_parts <- get_url_variable_parts(
+  start_date = start_date,
+  end_date = last_valid_date,
+  data_regular = TRUE
+)
+  
+url_preliminary_parts <- get_url_variable_parts(
+  start_date = last_valid_date + 1,
+  end_date = last_tempo_date,
+  data_regular = FALSE
 )
 
-# liste des fichiers à télécharger
+tib_sst$data_file <- c(url_regular_parts[[2]], url_preliminary_parts[[2]])
 
-get_nc_files <- function() {
+# Récupération dans tib_sst des urls des fichiers de données
+
+root_url <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"
+
+get_nc_urls <- function(url_link_parts) {
   
-  root_access <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"
-  file_prefixe <- "oisst-avhrr-v02r01"
-  file_suffixe <- "nc"
+  return(paste(root_url, url_link_parts[[1]], url_link_parts[[2]], sep = "/"))
+         
+} 
 
-  seq_days_regular_nc_files <- seq(
-    start_date,
-    last_valid_date,
-    by = "days"
-  )
+nc_regular_urls <- get_nc_urls(url_regular_parts)
+nc_preliminary_urls <- get_nc_urls(url_preliminary_parts)
 
-  seq_days_temp_nc_file <- seq(
-    last_valid_date + 1,
-    last_tempo_date,
-    by = "days"
-  )
+tib_sst$data_url <- c(nc_regular_urls, nc_preliminary_urls)
 
-  dir_regular <- yyyymm(seq_days_regular_nc_files)
-  dir_temp <- yyyymm(seq_days_temp_nc_file)
-  string_regular <- yyyymmdd(seq_days_regular_nc_files)
-  string_temp <- yyyymmdd(seq_days_temp_nc_file)
-  
-  seq_regular_nc_files <- paste(
-    root_access, 
-    dir_regular, 
-    paste(
-      file_prefixe, 
-      string_regular, 
-      file_suffixe, 
-      sep = "."
-    ), 
-    sep = "/"
-  )
+# Mise à OK du statut de la colonne data_status_OK
 
-  seq_temp_nc_files <- paste(
-    root_access, 
-    dir_temp, 
-    paste(
-      file_prefixe, 
-      paste0(string_temp, "_preliminary"),
-      file_suffixe,
-      sep = "."
-    ), 
-    sep = "/"
-  )
+tib_sst$data_status_OK = TRUE
 
-  list(seq_regular_nc_files, seq_temp_nc_files)
-}
-
-nc_regular_files <- get_nc_files()[[1]]
-nc_temp_files <- get_nc_files()[[2]]
-
-# téléchargement de tous les fichiers depuis la date d'origine des mesures
+# sauvegarde du tibble
 # 
-sst_file_link <- function(date) {
-  filename <- if_else(
-    date > last_valid_date,
-    "oisst-avhrr-v02r01.&_preliminary.nc",
-    "oisst-avhrr-v02r01.&.nc"
-  )
-  regex_file_link <- paste(
-    "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@",
-    filename,
-    sep = "/"
-  )  
-  sub("@", yyyymm(date), sub("&", yyyymmdd(date), regex_file_link))
-}
+saveRDS(tib_sst, "DATA/tib_sst.RDS")
+```
+
+## Téléchargement des données SST (si nécessaire)
+
+```{r}
+tib_sst <- readRDS("DATA/tib_sst.RDS")
 
 get_oisst_data <- function(date) {
-  link <- sst_file_link(date)
-  link_split <- strsplit(link, '/')[[1]]
-  file_name <- link_split[length(link_split)]
-  file_to_write <- paste("DATA" , file_name, sep = "/")
-  if (!file.exists(file_to_write)) {
-    res <- httr::GET(
-      link,
-      write_disk(
-        file_to_write,
-        overwrite = TRUE
-      ),
-      progress()
-    ) 
+  get_tib_sst_data <- function() {
+    data <- tib_sst |> 
+      filter(date == {{date}})
+    return(data)
   } 
-}
-
-# téléchargement des fichiers nc
-walk(seq_days_nc_files, get_oisst_data)
-
-# nettoyage des fichiers temporary superflus
-
-del_extra_temp_nc_files <- function() {
-  stored_temp_files <- list.files("DATA", pattern = "_preliminary.nc")
-  nc_temp_files_split <- strsplit(nc_temp_files, '/')
-  actual_temp_files <- vapply(
-    nc_temp_files_split, 
-    \(x) x[length(x)], 
-    character(1)
-  )
-  temp_files_to_delete <- 
-    stored_temp_files[!(stored_temp_files %in% actual_temp_files)]
-  if (length(temp_files_to_delete) > 0) {
-    unlink(paste(".", "DATA", temp_files_to_delete, sep = '/'))
+  data <- get_tib_sst_data()
+  data_file <- data$data_file
+  data_url <- data$data_url
+  data_status_OK <- data$data_status_OK
+  if (data_status_OK) {
+    file_name <- paste("DATA" , data_file, sep = "/")
+    if (!file.exists(file_name)) {
+      status_code <- status_code(GET(data_url))
+      message(status_code)
+      if (status_code == 200) {
+        res <- httr::GET(
+          data_url,
+          write_disk(
+            file_name,
+            overwrite = TRUE
+          ),
+          progress()
+        ) 
+      } else {
+        message(glue("The data for file {data_file} are inaccessible"))
+        tib_sst |> 
+          mutate(data_status_OK = if_else(
+            date == {{date}},
+            FALSE,
+            data_status_OK)) |> 
+          saveRDS("DATA/tib_sst.RDS")
+      }
+    }
+  } else {
+    message(glue("DATA status for file {data_file} is KO"))
   }
 }
 
-# do it  
-del_extra_temp_nc_files()
+# téléchargement des fichiers nc
+walk(tib_sst$date, get_oisst_data)
 
 ```

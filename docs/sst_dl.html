@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.550">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Fichiers NetCDF - 2&nbsp; Récupération des données SST</title>
 <style>
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -78,7 +78,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -87,6 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -97,23 +104,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sst_dl.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Données SST</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sst_dl.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Données SST</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Fichiers NetCDF</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/a-lambda/sst/" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/a-lambda/sst/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -168,7 +175,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
@@ -176,8 +183,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
 <li><a href="#chargement-de-packages-n%C3%A9cessaires" id="toc-chargement-de-packages-nécessaires" class="nav-link active" data-scroll-target="#chargement-de-packages-n%C3%A9cessaires"><span class="header-section-number">2.1</span> Chargement de packages nécessaires</a></li>
   <li><a href="#d%C3%A9compte-des-fichiers-exploitables" id="toc-décompte-des-fichiers-exploitables" class="nav-link" data-scroll-target="#d%C3%A9compte-des-fichiers-exploitables"><span class="header-section-number">2.2</span> Décompte des fichiers exploitables</a></li>
-  <li><a href="#t%C3%A9l%C3%A9chargement-des-fichiers-de-donn%C3%A9es" id="toc-téléchargement-des-fichiers-de-données" class="nav-link" data-scroll-target="#t%C3%A9l%C3%A9chargement-des-fichiers-de-donn%C3%A9es"><span class="header-section-number">2.3</span> Téléchargement des fichiers de données</a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/a-lambda/sst/edit/main/sst_dl.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+  <li><a href="#remplissage-de-la-table-des-fichiers-de-donn%C3%A9es" id="toc-remplissage-de-la-table-des-fichiers-de-données" class="nav-link" data-scroll-target="#remplissage-de-la-table-des-fichiers-de-donn%C3%A9es"><span class="header-section-number">2.3</span> Remplissage de la table des fichiers de données</a></li>
+  <li><a href="#t%C3%A9l%C3%A9chargement-des-donn%C3%A9es-sst-si-n%C3%A9cessaire" id="toc-téléchargement-des-données-sst-si-nécessaire" class="nav-link" data-scroll-target="#t%C3%A9l%C3%A9chargement-des-donn%C3%A9es-sst-si-n%C3%A9cessaire"><span class="header-section-number">2.4</span> Téléchargement des données SST (si nécessaire)</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/a-lambda/sst/edit/main/sst_dl.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
@@ -195,6 +203,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     
   </div>
   
+
 
 </header><section id="chargement-de-packages-nécessaires" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="chargement-de-packages-nécessaires">
 <span class="header-section-number">2.1</span> Chargement de packages nécessaires</h2>
@@ -219,8 +228,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">libs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"glue"</span>,</span>
 <span>  <span class="st">"httr"</span>,</span>
-<span>  <span class="st">"tidyverse"</span></span>
+<span>  <span class="st">"tidyverse"</span>,</span>
+<span>  <span class="st">"terra"</span>,</span>
+<span>  <span class="st">"ncdf4"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#install missing libraries</span></span>
@@ -245,73 +257,67 @@ Les autres ne possèdent pas ce suffixe.</p>
 </ul>
 <div class="cell">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">yyyymm</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span> <span class="co"># transform Date '1981-06-25' to string '198106' </span></span>
-<span>  <span class="va">annee</span> <span class="op">&lt;-</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
-<span>  <span class="va">mois</span> <span class="op">&lt;-</span> <span class="fu">month</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">annee</span>, <span class="fu">if_else</span><span class="op">(</span><span class="va">mois</span> <span class="op">&gt;</span> <span class="fl">9</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">mois</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"0"</span>, <span class="va">mois</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%02d"</span>, <span class="fu">month</span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">yyyymmdd</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span> <span class="co"># transform Date '1981-06-25' to string '19810625'</span></span>
-<span>  <span class="va">annee</span> <span class="op">&lt;-</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
-<span>  <span class="va">mois</span> <span class="op">&lt;-</span> <span class="fu">month</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
-<span>  <span class="va">jour</span> <span class="op">&lt;-</span> <span class="fu">day</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
-<span>    <span class="va">annee</span>,</span>
-<span>    <span class="fu">if_else</span><span class="op">(</span><span class="va">mois</span> <span class="op">&gt;</span> <span class="fl">9</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">mois</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"0"</span>, <span class="va">mois</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="fu">if_else</span><span class="op">(</span><span class="va">jour</span> <span class="op">&gt;</span> <span class="fl">9</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">jour</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"0"</span>, <span class="va">jour</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
+<span>      <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, </span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%02d"</span>, <span class="fu">month</span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%02d"</span>, <span class="fu">mday</span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">sst_file_link</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span>, <span class="va">ready</span> <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">chaine_matrice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span></span>
-<span>    <span class="va">ready</span>, </span>
+<span><span class="va">sst_data_url</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span>, <span class="va">data_regular</span> <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># we use the constant part of the url and replace</span></span>
+<span>  <span class="co"># - @ with 'yyyymm' part of the date</span></span>
+<span>  <span class="co"># - &amp; with 'yyyymmdd' part of the date</span></span>
+<span>  <span class="co"># to get all the url links</span></span>
+<span>  <span class="va">base_regex_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span></span>
+<span>    <span class="va">data_regular</span>, </span>
 <span>    <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&amp;.nc"</span>,</span>
 <span>    <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&amp;_preliminary.nc"</span></span>
 <span>  <span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/grep.html">sub</a></span><span class="op">(</span><span class="st">"@"</span>, <span class="fu">yyyymm</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">sub</a></span><span class="op">(</span><span class="st">"&amp;"</span>, <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="va">chaine_matrice</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/grep.html">sub</a></span><span class="op">(</span><span class="st">"@"</span>, <span class="fu">yyyymm</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">sub</a></span><span class="op">(</span><span class="st">"&amp;"</span>, <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="va">base_regex_url</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">get_last_valid_data_dates</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">valide</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
-<span>  <span class="va">last_tempo_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span></span>
+<span><span class="va">get_last_data_dates</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">http_200_status_OK</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
+<span>  <span class="va">get_last_data_date</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span>, <span class="va">data_regular</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">http_200_status_OK</span><span class="op">)</span> <span class="op">{</span> </span>
+<span>      <span class="va">http_status_code</span> <span class="op">&lt;-</span> <span class="fu">status_code</span><span class="op">(</span></span>
+<span>        <span class="fu">GET</span><span class="op">(</span><span class="fu">sst_data_url</span><span class="op">(</span>date <span class="op">=</span> <span class="va">date</span>, data_regular <span class="op">=</span> <span class="va">data_regular</span><span class="op">)</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>      <span class="kw">if</span> <span class="op">(</span><span class="va">http_status_code</span> <span class="op">==</span> <span class="fl">404</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">date</span> <span class="op">&lt;-</span> <span class="va">date</span> <span class="op">-</span> <span class="fl">1</span>  </span>
+<span>      <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>        <span class="kw">if</span> <span class="op">(</span><span class="va">http_status_code</span> <span class="op">==</span> <span class="fl">200</span><span class="op">)</span> <span class="op">{</span></span>
+<span>          <span class="va">http_200_status_OK</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
+<span>        <span class="op">}</span></span>
+<span>      <span class="op">}</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span>  <span class="co"># get last date for preliminary file</span></span>
-<span>  <span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">valide</span><span class="op">)</span> <span class="op">{</span> </span>
-<span>    <span class="va">http_status_code</span> <span class="op">&lt;-</span> <span class="fu">status_code</span><span class="op">(</span></span>
-<span>      <span class="fu">GET</span><span class="op">(</span><span class="fu">sst_file_link</span><span class="op">(</span><span class="va">last_tempo_date</span>, ready <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">http_status_code</span> <span class="op">==</span> <span class="fl">404</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">last_tempo_date</span> <span class="op">&lt;-</span> <span class="va">last_tempo_date</span> <span class="op">-</span> <span class="fl">1</span>  </span>
-<span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>      <span class="kw">if</span> <span class="op">(</span><span class="va">http_status_code</span> <span class="op">==</span> <span class="fl">200</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">valide</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
-<span>      <span class="op">}</span></span>
-<span>    <span class="op">}</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="va">valide</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
-<span>  <span class="va">last_valid_date</span> <span class="op">&lt;-</span> <span class="va">last_tempo_date</span> <span class="op">-</span> <span class="fl">13</span> <span class="co"># supposed to be preliminary data</span></span>
-<span>  <span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">valide</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">http_status_code</span> <span class="op">&lt;-</span> <span class="fu">status_code</span><span class="op">(</span></span>
-<span>      <span class="fu">GET</span><span class="op">(</span><span class="fu">sst_file_link</span><span class="op">(</span><span class="va">last_valid_date</span>, ready <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">http_status_code</span> <span class="op">==</span> <span class="fl">404</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">last_valid_date</span> <span class="op">&lt;-</span> <span class="va">last_valid_date</span> <span class="op">-</span> <span class="fl">1</span></span>
-<span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>      <span class="kw">if</span> <span class="op">(</span><span class="va">http_status_code</span> <span class="op">==</span> <span class="fl">200</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">valide</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
-<span>      <span class="op">}</span></span>
-<span>    <span class="op">}</span></span>
-<span>  <span class="op">}</span></span>
+<span>  <span class="va">last_tempo_date</span> <span class="op">&lt;-</span> <span class="fu">get_last_data_date</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, data_regular <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>  <span class="co"># get last date for data with status OK</span></span>
+<span>  <span class="va">date</span> <span class="op">&lt;-</span> <span class="va">last_tempo_date</span> <span class="op">-</span> <span class="fl">13</span> <span class="co"># supposed to be also "preliminary data" date</span></span>
+<span>  <span class="va">last_valid_date</span> <span class="op">&lt;-</span> <span class="fu">get_last_data_date</span><span class="op">(</span><span class="va">date</span>, data_regular <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">last_valid_date</span>, <span class="va">last_tempo_date</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">last_valid_date</span> <span class="op">&lt;-</span> <span class="fu">get_last_valid_data_dates</span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">last_valid_date</span> <span class="op">&lt;-</span> <span class="fu">get_last_data_dates</span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Dernier fichier finalisé daté du : "</span>, <span class="va">last_valid_date</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Dernier fichier finalisé daté du : 2024-01-27"</code></pre>
+<pre><code>[1] "Dernier fichier finalisé daté du : 2024-04-10"</code></pre>
 </div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">last_tempo_date</span> <span class="op">&lt;-</span> <span class="fu">get_last_valid_data_dates</span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">last_tempo_date</span> <span class="op">&lt;-</span> <span class="fu">get_last_data_dates</span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Dernier fichier temporaire daté du : "</span>, <span class="va">last_tempo_date</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Dernier fichier temporaire daté du : 2024-02-11"</code></pre>
+<pre><code>[1] "Dernier fichier temporaire daté du : 2024-04-24"</code></pre>
 </div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#--- date du premier fichier finalisé disponible</span></span>
 <span><span class="va">start_date</span> <span class="op">&lt;-</span> <span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span></span>
@@ -321,133 +327,137 @@ Les autres ne possèdent pas ce suffixe.</p>
 <span>  <span class="fu">interval</span><span class="op">(</span><span class="va">last_valid_date</span>, <span class="va">last_tempo_date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html">%/%</a></span> <span class="fu">days</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Nombre de fichiers finalisés : "</span>, <span class="va">number_of_nc_files</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Nombre de fichiers finalisés : 15489"</code></pre>
+<pre><code>[1] "Nombre de fichiers finalisés : 15563"</code></pre>
 </div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Nombre de fichiers temporaires : "</span>, <span class="va">number_of_tempo_files</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Nombre de fichiers temporaires : 15"</code></pre>
+<pre><code>[1] "Nombre de fichiers temporaires : 14"</code></pre>
 </div>
 </div>
-</section><section id="téléchargement-des-fichiers-de-données" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="téléchargement-des-fichiers-de-données">
-<span class="header-section-number">2.3</span> Téléchargement des fichiers de données</h2>
+</section><section id="remplissage-de-la-table-des-fichiers-de-données" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="remplissage-de-la-table-des-fichiers-de-données">
+<span class="header-section-number">2.3</span> Remplissage de la table des fichiers de données</h2>
+<p>Création d’un tibble <code>tib_sst</code> composée des colonnes suivantes :</p>
+<ul>
+<li>date : date de récupération des données</li>
+<li>data_file : nom local du fichier de données</li>
+<li>data_url : url permettant d’accéder aux données pour une date donnée</li>
+</ul>
+<p>Remarque :</p>
+<p>La problématique consiste à mettre à jour au fil de l’eau les données qui sont initialement enregistrées dans un fichier avec l’extension **preliminary.nc” le temps que les données soient “régularisées”. Cette opération se déroule sur un délai d’approximativement 2 semaines à partir de la récupération initiale.</p>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># séquence des jours associés aux fichiers nc</span></span>
-<span><span class="va">seq_days_nc_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span></span>
-<span>  <span class="va">start_date</span>,</span>
-<span>  <span class="va">last_tempo_date</span>,</span>
-<span>  by <span class="op">=</span> <span class="st">"days"</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Récupération dans tib_sst de toutes les dates associées au fichiers .nc</span></span>
+<span></span>
+<span><span class="va">tib_sst</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">last_tempo_date</span>, by <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Récupération dans tib_sst des noms de fichiers à stocker dans data</span></span>
+<span></span>
+<span><span class="va">get_url_variable_parts</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span>, <span class="va">data_regular</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">file_prefixe</span> <span class="op">&lt;-</span> <span class="st">"oisst-avhrr-v02r01."</span></span>
+<span>  <span class="va">file_suffixe_regular</span> <span class="op">&lt;-</span> <span class="st">".nc"</span></span>
+<span>  <span class="va">file_suffixe_preliminary</span> <span class="op">&lt;-</span> <span class="st">"_preliminary.nc"</span></span>
+<span>  </span>
+<span>  <span class="va">seq_days</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span>, by <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span></span>
+<span>  <span class="va">url_dir_part</span> <span class="op">&lt;-</span> <span class="fu">yyyymm</span><span class="op">(</span><span class="va">seq_days</span><span class="op">)</span></span>
+<span>  <span class="va">file_suffixe</span> <span class="op">&lt;-</span> <span class="fu">if_else</span><span class="op">(</span></span>
+<span>    <span class="va">data_regular</span>, </span>
+<span>    <span class="va">file_suffixe_regular</span>,</span>
+<span>    <span class="va">file_suffixe_preliminary</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="va">url_file_part</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">file_prefixe</span>, <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">seq_days</span><span class="op">)</span>, <span class="va">file_suffixe</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">url_dir_part</span>, <span class="va">url_file_part</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span>
+<span>  </span>
+<span><span class="va">url_regular_parts</span> <span class="op">&lt;-</span> <span class="fu">get_url_variable_parts</span><span class="op">(</span></span>
+<span>  start_date <span class="op">=</span> <span class="va">start_date</span>,</span>
+<span>  end_date <span class="op">=</span> <span class="va">last_valid_date</span>,</span>
+<span>  data_regular <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="va">url_preliminary_parts</span> <span class="op">&lt;-</span> <span class="fu">get_url_variable_parts</span><span class="op">(</span></span>
+<span>  start_date <span class="op">=</span> <span class="va">last_valid_date</span> <span class="op">+</span> <span class="fl">1</span>,</span>
+<span>  end_date <span class="op">=</span> <span class="va">last_tempo_date</span>,</span>
+<span>  data_regular <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># liste des fichiers à télécharger</span></span>
+<span><span class="va">tib_sst</span><span class="op">$</span><span class="va">data_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">url_regular_parts</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="va">url_preliminary_parts</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">get_nc_files</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="co"># Récupération dans tib_sst des urls des fichiers de données</span></span>
+<span></span>
+<span><span class="va">root_url</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"</span></span>
+<span></span>
+<span><span class="va">get_nc_urls</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">url_link_parts</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  </span>
-<span>  <span class="va">root_access</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"</span></span>
-<span>  <span class="va">file_prefixe</span> <span class="op">&lt;-</span> <span class="st">"oisst-avhrr-v02r01"</span></span>
-<span>  <span class="va">file_suffixe</span> <span class="op">&lt;-</span> <span class="st">"nc"</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">root_url</span>, <span class="va">url_link_parts</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">url_link_parts</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
+<span>         </span>
+<span><span class="op">}</span> </span>
 <span></span>
-<span>  <span class="va">seq_days_regular_nc_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span></span>
-<span>    <span class="va">start_date</span>,</span>
-<span>    <span class="va">last_valid_date</span>,</span>
-<span>    by <span class="op">=</span> <span class="st">"days"</span></span>
-<span>  <span class="op">)</span></span>
+<span><span class="va">nc_regular_urls</span> <span class="op">&lt;-</span> <span class="fu">get_nc_urls</span><span class="op">(</span><span class="va">url_regular_parts</span><span class="op">)</span></span>
+<span><span class="va">nc_preliminary_urls</span> <span class="op">&lt;-</span> <span class="fu">get_nc_urls</span><span class="op">(</span><span class="va">url_preliminary_parts</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">seq_days_temp_nc_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span></span>
-<span>    <span class="va">last_valid_date</span> <span class="op">+</span> <span class="fl">1</span>,</span>
-<span>    <span class="va">last_tempo_date</span>,</span>
-<span>    by <span class="op">=</span> <span class="st">"days"</span></span>
-<span>  <span class="op">)</span></span>
+<span><span class="va">tib_sst</span><span class="op">$</span><span class="va">data_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nc_regular_urls</span>, <span class="va">nc_preliminary_urls</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">dir_regular</span> <span class="op">&lt;-</span> <span class="fu">yyyymm</span><span class="op">(</span><span class="va">seq_days_regular_nc_files</span><span class="op">)</span></span>
-<span>  <span class="va">dir_temp</span> <span class="op">&lt;-</span> <span class="fu">yyyymm</span><span class="op">(</span><span class="va">seq_days_temp_nc_file</span><span class="op">)</span></span>
-<span>  <span class="va">string_regular</span> <span class="op">&lt;-</span> <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">seq_days_regular_nc_files</span><span class="op">)</span></span>
-<span>  <span class="va">string_temp</span> <span class="op">&lt;-</span> <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">seq_days_temp_nc_file</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="va">seq_regular_nc_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span></span>
-<span>    <span class="va">root_access</span>, </span>
-<span>    <span class="va">dir_regular</span>, </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span></span>
-<span>      <span class="va">file_prefixe</span>, </span>
-<span>      <span class="va">string_regular</span>, </span>
-<span>      <span class="va">file_suffixe</span>, </span>
-<span>      sep <span class="op">=</span> <span class="st">"."</span></span>
-<span>    <span class="op">)</span>, </span>
-<span>    sep <span class="op">=</span> <span class="st">"/"</span></span>
-<span>  <span class="op">)</span></span>
+<span><span class="co"># Mise à OK du statut de la colonne data_status_OK</span></span>
 <span></span>
-<span>  <span class="va">seq_temp_nc_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span></span>
-<span>    <span class="va">root_access</span>, </span>
-<span>    <span class="va">dir_temp</span>, </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span></span>
-<span>      <span class="va">file_prefixe</span>, </span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">string_temp</span>, <span class="st">"_preliminary"</span><span class="op">)</span>,</span>
-<span>      <span class="va">file_suffixe</span>,</span>
-<span>      sep <span class="op">=</span> <span class="st">"."</span></span>
-<span>    <span class="op">)</span>, </span>
-<span>    sep <span class="op">=</span> <span class="st">"/"</span></span>
-<span>  <span class="op">)</span></span>
+<span><span class="va">tib_sst</span><span class="op">$</span><span class="va">data_status_OK</span> <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">seq_regular_nc_files</span>, <span class="va">seq_temp_nc_files</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">nc_regular_files</span> <span class="op">&lt;-</span> <span class="fu">get_nc_files</span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="va">nc_temp_files</span> <span class="op">&lt;-</span> <span class="fu">get_nc_files</span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># téléchargement de tous les fichiers depuis la date d'origine des mesures</span></span>
+<span><span class="co"># sauvegarde du tibble</span></span>
 <span><span class="co"># </span></span>
-<span><span class="va">sst_file_link</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">filename</span> <span class="op">&lt;-</span> <span class="fu">if_else</span><span class="op">(</span></span>
-<span>    <span class="va">date</span> <span class="op">&gt;</span> <span class="va">last_valid_date</span>,</span>
-<span>    <span class="st">"oisst-avhrr-v02r01.&amp;_preliminary.nc"</span>,</span>
-<span>    <span class="st">"oisst-avhrr-v02r01.&amp;.nc"</span></span>
-<span>  <span class="op">)</span></span>
-<span>  <span class="va">regex_file_link</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span></span>
-<span>    <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@"</span>,</span>
-<span>    <span class="va">filename</span>,</span>
-<span>    sep <span class="op">=</span> <span class="st">"/"</span></span>
-<span>  <span class="op">)</span>  </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/grep.html">sub</a></span><span class="op">(</span><span class="st">"@"</span>, <span class="fu">yyyymm</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">sub</a></span><span class="op">(</span><span class="st">"&amp;"</span>, <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="va">regex_file_link</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">tib_sst</span>, <span class="st">"DATA/tib_sst.RDS"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="téléchargement-des-données-sst-si-nécessaire" class="level2" data-number="2.4"><h2 data-number="2.4" class="anchored" data-anchor-id="téléchargement-des-données-sst-si-nécessaire">
+<span class="header-section-number">2.4</span> Téléchargement des données SST (si nécessaire)</h2>
+<div class="cell">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tib_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"DATA/tib_sst.RDS"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">get_oisst_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">link</span> <span class="op">&lt;-</span> <span class="fu">sst_file_link</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
-<span>  <span class="va">link_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="va">link</span>, <span class="st">'/'</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span>  <span class="va">file_name</span> <span class="op">&lt;-</span> <span class="va">link_split</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">link_split</span><span class="op">)</span><span class="op">]</span></span>
-<span>  <span class="va">file_to_write</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"DATA"</span> , <span class="va">file_name</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.exists</a></span><span class="op">(</span><span class="va">file_to_write</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span></span>
-<span>      <span class="va">link</span>,</span>
-<span>      <span class="fu">write_disk</span><span class="op">(</span></span>
-<span>        <span class="va">file_to_write</span>,</span>
-<span>        overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      <span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
-<span>    <span class="op">)</span> </span>
+<span>  <span class="va">get_tib_sst_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">tib_sst</span> <span class="op">|&gt;</span> </span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">==</span> <span class="op">{</span><span class="op">{</span><span class="va">date</span><span class="op">}</span><span class="op">}</span><span class="op">)</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span>  <span class="op">}</span> </span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="co"># téléchargement des fichiers nc</span></span>
-<span><span class="fu">walk</span><span class="op">(</span><span class="va">seq_days_nc_files</span>, <span class="va">get_oisst_data</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># nettoyage des fichiers temporary superflus</span></span>
-<span></span>
-<span><span class="va">del_extra_temp_nc_files</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">stored_temp_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="st">"DATA"</span>, pattern <span class="op">=</span> <span class="st">"_preliminary.nc"</span><span class="op">)</span></span>
-<span>  <span class="va">nc_temp_files_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="va">nc_temp_files</span>, <span class="st">'/'</span><span class="op">)</span></span>
-<span>  <span class="va">actual_temp_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span></span>
-<span>    <span class="va">nc_temp_files_split</span>, </span>
-<span>    \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">]</span>, </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span>  <span class="va">temp_files_to_delete</span> <span class="op">&lt;-</span> </span>
-<span>    <span class="va">stored_temp_files</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">stored_temp_files</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">actual_temp_files</span><span class="op">)</span><span class="op">]</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">temp_files_to_delete</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"."</span>, <span class="st">"DATA"</span>, <span class="va">temp_files_to_delete</span>, sep <span class="op">=</span> <span class="st">'/'</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">get_tib_sst_data</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">data_file</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">data_file</span></span>
+<span>  <span class="va">data_url</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">data_url</span></span>
+<span>  <span class="va">data_status_OK</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">data_status_OK</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">data_status_OK</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">file_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"DATA"</span> , <span class="va">data_file</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.exists</a></span><span class="op">(</span><span class="va">file_name</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">status_code</span> <span class="op">&lt;-</span> <span class="fu">status_code</span><span class="op">(</span><span class="fu">GET</span><span class="op">(</span><span class="va">data_url</span><span class="op">)</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="va">status_code</span><span class="op">)</span></span>
+<span>      <span class="kw">if</span> <span class="op">(</span><span class="va">status_code</span> <span class="op">==</span> <span class="fl">200</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span></span>
+<span>          <span class="va">data_url</span>,</span>
+<span>          <span class="fu">write_disk</span><span class="op">(</span></span>
+<span>            <span class="va">file_name</span>,</span>
+<span>            overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>          <span class="op">)</span>,</span>
+<span>          <span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
+<span>        <span class="op">)</span> </span>
+<span>      <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="fu">glue</span><span class="op">(</span><span class="st">"The data for file {data_file} are inaccessible"</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="va">tib_sst</span> <span class="op">|&gt;</span> </span>
+<span>          <span class="fu">mutate</span><span class="op">(</span>data_status_OK <span class="op">=</span> <span class="fu">if_else</span><span class="op">(</span></span>
+<span>            <span class="va">date</span> <span class="op">==</span> <span class="op">{</span><span class="op">{</span><span class="va">date</span><span class="op">}</span><span class="op">}</span>,</span>
+<span>            <span class="cn">FALSE</span>,</span>
+<span>            <span class="va">data_status_OK</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>          <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="st">"DATA/tib_sst.RDS"</span><span class="op">)</span></span>
+<span>      <span class="op">}</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="fu">glue</span><span class="op">(</span><span class="st">"DATA status for file {data_file} is KO"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># do it  </span></span>
-<span><span class="fu">del_extra_temp_nc_files</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co"># téléchargement des fichiers nc</span></span>
+<span><span class="fu">walk</span><span class="op">(</span><span class="va">tib_sst</span><span class="op">$</span><span class="va">date</span>, <span class="va">get_oisst_data</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>404</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The data for file oisst-avhrr-v02r01.20240331.nc are inaccessible</code></pre>
+</div>
 </div>
 
 
@@ -492,6 +502,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -560,13 +597,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -645,10 +684,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -658,8 +696,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -672,6 +719,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -715,6 +881,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -740,6 +907,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -799,12 +992,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./intro.html" class="pagination-link">
+      <a href="./intro.html" class="pagination-link" aria-label="Introduction">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./timeseries.html" class="pagination-link">
+      <a href="./timeseries.html" class="pagination-link" aria-label="Données temporelles">
         <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Données temporelles</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -813,4 +1006,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/a-lambda/sst/edit/main/sst_dl.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer></body></html>
