@@ -143,16 +143,9 @@ tib_sst <- tibble(date = seq(start_date, last_tempo_date, by = "days"))
 get_url_variable_parts <- function(start_date, end_date, data_regular) {
   
   file_prefixe <- "oisst-avhrr-v02r01."
-  file_suffixe_regular <- ".nc"
-  file_suffixe_preliminary <- "_preliminary.nc"
-  
+  file_suffixe <- if_else(data_regular, ".nc", "_preliminary.nc")
   seq_days <- seq(start_date, end_date, by = "days")
   url_dir_part <- yyyymm(seq_days)
-  file_suffixe <- if_else(
-    data_regular, 
-    file_suffixe_regular,
-    file_suffixe_preliminary
-  )
   url_file_part <- paste0(file_prefixe, yyyymmdd(seq_days), file_suffixe)
   return(list(url_dir_part, url_file_part))
   
