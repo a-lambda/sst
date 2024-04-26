@@ -192,6 +192,9 @@ saveRDS(tib_sst, "DATA/tib_sst.RDS")
 ## Téléchargement des données SST (si nécessaire)
 
 ```{r}
+#| label: data_download
+#| message: false
+
 tib_sst <- readRDS("DATA/tib_sst.RDS")
 
 get_oisst_data <- function(date) {

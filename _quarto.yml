@@ -2,9 +2,30 @@ project:
   type: book
   output-dir: docs
 
+format:
+  html:
+    link-external-newwindow: true
+    cover-image: cover.png
+    theme: 
+      light: 
+        - cosmo
+      #   - css/fira-code.css
+      #   - css/light.css
+      # dark:
+      #   - slate
+      #   - css/dark.css
+    lang: "fr"
+    code-link: true
+    code-overflow: wrap
+    toc: true
+    # monofont: Fira Code
+    # number-depth: 2
+  pdf:
+    documentclass: scrreprt
+
 book:
-  reader-mode: true
-  page-navigation: true
+  # reader-mode: true
+  # page-navigation: true
   title: "Fichiers NetCDF"
   subtitle: "Exemple tiré de la NOAA"
   author: 
@@ -28,24 +49,4 @@ book:
     - references.qmd
 
 bibliography: references.bib
-
-format:
-  html:
-    cover-image: cover.png
-    theme: 
-      light: 
-        - cosmo
-        - css/fira-code.css
-        - css/light.css
-      dark:
-        - slate
-        - css/dark.css
-    code-link: true
-    toc: true
-    monofont: Fira Code
-    number-depth: 2
-  pdf:
-    documentclass: scrreprt
-
-
 
