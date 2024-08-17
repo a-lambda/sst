@@ -40,11 +40,11 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
-    - href: sst_dl.qmd
+    - href: SST_001_recuperation_donnees.qmd
       text: Données SST
-    - href: timeseries.qmd
+    - href: SST_02_timeseries.qmd
       text: Données temporelles
-    - href: sst_example.qmd
+    - href: SST_03_levelplot.qmd
       text: Un fichier SST
     - references.qmd
 
