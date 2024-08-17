@@ -1,5 +1,5 @@
 ---
-title: "Données SST du 6 janvier 2024"
+title: "Données SST du 1er juillet 2024"
 format: html
 ---
 
@@ -34,7 +34,7 @@ Grâce à elle nous pouvons déjà voir quel type d'informations sont enregistr�
 ```{r}
 #| label: load_nc_file
 
-(nc <- nc_open("DATA/oisst-avhrr-v02r01.20240401.nc"))
+(nc <- nc_open("DATA/oisst-avhrr-v02r01.20240701.nc"))
 
 ```
 
@@ -44,10 +44,18 @@ les variables principales sont discriminées suivant plusieurs dimensions.
 
 Ici, ce sont :
 
-- lon : la longitude (de taille 1440)
-- lat : la latitude (de taille 720)
+- lon : la longitude (de taille $1440=\frac{360}{0.25}$) 
+- lat : la latitude (de taille $720=\frac{180}{0.25}$)
 - zlev : La hauteur de la surface de l'eau de mer
 - time : temps central de la journée
+
+::: {.callout-note collapse="false"}
+
+- Les longitudes sont ordonnées de l'Est vers l'Ouest en partant du méridien de Greenwich depuis la valeur $0.125$ jusqu'à la valeur $0.125+1439*0.25=359.875$
+
+- Les latitudes sont ordonnées du Sud au Nord dans l'array `lat` en partant du pôle Sud depuis la valeur $-90+0.125=-89.875$ jusqu'à la valeur $-89.875+719*0.25=89.875$
+
+:::
 
 Il est possible d'avoir accès aux données des dimensions via la fonction `ncvar_get` et l'accès aux attributs avec la fonction `ncatt_get`
 
@@ -158,20 +166,18 @@ walk(nc_var, nc_charge_var)
 
 La variable sst est enregistrée en tant que `r class(sst)` avec les dimensions `r dim(sst)` 
 
-La valeur enregistrée aux coordonnées [800, 500] vaut sst[800, 500] = `r sst[800, 500]`
+- La longitude correspond à la 1ère dimension (lignes de la matrice)
 
-Elle correspond normalement à la température pour la longitude lon[800] = `r lon[800]` et la latitude lat[500] = `r lat[500]`
+- La latitude correspond à la 2ème dimension (colonnes de la matrice)
+
+- Le vecteur associé est obtenu en parcourant d'abord les 1440 longitudes d'un parallèle avant de passer à la latitude suivante.
 
 ```{r}
 #| label: conversion_to_dataframe
-lon_800 <- lon[800]
-lat_500 <- lat[500]
 lonlat <- expand.grid(lon, lat)
-tmp_sst <- as.vector(sst)
-df_sst <- cbind(lonlat, tmp_sst)
+df_sst <- cbind(lonlat, as.vector(sst))
 names(df_sst) <- c("lon", "lat", "sst")
 head(df_sst)
-df_sst |> dplyr::filter(lon == lon_800 & lat == lat_500) -> df_sst_800_500
 
 ```
 
@@ -188,21 +194,15 @@ df_sst |>
   geom_point(size = 0.5) +
   coord_fixed(expand = FALSE) +
   scale_colour_distiller(palette = "RdBu") +
-  geom_point(
-    data = df_sst_800_500, 
-    aes(x = lon, y = lat),
-    color = "red",
-    size = 2) +
   labs(
     x = NULL,
     y = NULL,
     title = "Sea Surface Temperature",
-    subtitle = "1er avril 2024",
+    subtitle = time_as_date,
     caption = "Dataset: NOAA OISST V2.1",
     color = "°C"
   )
 ```
-
 
 ## Calcul de moyenne globale
 
@@ -251,11 +251,19 @@ df_area_weights <- expand.grid(lon, area_weights)
 names(df_area_weights) <- c("lon", "w")
 w <- df_area_weights$w
 df_sst_weights <- cbind(df_sst, w)
-df_sst_60S_60N <- df_sst_weights |> 
-  filter(lat >= -60 & lat <= 60)
-sst_weighted_mean <- df_sst_60S_60N |> 
+
+# moyenne pondérée globale
+sst_weighted_mean <- df_sst_weights |> 
   summarize(wm_sst = weighted.mean(sst, w, na.rm = TRUE))
 sst_weighted_mean
+
+# moyenne pondérée entre -60°S et +60°N
+df_sst_60S_60N <- df_sst_weights |> 
+  filter(lat >= -60 & lat <= 60)
+sst_weighted_mean_60S_60N <- df_sst_60S_60N |> 
+  summarize(wm_sst_60S_60N = weighted.mean(sst, w, na.rm = TRUE))
+sst_weighted_mean_60S_60N
+
 ```
 
 Si nous souhaitons centrer la carte sur le méridien de Greenwich, il est nécessaire de translater les longitudes.
@@ -280,8 +288,13 @@ df_sst |>
     y = NULL,
     title = "Sea Surface Temperature",
     subtitle = paste0(
-      "1er avril 2024 - mean temperature = ",
-      round(sst_weighted_mean, 3),
+      time_as_date,
+      " - mean global = ",
+      round(sst_weighted_mean, 1),
+      " °Celsius",
+      " | ",
+      " mean World(60°S-60°N) = ",
+      round(sst_weighted_mean_60S_60N, 1),
       " °Celsius"
     ),
     caption = "Dataset: NOAA OISST V2.1",
@@ -293,19 +306,14 @@ df_sst |>
     # panel.background = element_rect(fill = "black"),
     # plot.background = element_rect(fill = "black")
   )
+
 ```
 
 
-
-
-
-
-
-
 ```{r}
-list_raster <- map(nc_var, \(x) rast(t(get(x))))
+#list_raster <- map(nc_var, \(x) rast(t(get(x))))
 ```
 
 ```{r}
-walk(list_raster, \(x) plot(flip(x, direction = "vertical")))
+#walk(list_raster, \(x) plot(flip(x, direction = "vertical")))
 ```
