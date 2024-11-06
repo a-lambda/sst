@@ -136,13 +136,18 @@ Remarque :
 La problématique consiste à mettre à jour au fil de l'eau les données qui sont initialement enregistrées dans un fichier avec l'extension **preliminary.nc" le temps que les données soient "validées". Cette opération se déroule sur un délai d'approximativement 2 semaines à partir de la récupération des données.
 
 ```{r}
-#| label: tib_sst
+#| label: tib_sst_date
 
 # Récupération dans tib_sst de toutes les dates associées au fichiers .nc
 
 tib_sst <- tibble(date = seq(start_date, last_tempo_date, by = "days"))
+```
 
-# Récupération dans tib_sst des noms de fichiers à stocker dans data
+
+```{r}
+#| label: tib_sst_data_filename_and_url
+#| 
+# Récupération dans tib_sst des urls et noms de fichiers
 
 get_url_variable_parts <- function(start_date, end_date, data_valid) {
   
@@ -184,7 +189,13 @@ urls_nc_preliminary <- get_nc_urls(url_preliminary_variable_parts)
 
 tib_sst$data_url <- c(urls_nc_valid, urls_nc_preliminary)
 
-# Vérification de l'existence des fichiers nc dans le dossier DATA
+```
+
+
+```{r}
+#| label: tib_sst_data_loaded
+#| 
+# data_loaded renseigne sur la présence du fichier en local (dossier DATA)
 
 nc_files <- tib_sst$data_file
 nc_files_on_disk <- list.files(path = "DATA", pattern = "*.nc*")
@@ -197,19 +208,15 @@ if (length(nc_files_to_delete > 0)) {
   unlink(paste("DATA", nc_files_to_delete, sep = "/"))
 }
 
-# data_loaded renseigne sur la présence du fichier en local
-# 
 saveRDS(tib_sst, "DATA/tib_sst.RDS")
 
 ```
 
-## Téléchargement des données SST (si nécessaire)
+## Téléchargement des données SST (si nécessaire avec data_loaded == FALSE)
 
 ```{r}
 #| label: data_download
 #| message: false
-
-tib_sst <- readRDS("DATA/tib_sst.RDS")
 
 get_oisst_data <- function(date) {
   get_tib_sst_data <- function() {
@@ -250,6 +257,7 @@ get_oisst_data <- function(date) {
   }
 }
 
+tib_sst <- readRDS("DATA/tib_sst.RDS")
 # téléchargement des fichiers nc
 walk(tib_sst$date, get_oisst_data)
 
