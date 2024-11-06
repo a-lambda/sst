@@ -133,7 +133,7 @@ Création d'un tibble `tib_sst` composée des colonnes suivantes :
 
 Remarque :
 
-La problématique consiste à mettre à jour au fil de l'eau les données qui sont initialement enregistrées dans un fichier avec l'extension **preliminary.nc" le temps que les données soient "régularisées". Cette opération se déroule sur un délai d'approximativement 2 semaines à partir de la récupération initiale.
+La problématique consiste à mettre à jour au fil de l'eau les données qui sont initialement enregistrées dans un fichier avec l'extension **preliminary.nc" le temps que les données soient "validées". Cette opération se déroule sur un délai d'approximativement 2 semaines à partir de la récupération des données.
 
 ```{r}
 #| label: tib_sst
@@ -146,28 +146,28 @@ tib_sst <- tibble(date = seq(start_date, last_tempo_date, by = "days"))
 
 get_url_variable_parts <- function(start_date, end_date, data_valid) {
   
+  seq_days <- seq(start_date, end_date, by = "days")
+  url_folder <- yyyymm(seq_days)
   file_prefixe <- "oisst-avhrr-v02r01."
   file_suffixe <- if_else(data_valid, ".nc", "_preliminary.nc")
-  seq_days <- seq(start_date, end_date, by = "days")
-  url_dir_part <- yyyymm(seq_days)
-  url_file_part <- paste0(file_prefixe, yyyymmdd(seq_days), file_suffixe)
-  return(list(url_dir_part, url_file_part))
+  url_file <- paste0(file_prefixe, yyyymmdd(seq_days), file_suffixe)
+  return(list(url_folder, url_file))
   
 }
   
-url_valid_parts <- get_url_variable_parts(
+url_valid_variable_parts <- get_url_variable_parts(
   start_date = start_date,
   end_date = last_valid_date,
   data_valid = TRUE
 )
   
-url_preliminary_parts <- get_url_variable_parts(
+url_preliminary_variable_parts <- get_url_variable_parts(
   start_date = last_valid_date + 1,
   end_date = last_tempo_date,
   data_valid = FALSE
 )
 
-tib_sst$data_file <- c(url_valid_parts[[2]], url_preliminary_parts[[2]])
+tib_sst$data_file <- c(url_valid_variable_parts[[2]], url_preliminary_variable_parts[[2]])
 
 # Récupération dans tib_sst des urls des fichiers de données
 
@@ -179,10 +179,10 @@ get_nc_urls <- function(url_link_parts) {
          
 } 
 
-nc_regular_urls <- get_nc_urls(url_valid_parts)
-nc_preliminary_urls <- get_nc_urls(url_preliminary_parts)
+urls_nc_valid <- get_nc_urls(url_valid_variable_parts)
+urls_nc_preliminary <- get_nc_urls(url_preliminary_variable_parts)
 
-tib_sst$data_url <- c(nc_regular_urls, nc_preliminary_urls)
+tib_sst$data_url <- c(urls_nc_valid, urls_nc_preliminary)
 
 # Mise à OK du statut de la colonne data_status_OK
 
