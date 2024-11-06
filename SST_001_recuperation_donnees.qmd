@@ -184,13 +184,23 @@ urls_nc_preliminary <- get_nc_urls(url_preliminary_variable_parts)
 
 tib_sst$data_url <- c(urls_nc_valid, urls_nc_preliminary)
 
-# Mise à OK du statut de la colonne data_status_OK
+# Vérification de l'existence des fichiers nc dans le dossier DATA
 
-tib_sst$data_status_OK = TRUE
+nc_files <- tib_sst$data_file
+nc_files_on_disk <- list.files(path = "DATA", pattern = "*.nc*")
+tib_sst$data_loaded <- nc_files %in% nc_files_on_disk
 
-# sauvegarde du tibble
+# Suppression des fichiers temporaires inutiles
+
+nc_files_to_delete <- nc_files_on_disk[!(nc_files_on_disk %in% nc_files)]
+if (length(nc_files_to_delete > 0)) {
+  unlink(paste("DATA", nc_files_to_delete, sep = "/"))
+}
+
+# data_loaded renseigne sur la présence du fichier en local
 # 
 saveRDS(tib_sst, "DATA/tib_sst.RDS")
+
 ```
 
 ## Téléchargement des données SST (si nécessaire)
@@ -210,8 +220,8 @@ get_oisst_data <- function(date) {
   data <- get_tib_sst_data()
   data_file <- data$data_file
   data_url <- data$data_url
-  data_status_OK <- data$data_status_OK
-  if (data_status_OK) {
+  data_loaded <- data$data_loaded
+  if (data_loaded) {
     file_name <- paste("DATA" , data_file, sep = "/")
     if (!file.exists(file_name)) {
       status_code <- status_code(GET(data_url))
@@ -228,10 +238,10 @@ get_oisst_data <- function(date) {
       } else {
         message(glue("The data for file {data_file} are inaccessible"))
         tib_sst |> 
-          mutate(data_status_OK = if_else(
+          mutate(data_loaded = if_else(
             date == {{date}},
             FALSE,
-            data_status_OK)) |> 
+            data_loaded)) |> 
           saveRDS("DATA/tib_sst.RDS")
       }
     }
