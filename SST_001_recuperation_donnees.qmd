@@ -128,7 +128,7 @@ paste0("Nombre de fichiers temporaires : ", number_of_tempo_files)
 Création d'un tibble `tib_sst` composée des colonnes suivantes :
 
 - date : date de récupération des données
-- data_file : nom local du fichier de données
+- data_filename : nom local du fichier de données
 - data_url : url permettant d'accéder aux données pour une date donnée
 
 Remarque :
@@ -172,7 +172,7 @@ url_preliminary_variable_parts <- get_url_variable_parts(
   data_valid = FALSE
 )
 
-tib_sst$data_file <- c(url_valid_variable_parts[[2]], url_preliminary_variable_parts[[2]])
+tib_sst$data_filename <- c(url_valid_variable_parts[[2]], url_preliminary_variable_parts[[2]])
 
 # Récupération dans tib_sst des urls des fichiers de données
 
@@ -197,7 +197,7 @@ tib_sst$data_url <- c(urls_nc_valid, urls_nc_preliminary)
 #| 
 # data_loaded renseigne sur la présence du fichier en local (dossier DATA)
 
-nc_files <- tib_sst$data_file
+nc_files <- tib_sst$data_filename
 nc_files_on_disk <- list.files(path = "DATA", pattern = "*.nc*")
 tib_sst$data_loaded <- nc_files %in% nc_files_on_disk
 
@@ -218,47 +218,26 @@ saveRDS(tib_sst, "DATA/tib_sst.RDS")
 #| label: data_download
 #| message: false
 
-get_oisst_data <- function(date) {
-  get_tib_sst_data <- function() {
-    data <- tib_sst |> 
-      filter(date == {{date}})
-    return(data)
-  } 
-  data <- get_tib_sst_data()
-  data_file <- data$data_file
-  data_url <- data$data_url
-  data_loaded <- data$data_loaded
-  if (data_loaded) {
-    file_name <- paste("DATA" , data_file, sep = "/")
-    if (!file.exists(file_name)) {
-      status_code <- status_code(GET(data_url))
-      message(status_code)
-      if (status_code == 200) {
-        res <- httr::GET(
-          data_url,
-          write_disk(
-            file_name,
-            overwrite = TRUE
-          ),
-          progress()
-        ) 
-      } else {
-        message(glue("The data for file {data_file} are inaccessible"))
-        tib_sst |> 
-          mutate(data_loaded = if_else(
-            date == {{date}},
-            FALSE,
-            data_loaded)) |> 
-          saveRDS("DATA/tib_sst.RDS")
-      }
-    }
+get_nc_files_unloaded_data <- function(file_name, file_url) {
+  file_path <- paste("DATA" , file_name, sep = "/")
+  status_code <- status_code(GET(file_url))
+  message(status_code)
+  if (status_code == 200) {
+    res <- httr::GET(file_url,
+                     write_disk(file_path, overwrite = TRUE),
+                     progress()
+                    )
   } else {
-    message(glue("DATA status for file {data_file} is KO"))
+    message(glue("The data for file {file_name} are inaccessible"))
   }
 }
 
-tib_sst <- readRDS("DATA/tib_sst.RDS")
+nc_files_unloaded <- tib_sst |> 
+  dplyr::filter(!data_loaded)
+nc_names <- nc_files_unloaded$data_filename
+nc_urls <- nc_files_unloaded$data_url
 # téléchargement des fichiers nc
-walk(tib_sst$date, get_oisst_data)
+
+pwalk(list(nc_names, nc_urls), get_nc_files_unloaded_data)
 
 ```
