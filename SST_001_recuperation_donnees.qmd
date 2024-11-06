@@ -155,7 +155,7 @@ get_url_variable_parts <- function(start_date, end_date, data_valid) {
   
 }
   
-url_regular_parts <- get_url_variable_parts(
+url_valid_parts <- get_url_variable_parts(
   start_date = start_date,
   end_date = last_valid_date,
   data_valid = TRUE
@@ -167,7 +167,7 @@ url_preliminary_parts <- get_url_variable_parts(
   data_valid = FALSE
 )
 
-tib_sst$data_file <- c(url_regular_parts[[2]], url_preliminary_parts[[2]])
+tib_sst$data_file <- c(url_valid_parts[[2]], url_preliminary_parts[[2]])
 
 # Récupération dans tib_sst des urls des fichiers de données
 
@@ -179,7 +179,7 @@ get_nc_urls <- function(url_link_parts) {
          
 } 
 
-nc_regular_urls <- get_nc_urls(url_regular_parts)
+nc_regular_urls <- get_nc_urls(url_valid_parts)
 nc_preliminary_urls <- get_nc_urls(url_preliminary_parts)
 
 tib_sst$data_url <- c(nc_regular_urls, nc_preliminary_urls)
