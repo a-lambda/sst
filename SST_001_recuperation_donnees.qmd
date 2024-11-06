@@ -63,13 +63,13 @@ yyyymmdd <- function(date) { # transform Date '1981-06-25' to string '19810625'
   )
 }
 
-sst_data_url <- function(date, data_regular = TRUE) {
+sst_data_url <- function(date, data_valid = TRUE) {
   # we use the constant part of the url and replace
   # - @ with 'yyyymm' part of the date
   # - & with 'yyyymmdd' part of the date
   # to get all the url links
   base_regex_url <- ifelse(
-    data_regular, 
+    data_valid, 
     "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&.nc",
     "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&_preliminary.nc"
   )
@@ -79,10 +79,10 @@ sst_data_url <- function(date, data_regular = TRUE) {
 get_last_data_dates <- function() {
   
   http_200_status_OK <- FALSE
-  get_last_data_date <- function(date, data_regular) {
+  get_last_data_date <- function(date, data_valid) {
     while (!http_200_status_OK) { 
       http_status_code <- status_code(
-        GET(sst_data_url(date = date, data_regular = data_regular))
+        GET(sst_data_url(date = date, data_valid = data_valid))
       )
       if (http_status_code == 404) {
         date <- date - 1  
@@ -95,10 +95,10 @@ get_last_data_dates <- function() {
     return(date)
   }
   # get last date for preliminary file
-  last_tempo_date <- get_last_data_date(Sys.Date(), data_regular = FALSE)
+  last_tempo_date <- get_last_data_date(Sys.Date(), data_valid = FALSE)
   # get last date for data with status OK
   date <- last_tempo_date - 13 # supposed to be also "preliminary data" date
-  last_valid_date <- get_last_data_date(date, data_regular = TRUE)
+  last_valid_date <- get_last_data_date(date, data_valid = TRUE)
   c(last_valid_date, last_tempo_date)
 }
 
@@ -111,10 +111,14 @@ paste0("Dernier fichier temporaire daté du : ", last_tempo_date)
 #--- date du premier fichier finalisé disponible
 start_date <- ymd("1981-09-01")
 
-number_of_nc_files <- interval(start_date, last_valid_date) %/% days(1) + 1
+number_of_nc_files <- 
+  lubridate::interval(start_date, last_valid_date) %/% days(1) + 1
+
 number_of_tempo_files <-
-  interval(last_valid_date, last_tempo_date) %/% days(1)
+  lubridate::interval(last_valid_date, last_tempo_date) %/% days(1)
+
 paste0("Nombre de fichiers finalisés : ", number_of_nc_files)
+
 paste0("Nombre de fichiers temporaires : ", number_of_tempo_files)
 
 ```
@@ -140,10 +144,10 @@ tib_sst <- tibble(date = seq(start_date, last_tempo_date, by = "days"))
 
 # Récupération dans tib_sst des noms de fichiers à stocker dans data
 
-get_url_variable_parts <- function(start_date, end_date, data_regular) {
+get_url_variable_parts <- function(start_date, end_date, data_valid) {
   
   file_prefixe <- "oisst-avhrr-v02r01."
-  file_suffixe <- if_else(data_regular, ".nc", "_preliminary.nc")
+  file_suffixe <- if_else(data_valid, ".nc", "_preliminary.nc")
   seq_days <- seq(start_date, end_date, by = "days")
   url_dir_part <- yyyymm(seq_days)
   url_file_part <- paste0(file_prefixe, yyyymmdd(seq_days), file_suffixe)
@@ -154,13 +158,13 @@ get_url_variable_parts <- function(start_date, end_date, data_regular) {
 url_regular_parts <- get_url_variable_parts(
   start_date = start_date,
   end_date = last_valid_date,
-  data_regular = TRUE
+  data_valid = TRUE
 )
   
 url_preliminary_parts <- get_url_variable_parts(
   start_date = last_valid_date + 1,
   end_date = last_tempo_date,
-  data_regular = FALSE
+  data_valid = FALSE
 )
 
 tib_sst$data_file <- c(url_regular_parts[[2]], url_preliminary_parts[[2]])
