@@ -75,82 +75,85 @@ Si le fichier pris en compte est un fichier finalisé `status_ok`vaudra $TRUE$
 ```{r}
 
 # get weighted mean of one variable between lat_min and lat_max
-get_var_weighted_mean <- function(file, var, lat_min, lat_max) {
+get_var_weighted_mean <- function(file, var, lon_min, lon_max, lat_min, lat_max) {
   # are we consider preliminary file
   status_ok <- if_else(str_detect(file, '_preliminary'), FALSE, TRUE)
   #--- get data from NetCDF file
   nc <- nc_open(file)
+  lon <- ncvar_get(nc, varid = "lon")
   lat <- ncvar_get(nc, varid = "lat")
   time <- ncvar_get(nc, varid = "time")
   var <- ncvar_get(nc, varid = var)
   nc_close(nc)
   #--- create the area_weights matrix
   w <- matrix(rep(area_weights, 1440), ncol = 720, byrow = TRUE)
-  i_min <- min(which(lat >= lat_min))
-  i_max <- max(which(lat <= lat_max))
+  x_min <- min(which(lon >= lon_min))
+  x_max <- max(which(lon <= lon_max))
+  y_min <- min(which(lat >= lat_min))
+  y_max <- max(which(lat <= lat_max))
+  
   #--- calculate weighted mean
-  wm_var_60S_60N <- weighted.mean(
-    var[,i_min:i_max], 
-    w[,i_min:i_max], 
+  wm_var <- weighted.mean(
+    var[x_min:x_max, y_min:y_max], 
+    w[x_min:x_max, y_min:y_max], 
     na.rm = TRUE
   )
   #--- 
-  c(time, wm_var_60S_60N, status_ok)
+  c(time, wm_var, status_ok)
 }
 
 # get all weighted mean for one variable for all NetCDF files available
-get_var_all_weighted_mean <- function(var, lat_min, lat_max) {
+get_var_all_weighted_mean <- function(var, lon_min, lon_max, lat_min, lat_max) {
   files <- list.files(path = "DATA", pattern = "*.nc", full.names = TRUE)
   if (length(files) > 0 ) {
     #--- RDS file format : weighted_mean_<var>_XXXS_XXXN.RDS
     RDS_file <- paste0(
-      'weighted_mean_', var, '_', abs(lat_min), 'S_', abs(lat_max), 'N.RDS'
+      'weighted_mean_', 
+      var, 
+      '_', lon_min,
+      '_', lon_max,
+      '_', abs(lat_min), 'S',
+      '_', abs(lat_max), 'N', '.RDS'
     )
+    message(RDS_file)
     if (file.exists(RDS_file)) {
       #--- return valid files which mean have already been treated
-      RDS_data <- readRDS(RDS_file)
+      RDS_data <- readRDS(RDS_file) |> 
+        filter(status_ok) # élimination des données temporaires
+      saveRDS(RDS_data, RDS_file) 
       valid_files_already_treated <- RDS_data |>
-        filter(status_ok) |> 
         pull(date) |> 
         yyyymmdd() |> 
         vapply(\(x) paste0('DATA/oisst-avhrr-v02r01.', x, '.nc'), character(1))
       #--- return tempo files which mean have already been treated
-      tempo_files_already_treated <- RDS_data |>
-        filter(!status_ok) |> 
-        pull(date) |> 
-        yyyymmdd() |> 
-        vapply(\(x) paste0('DATA/oisst-avhrr-v02r01.', x, '_preliminary.nc'), character(1))
-      files_treated <- c(valid_files_already_treated, tempo_files_already_treated)
-      files_to_treat <- files[!(files %in% files_treated)]
+      files_to_treat <- files[!(files %in% valid_files_already_treated)]
     } else {
       files_to_treat <- files
     }
-    if (length(files_to_treat) > 0) {
-      #--- be aware not to consider old tempo files for later version !!!
-      origin_date <- ymd("1978-01-01")
-      wm_matrix <- matrix(numeric(0), nrow = length(files_to_treat), ncol = 3)
-      colnames(wm_matrix) <- c('time', 'wm', 'status_ok')
-      for (i in seq_along(files_to_treat)) { 
-        result <- get_var_weighted_mean(files_to_treat[i], var, lat_min, lat_max)
-        wm_matrix[i, 1] <- result[1] # time in days from origin date
-        wm_matrix[i, 2] <- result[2] # weighted mean
-        wm_matrix[i, 3] <- result[3] # status
-      }
-      df_wm_var <- as_tibble(wm_matrix) |>
-        set_names('time', paste0('wm_', var), 'status_ok') |> 
-        mutate(
-          date = lubridate::as_date(time, origin = origin_date),
-          status_ok = as.logical(status_ok)
-        )
-      if (file.exists(RDS_file)) {
-        df_wm_var <- rbind(RDS_data, df_wm_var)
-      }
-      df_wm_var
-    } else {
-      if (file.exists(RDS_file)) {
-        RDS_data
-      }
+    #--- be aware not to consider old tempo files for later version !!!
+    origin_date <- ymd("1978-01-01")
+    wm_matrix <- matrix(numeric(0), nrow = length(files_to_treat), ncol = 3)
+    colnames(wm_matrix) <- c('time', 'wm', 'status_ok')
+    for (i in seq_along(files_to_treat)) { 
+      result <- get_var_weighted_mean(files_to_treat[i], var, lon_min, lon_max, lat_min, lat_max)
+      message(paste0("file : ", files_to_treat[i]))
+      wm_matrix[i, 1] <- result[1] # time in days from origin date
+      wm_matrix[i, 2] <- result[2] # weighted mean
+      wm_matrix[i, 3] <- result[3] # status
     }
+    df_wm_var <- as_tibble(wm_matrix) |>
+      set_names('time', paste0('wm_', var), 'status_ok') |> 
+      mutate(
+        date = lubridate::as_date(time, origin = origin_date),
+        status_ok = as.logical(status_ok)
+      )
+    if (file.exists(RDS_file)) {
+      RDS_data <- rbind(RDS_data, df_wm_var)
+    } else {
+      RDS_data <- df_wm_var
+    }
+    saveRDS(RDS_data, RDS_file)
+    RDS_data
   } else { 
     message("aucun fichier de données à traiter") 
   }
@@ -171,17 +174,10 @@ Les moyennes pondérées sont calculées consécutivement sur les variables :
 
 # get weighted mean var with -60 < latitude < 60
 
-df_wm_sst_60S_60N <- get_var_all_weighted_mean("sst", -60, 60)
-saveRDS(df_wm_sst_60S_60N, 'weighted_mean_sst_60S_60N.RDS')
-
-df_wm_anom_60S_60N <- get_var_all_weighted_mean("anom", -60, 60)
-saveRDS(df_wm_anom_60S_60N, 'weighted_mean_anom_60S_60N.RDS')
-
-df_wm_err_60S_60N <- get_var_all_weighted_mean("err", -60, 60)
-saveRDS(df_wm_err_60S_60N, 'weighted_mean_err_60S_60N.RDS')
-
-df_wm_ice_60S_60N <- get_var_all_weighted_mean("ice", -60, 60)
-saveRDS(df_wm_ice_60S_60N, 'weighted_mean_ice_60S_60N.RDS')
+df_wm_sst_0_360_60S_60N <- get_var_all_weighted_mean("sst", 0, 360, -60, 60)
+df_wm_anom_0_360_60S_60N <- get_var_all_weighted_mean("anom", 0, 360, -60, 60)
+df_wm_err_0_360_60S_60N <- get_var_all_weighted_mean("err", 0, 360, -60, 60)
+df_wm_ice_0_360_60S_60N <- get_var_all_weighted_mean("ice", 0, 360, -60, 60)
 
 ```
 
@@ -191,17 +187,10 @@ Les mêmes variables que précédemment sont prises en compte.
 
 ```{r}
 
-df_wm_sst_90S_90N <- get_var_all_weighted_mean("sst", -90, 90)
-saveRDS(df_wm_sst_90S_90N, 'weighted_mean_sst_90S_90N.RDS')
-
-df_wm_anom_90S_90N <- get_var_all_weighted_mean("anom", -90, 90)
-saveRDS(df_wm_anom_90S_90N, 'weighted_mean_anom_90S_90N.RDS')
-
-df_wm_err_90S_90N <- get_var_all_weighted_mean("err", -90, 90)
-saveRDS(df_wm_err_90S_90N, 'weighted_mean_err_90S_90N.RDS')
-
-df_wm_ice_90S_90N <- get_var_all_weighted_mean("ice", -90, 90)
-saveRDS(df_wm_ice_90S_90N, 'weighted_mean_ice_90S_90N.RDS')
+df_wm_sst_0_360_90S_90N <- get_var_all_weighted_mean("sst", 0, 360, -90, 90)
+df_wm_anom_0_360_90S_90N <- get_var_all_weighted_mean("anom", 0, 360, -90, 90)
+df_wm_err_0_360_90S_90N <- get_var_all_weighted_mean("err", 0, 360, -90, 90)
+df_wm_ice_0_360_90S_90N <- get_var_all_weighted_mean("ice", 0, 360, -90, 90)
 
 ```
 
@@ -251,24 +240,24 @@ saveRDS(df_wm_ice_90S_90N, 'weighted_mean_ice_90S_90N.RDS')
 
 ```{r}
 
-sst_60S_60N <- readRDS('weighted_mean_sst_60S_60N.RDS') |> 
+sst_0_360_60S_60N <- readRDS('weighted_mean_sst_0_360_60S_60N.RDS') |> 
   mutate(
     year = year(date),
     yday = yday(date),
     month = month(date)
     ) 
     
-ggplot(data = sst_60S_60N,
+ggplot(data = sst_0_360_60S_60N,
        aes(x = yday, y = wm_sst, group = year)) +
   geom_line(aes(color = factor(year))) +
   scale_color_grey(start = 0.8, end = 0.2) +
   geom_line(
-    data = sst_60S_60N |> filter(year == 2023),
+    data = sst_0_360_60S_60N |> filter(year == 2023),
     aes(x = yday, y = wm_sst),
     color = "orange",
     linewidth = 1) +
   geom_line(
-    data = sst_60S_60N |> filter(year == 2024),
+    data = sst_0_360_60S_60N |> filter(year == 2024),
     aes(x = yday, y = wm_sst, group = year),
     color = "black", 
     linewidth = 1) +
@@ -310,7 +299,7 @@ p +
 
 ```{r}
 
-ggplot(data = sst_60S_60N,
+ggplot(data = sst_0_360_60S_60N,
        aes(x = date, y = wm_sst)) +
   geom_line() +
   geom_smooth(
@@ -318,13 +307,13 @@ ggplot(data = sst_60S_60N,
     se = FALSE
   ) + 
   geom_smooth(
-    data = sst_60S_60N |> 
+    data = sst_0_360_60S_60N |> 
       filter(year > 2000),
     method = "lm",
     se = FALSE, colour = "#FFA050"
   ) +
   geom_smooth(
-    data = sst_60S_60N |> 
+    data = sst_0_360_60S_60N |> 
       filter(year > 2010),
     method = "lm",
     se = FALSE, colour = "#FF0000"
@@ -336,7 +325,7 @@ ggplot(data = sst_60S_60N,
   
 ```{r}
 
-sst_90S_90N <- readRDS("weighted_mean_sst_90S_90N.RDS") |> 
+sst_90S_90N <- readRDS("weighted_mean_sst_0_360_90S_90N.RDS") |> 
   mutate(year = year(date))
 ggplot(data = sst_90S_90N) +
   geom_line(aes(x = date, y = wm_sst, group = year, color = year))
