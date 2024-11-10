@@ -103,18 +103,15 @@ get_var_weighted_mean <- function(file, var, lon_min, lon_max, lat_min, lat_max)
 }
 
 # get all weighted mean for one variable for all NetCDF files available
-get_var_all_weighted_mean <- function(var, lon_min, lon_max, lat_min, lat_max) {
+get_var_all_weighted_mean <- function(var, geo_data) {
   files <- list.files(path = "DATA", pattern = "*.nc", full.names = TRUE)
   if (length(files) > 0 ) {
-    #--- RDS file format : weighted_mean_<var>_XXXS_XXXN.RDS
-    RDS_file <- paste0(
-      'weighted_mean_', 
-      var, 
-      '_', lon_min,
-      '_', lon_max,
-      '_', abs(lat_min), 'S',
-      '_', abs(lat_max), 'N', '.RDS'
-    )
+    lon_min <- geo_data$bbox["lon_min"]
+    lon_max <- geo_data$bbox["lon_max"]
+    lat_min <- geo_data$bbox["lat_min"]
+    lat_max <- geo_data$bbox["lat_max"]
+    #--- RDS file format : wm_<var>_<RDS_name>.RDS
+    RDS_file <- paste0('wm_', var, '_', geo_data$RDS_name, '.RDS')
     message(RDS_file)
     if (file.exists(RDS_file)) {
       #--- return valid files which mean have already been treated
@@ -161,38 +158,70 @@ get_var_all_weighted_mean <- function(var, lon_min, lon_max, lat_min, lat_max) {
 
 ```
 
-## calcul des moyennes pondérées pour des latitutes comprises entre -60° et 60°
+## calcul des moyennes pondérées pour le monde (60°S-60°N)
 
-Les moyennes pondérées sont calculées consécutivement sur les variables :
-
-- sst
-- anom
-- err
-- ice
+Les moyennes pondérées sont calculées consécutivement sur les variables 
+`sst`, `anom`, `err` et `ice`.
 
 ```{r}
 
 # get weighted mean var with -60 < latitude < 60
 
-df_wm_sst_0_360_60S_60N <- get_var_all_weighted_mean("sst", 0, 360, -60, 60)
-df_wm_anom_0_360_60S_60N <- get_var_all_weighted_mean("anom", 0, 360, -60, 60)
-df_wm_err_0_360_60S_60N <- get_var_all_weighted_mean("err", 0, 360, -60, 60)
-df_wm_ice_0_360_60S_60N <- get_var_all_weighted_mean("ice", 0, 360, -60, 60)
+geo_world <- list(
+  RDS_name = "world", 
+  bbox = c(lon_min = 0, lon_max = 360, lat_min = -60, lat_max = 60)
+)
+
+df_wm_sst_world <- get_var_all_weighted_mean("sst", geo_world)
+df_wm_anom_world <- get_var_all_weighted_mean("anom", geo_world)
 
 ```
 
-## calcul des moyennes pondérées pour l'ensemble du globe (-90° < latitude < 90°)
+## calcul des moyennes pondérées pour l'Atlantique Nord (0-60°N, 0-80W)
 
 Les mêmes variables que précédemment sont prises en compte.
 
 ```{r}
 
-df_wm_sst_0_360_90S_90N <- get_var_all_weighted_mean("sst", 0, 360, -90, 90)
-df_wm_anom_0_360_90S_90N <- get_var_all_weighted_mean("anom", 0, 360, -90, 90)
-df_wm_err_0_360_90S_90N <- get_var_all_weighted_mean("err", 0, 360, -90, 90)
-df_wm_ice_0_360_90S_90N <- get_var_all_weighted_mean("ice", 0, 360, -90, 90)
+geo_north_atlantic <- list(
+  RDS_name = "north_atlantic",
+  bbox = c(lon_min = 280, lon_max = 360, lat_min = 0, lat_max = 60)
+)
+
+df_wm_sst_north_atlantic <- get_var_all_weighted_mean("sst", geo_north_atlantic)
+df_wm_anom_north_atlantic <- get_var_all_weighted_mean("anom", geo_north_atlantic)
 
 ```
+
+```{r}
+
+# Il est nécessaire de donner des limites géographiques 
+# sous forme de coordonnées d'un polygone différent d'un carré !!!!
+
+# geo_mediterranean_sea <- list(
+#   RDS_name = "mediterranean_sea",
+#   box = c(lon_min = 280, lon_max = 360, lat_min = 0, lat_max = 60)
+# )
+# 
+# df_wm_sst_mediterranean_sea <- get_var_all_weighted_mean(
+#   "sst", geo_mediterranean_sea)
+# df_wm_anom_mediterranean_sea <- get_var_all_weighted_mean(
+#   "anom", geo_mediterranean_sea)
+# df_wm_err_mediterranean_sea <- get_var_all_weighted_mean(
+#   "err", geo_mediterranean_sea)
+# df_wm_ice_mediterranean_sea <- get_var_all_weighted_mean(
+#   "ice", geo_mediterranean_sea)
+
+
+
+
+```
+
+```{r}
+
+```
+
+
 
 
 ```{r}
@@ -240,24 +269,24 @@ df_wm_ice_0_360_90S_90N <- get_var_all_weighted_mean("ice", 0, 360, -90, 90)
 
 ```{r}
 
-sst_0_360_60S_60N <- readRDS('weighted_mean_sst_0_360_60S_60N.RDS') |> 
+df_wm_sst_world <- readRDS('wm_sst_world.RDS') |> 
   mutate(
     year = year(date),
     yday = yday(date),
     month = month(date)
     ) 
     
-ggplot(data = sst_0_360_60S_60N,
+ggplot(data = df_wm_sst_world,
        aes(x = yday, y = wm_sst, group = year)) +
   geom_line(aes(color = factor(year))) +
   scale_color_grey(start = 0.8, end = 0.2) +
   geom_line(
-    data = sst_0_360_60S_60N |> filter(year == 2023),
+    data = df_wm_sst_world |> filter(year == 2023),
     aes(x = yday, y = wm_sst),
     color = "orange",
     linewidth = 1) +
   geom_line(
-    data = sst_0_360_60S_60N |> filter(year == 2024),
+    data = df_wm_sst_world |> filter(year == 2024),
     aes(x = yday, y = wm_sst, group = year),
     color = "black", 
     linewidth = 1) +
@@ -299,7 +328,7 @@ p +
 
 ```{r}
 
-ggplot(data = sst_0_360_60S_60N,
+ggplot(data = df_wm_sst_world,
        aes(x = date, y = wm_sst)) +
   geom_line() +
   geom_smooth(
@@ -307,13 +336,13 @@ ggplot(data = sst_0_360_60S_60N,
     se = FALSE
   ) + 
   geom_smooth(
-    data = sst_0_360_60S_60N |> 
+    data = df_wm_sst_world |> 
       filter(year > 2000),
     method = "lm",
     se = FALSE, colour = "#FFA050"
   ) +
   geom_smooth(
-    data = sst_0_360_60S_60N |> 
+    data = df_wm_sst_world |> 
       filter(year > 2010),
     method = "lm",
     se = FALSE, colour = "#FF0000"
@@ -325,9 +354,9 @@ ggplot(data = sst_0_360_60S_60N,
   
 ```{r}
 
-sst_90S_90N <- readRDS("weighted_mean_sst_0_360_90S_90N.RDS") |> 
+df_wm_sst_world <- readRDS("wm_sst_world.RDS") |> 
   mutate(year = year(date))
-ggplot(data = sst_90S_90N) +
+ggplot(data = df_wm_sst_world) +
   geom_line(aes(x = date, y = wm_sst, group = year, color = year))
 
 ```
