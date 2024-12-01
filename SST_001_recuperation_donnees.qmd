@@ -9,6 +9,7 @@
     3.  `purrr`, entre autres.
 -   `terra`,
 -   `ncdf4` pour la gestion des fichiers NetCDF,
+-   `stringi` pour la fonction stri_sub 
 
 ```{r}
 #| label: load_libraries
@@ -19,7 +20,8 @@ libs <- c(
   "httr",
   "tidyverse",
   "terra",
-  "ncdf4"
+  "ncdf4",
+  "stringi"
 )
 
 #install missing libraries
@@ -47,79 +49,88 @@ En date du `Sys.Date()` nous allons déterminer :
 - le nombre total de fichiers temporaires
 
 ```{r}
-#| label: get_last_sst_dates
+#| label: tools
 
-yyyymm <- function(date) { # transform Date '1981-06-25' to string '198106' 
-  return(paste0(year(date), sprintf("%02d", month(date))))
+yyyymm <- function(date) {
+  return(gsub("-", "", stri_sub(date, 1, 7)))
 }
 
-yyyymmdd <- function(date) { # transform Date '1981-06-25' to string '19810625'
+yyyymmdd <- function(date) { 
+  return(gsub("-", "", date))
+}
+```
+
+
+```{r}
+#| label: url_data
+
+url_data <- function(date, is.preliminary = FALSE) {
+  
+  url_root <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"
+  file_prefix <- "oisst-avhrr-v02r01." 
+  file_suffix <- ifelse(is.preliminary, "_preliminary.nc", ".nc")
   return(
-    paste0(
-      year(date), 
-      sprintf("%02d", month(date)), 
-      sprintf("%02d", mday(date))
+    paste(
+      url_root, 
+      yyyymm(date),
+      paste0(file_prefix, yyyymmdd(date), file_suffix),
+      sep = "/"  
     )
   )
-}
-
-sst_data_url <- function(date, data_valid = TRUE) {
-  # we use the constant part of the url and replace
-  # - @ with 'yyyymm' part of the date
-  # - & with 'yyyymmdd' part of the date
-  # to get all the url links
-  base_regex_url <- ifelse(
-    data_valid, 
-    "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&.nc",
-    "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/@/oisst-avhrr-v02r01.&_preliminary.nc"
-  )
-  sub("@", yyyymm(date), sub("&", yyyymmdd(date), base_regex_url))
-}
-
-get_last_data_dates <- function() {
   
+}
+
+```
+
+
+```{r}
+#| label: get_newest_date
+#| 
+get_newest_date <- function(is.preliminary) {
+  
+  init_date <- as.Date(
+    ifelse(is.preliminary, Sys.Date(), Sys.Date() - 14)
+  )
+  date <- init_date
   http_200_status_OK <- FALSE
-  get_last_data_date <- function(date, data_valid) {
-    while (!http_200_status_OK) { 
-      http_status_code <- status_code(
-        GET(sst_data_url(date = date, data_valid = data_valid))
-      )
-      if (http_status_code == 404) {
-        date <- date - 1  
-      } else {
-        if (http_status_code == 200) {
-          http_200_status_OK <- TRUE
-        }
+  while (!http_200_status_OK) {
+    url <- url_data(date = date, is.preliminary = is.preliminary)
+    http_status_code <- status_code(
+      GET(url)
+    )
+    if (http_status_code == 404) { 
+      date <- date - 1
+    } else {
+      if (http_status_code == 200) { 
+        http_200_status_OK <- TRUE 
       }
     }
-    return(date)
   }
-  # get last date for preliminary file
-  last_tempo_date <- get_last_data_date(Sys.Date(), data_valid = FALSE)
-  # get last date for data with status OK
-  date <- last_tempo_date - 13 # supposed to be also "preliminary data" date
-  last_valid_date <- get_last_data_date(date, data_valid = TRUE)
-  c(last_valid_date, last_tempo_date)
+  return(date)
 }
 
-last_valid_date <- get_last_data_dates()[[1]]
-paste0("Dernier fichier finalisé daté du : ", last_valid_date)
+newest_preliminary_date <- get_newest_date(is.preliminary = TRUE)
+newest_finalized_date <- get_newest_date(is.preliminary = FALSE)
 
-last_tempo_date <- get_last_data_dates()[[2]]
-paste0("Dernier fichier temporaire daté du : ", last_tempo_date)
+```
 
-#--- date du premier fichier finalisé disponible
-start_date <- ymd("1981-09-01")
 
-number_of_nc_files <- 
-  lubridate::interval(start_date, last_valid_date) %/% days(1) + 1
+```{r}
+#| label: get_data_files_count
+#| 
+data_files_count <- function(start_date, end_date) {
+  
+  lubridate::interval(start_date, end_date) %/% days(1) + 1
 
-number_of_tempo_files <-
-  lubridate::interval(last_valid_date, last_tempo_date) %/% days(1)
+}
 
-paste0("Nombre de fichiers finalisés : ", number_of_nc_files)
+nc_files_count <- data_files_count(ymd("1981-09-01"), newest_finalized_date)
+preliminary_files_count <- data_files_count(ymd("1981-09-01"), newest_preliminary_date)
 
-paste0("Nombre de fichiers temporaires : ", number_of_tempo_files)
+paste0("Dernier fichier finalisé daté du : ", newest_finalized_date)
+paste0("Dernier fichier temporaire daté du : ", newest_preliminary_date)
+paste0("Nombre de fichiers finalisés : ", nc_files_count)
+paste0("Nombre de fichiers temporaires : ", preliminary_files_count)
 
 ```
 
@@ -136,79 +147,81 @@ Remarque :
 La problématique consiste à mettre à jour au fil de l'eau les données qui sont initialement enregistrées dans un fichier avec l'extension **preliminary.nc" le temps que les données soient "validées". Cette opération se déroule sur un délai d'approximativement 2 semaines à partir de la récupération des données.
 
 ```{r}
-#| label: tib_sst_date
+#| label: tib_expected
 
-# Récupération dans tib_sst de toutes les dates associées au fichiers .nc
+# Les mesures ont démarré le 1er septembre 1981
+# 
+tib_expected <- tibble(
+  date = seq(ymd("1981-09-01"), newest_preliminary_date, by = "days")
+)
 
-tib_sst <- tibble(date = seq(start_date, last_tempo_date, by = "days"))
-```
-
-
-```{r}
-#| label: tib_sst_data_filename_and_url
-#| 
-# Récupération dans tib_sst des urls et noms de fichiers
-
-get_url_variable_parts <- function(start_date, end_date, data_valid) {
+get_data_url <- function(start_date, end_date, is.preliminary) {
   
   seq_days <- seq(start_date, end_date, by = "days")
   url_folder <- yyyymm(seq_days)
-  file_prefixe <- "oisst-avhrr-v02r01."
-  file_suffixe <- if_else(data_valid, ".nc", "_preliminary.nc")
-  url_file <- paste0(file_prefixe, yyyymmdd(seq_days), file_suffixe)
+  file_prefix <- "oisst-avhrr-v02r01."
+  file_suffix <- if_else(is.preliminary, "_preliminary.nc", ".nc")
+  url_file <- paste0(file_prefix, yyyymmdd(seq_days), file_suffix)
   return(list(url_folder, url_file))
   
 }
   
-url_valid_variable_parts <- get_url_variable_parts(
-  start_date = start_date,
-  end_date = last_valid_date,
-  data_valid = TRUE
+url_finalized_data <- get_data_url(
+  start_date = ymd("1981-09-01"),
+  end_date = newest_finalized_date,
+  is.preliminary = FALSE
 )
   
-url_preliminary_variable_parts <- get_url_variable_parts(
-  start_date = last_valid_date + 1,
-  end_date = last_tempo_date,
-  data_valid = FALSE
+url_preliminary_data <- get_data_url(
+  start_date = newest_finalized_date + 1,
+  end_date = newest_preliminary_date,
+  is.preliminary = TRUE
 )
 
-tib_sst$data_filename <- c(url_valid_variable_parts[[2]], url_preliminary_variable_parts[[2]])
+tib_expected$data_filename <- c(
+  url_finalized_data[[2]], 
+  url_preliminary_data[[2]]
+)
 
-# Récupération dans tib_sst des urls des fichiers de données
-
-root_url <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"
-
-get_nc_urls <- function(url_link_parts) {
+url_root <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/"
   
-  return(paste(root_url, url_link_parts[[1]], url_link_parts[[2]], sep = "/"))
+get_data_urls <- function(url_parts) {
+  
+  return(paste(url_root, url_parts[[1]], url_parts[[2]], sep = "/"))
          
 } 
 
-urls_nc_valid <- get_nc_urls(url_valid_variable_parts)
-urls_nc_preliminary <- get_nc_urls(url_preliminary_variable_parts)
+tib_expected$data_url <- c(
+  get_data_urls(url_finalized_data),
+  get_data_urls(url_preliminary_data)
+)
 
-tib_sst$data_url <- c(urls_nc_valid, urls_nc_preliminary)
+```
+
+Le champ data_files_loaded de type logique permet de connaître la liste des fichiers de données déjà présents dans le dossier `DATA`
+
+```{r}
+#| label: is_data_expected_loaded
+#| 
+# data_loaded renseigne sur la présence du fichier en local (dossier DATA)
+
+data_files <- tib_expected$data_filename
+data_files_loaded <- list.files(path = "DATA", pattern = "*.nc*")
+data_preliminary_loaded <- list.files(
+  path = "DATA", pattern = "*_preliminary.nc*"
+)
+tib_expected$data_loaded <- (data_files %in% data_files_loaded)
 
 ```
 
 
 ```{r}
-#| label: tib_sst_data_loaded
-#| 
-# data_loaded renseigne sur la présence du fichier en local (dossier DATA)
+#| label: delete_preliminary_data
 
-nc_files <- tib_sst$data_filename
-nc_files_on_disk <- list.files(path = "DATA", pattern = "*.nc*")
-tib_sst$data_loaded <- nc_files %in% nc_files_on_disk
-
-# Suppression des fichiers temporaires inutiles
-
-nc_files_to_delete <- nc_files_on_disk[!(nc_files_on_disk %in% nc_files)]
-if (length(nc_files_to_delete > 0)) {
-  unlink(paste("DATA", nc_files_to_delete, sep = "/"))
+data_files_to_delete <- data_files_loaded[!(data_files_loaded %in% data_files)]
+if (length(data_files_to_delete > 0)) {
+  unlink(paste("DATA", data_files_to_delete, sep = "/"))
 }
-
-saveRDS(tib_sst, "DATA/tib_sst.RDS")
 
 ```
 
@@ -218,26 +231,45 @@ saveRDS(tib_sst, "DATA/tib_sst.RDS")
 #| label: data_download
 #| message: false
 
-get_nc_files_unloaded_data <- function(file_name, file_url) {
-  file_path <- paste("DATA" , file_name, sep = "/")
-  status_code <- status_code(GET(file_url))
+get_unloaded_data <- function(data_filename, data_url) {
+  
+  file_path <- paste("DATA" , data_filename, sep = "/")
+  status_code <- status_code(GET(data_url))
   message(status_code)
   if (status_code == 200) {
-    res <- httr::GET(file_url,
+    res <- httr::GET(data_url,
                      write_disk(file_path, overwrite = TRUE),
                      progress()
                     )
   } else {
-    message(glue("The data for file {file_name} are inaccessible"))
+    message(glue("The data for file {data_filename} are inaccessible"))
   }
+  
 }
 
-nc_files_unloaded <- tib_sst |> 
+data_files_unloaded <- tib_expected |> 
   dplyr::filter(!data_loaded)
-nc_names <- nc_files_unloaded$data_filename
-nc_urls <- nc_files_unloaded$data_url
-# téléchargement des fichiers nc
 
-pwalk(list(nc_names, nc_urls), get_nc_files_unloaded_data)
+data_filenames <- data_files_unloaded$data_filename
+data_urls <- data_files_unloaded$data_url
+
+pwalk(list(data_filenames, data_urls), get_unloaded_data)
 
 ```
+
+
+```{r}
+#| label: get_data_state_after_download_and_save
+#| 
+# data_loaded renseigne sur la présence du fichier en local (dossier DATA)
+
+tib_sst <- tib_expected
+data_files <- tib_sst$data_filename
+data_files_loaded <- list.files(path = "DATA", pattern = "*.nc*")
+tib_sst$data_loaded <- (data_files %in% data_files_loaded)
+
+saveRDS(tib_sst, "DATA/tib_sst.RDS")
+
+```
+
+
