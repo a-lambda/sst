@@ -109,7 +109,7 @@ get_var_all_weighted_mean <- function(var, geo_data) {
     lat_max <- geo_data$bbox["lat_max"]
     #--- RDS file format : wm_<var>_<RDS_name>.RDS
     RDS_file <- paste0('wm_', var, '_', geo_data$RDS_name, '.RDS')
-    message(RDS_file)
+    #message(RDS_file)
     if (file.exists(RDS_file)) {
       #--- return valid files which mean have already been treated
       RDS_data <- readRDS(RDS_file) |> 
