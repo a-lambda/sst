@@ -1,5 +1,5 @@
 ---
-title: "Données SST du 1er juillet 2024"
+title: "Données SST du 21 novembre 2024"
 format: html
 ---
 
@@ -34,7 +34,7 @@ Grâce à elle nous pouvons déjà voir quel type d'informations sont enregistr�
 ```{r}
 #| label: load_nc_file
 
-(nc <- nc_open("DATA/oisst-avhrr-v02r01.20240701.nc"))
+(nc <- nc_open("DATA/oisst-avhrr-v02r01.20241121.nc"))
 
 ```
 
@@ -307,33 +307,5 @@ df_sst |>
     # plot.background = element_rect(fill = "black")
   )
 
-```
-
-
-```{r}
-#list_raster <- map(nc_var, \(x) rast(t(get(x))))
-```
-
-```{r}
-#walk(list_raster, \(x) plot(flip(x, direction = "vertical")))
-```
-
-```{r}
-
-# data_raster <- rasterFromXYZ(df_sst, crs = "EPSG:4326") # vers un RasterLayer
-
-df_sst <- df_sst |> mutate(lon = if_else(lon > 180, lon - 360, lon))
-data_raster <- terra::rast(df_sst, crs = "EPSG:4326")
-cl <- as.contour(data_raster) |> st_as_sf()
-plot(data_raster, axes = TRUE)
-plot(world, add = TRUE)
-plot(cl, add = TRUE)
-
-raster_wintri <- project(data_raster, "+proj=wintri", method = "near")
-world_wintri = st_transform(world, crs = "+proj=wintri")
-plot(st_geometry(world_wintri))
-plot(raster_wintri, add = TRUE)
-
-rasterVis::contourplot(data_raster, contour = TRUE, labels = FALSE)
 ```
 
