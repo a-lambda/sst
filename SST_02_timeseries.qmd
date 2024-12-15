@@ -130,7 +130,7 @@ get_var_all_weighted_mean <- function(var, geo_data) {
     colnames(wm_matrix) <- c('time', 'wm', 'status_ok')
     for (i in seq_along(files_to_treat)) { 
       result <- get_var_weighted_mean(files_to_treat[i], var, lon_min, lon_max, lat_min, lat_max)
-      message(paste0("file : ", files_to_treat[i]))
+      #message(paste0("file : ", files_to_treat[i]))
       wm_matrix[i, 1] <- result[1] # time in days from origin date
       wm_matrix[i, 2] <- result[2] # weighted mean
       wm_matrix[i, 3] <- result[3] # status
