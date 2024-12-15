@@ -6,6 +6,7 @@ format: html
 ## chargement librairies utiles
 
 ```{r}
+#| label: load_libraries
 #| message: false
 #| 
 libs <- c(
@@ -14,7 +15,8 @@ libs <- c(
   "data.table",
   "jsonlite",
   "tictoc",
-  "fpp3"
+  "fpp3",
+  "stringi"
 )
 #install missing libraries
 installed_libs <- libs %in% rownames(installed.packages())
@@ -29,22 +31,14 @@ invisible(lapply(libs, library, character.only = TRUE))
 ## fonctions de base (peut-être disponibles dans lubridate)
 
 ```{r}
-
-yyyymm <- function(date) { # transform Date '1981-06-25' to string '198106' 
-  annee <- year(date)
-  mois <- month(date)
-  paste0(annee, if_else(mois > 9, as.character(mois), paste0("0", mois)))
+#| label: tools
+#| 
+yyyymm <- function(date) {
+  return(gsub("-", "", stri_sub(date, 1, 7)))
 }
 
-yyyymmdd <- function(date) { # transform Date '1981-06-25' to string '19810625'
-  annee <- year(date)
-  mois <- month(date)
-  jour <- day(date)
-  paste0(
-    annee,
-    if_else(mois > 9, as.character(mois), paste0("0", mois)),
-    if_else(jour > 9, as.character(jour), paste0("0", jour))
-  )
+yyyymmdd <- function(date) { 
+  return(gsub("-", "", Sys.Date()))
 }
 
 ```
@@ -57,6 +51,9 @@ area_weights <- fread(
   file = "area_weights.csv",
   dec = ","
 ) |> pull( w )
+# matrix_area_weights <- matrix(rep(area_weights, 1440), nrow = 1440, byrow = TRUE)
+# wmean <- weighted.mean(sst, matrix_area_weights, na.rm = TRUE)
+# wmean_60_60 <- weighted.mean(sst[,121:600], matrix_area_weights[,121:600], na.rm = TRUE)
 
 ```
 
@@ -161,7 +158,7 @@ get_var_all_weighted_mean <- function(var, geo_data) {
 ## calcul des moyennes pondérées pour le monde (60°S-60°N)
 
 Les moyennes pondérées sont calculées consécutivement sur les variables 
-`sst`, `anom`, `err` et `ice`.
+`sst`, `anom`, et `ice`.
 
 ```{r}
 
@@ -173,7 +170,8 @@ geo_world <- list(
 )
 
 df_wm_sst_world <- get_var_all_weighted_mean("sst", geo_world)
-df_wm_anom_world <- get_var_all_weighted_mean("anom", geo_world)
+# df_wm_anom_world <- get_var_all_weighted_mean("anom", geo_world)
+# df_wm_anom_ice <- get_var_all_weighted_mean("ice", geo_world)
 
 ```
 
@@ -189,79 +187,8 @@ geo_north_atlantic <- list(
 )
 
 df_wm_sst_north_atlantic <- get_var_all_weighted_mean("sst", geo_north_atlantic)
-df_wm_anom_north_atlantic <- get_var_all_weighted_mean("anom", geo_north_atlantic)
-
-```
-
-```{r}
-
-# Il est nécessaire de donner des limites géographiques 
-# sous forme de coordonnées d'un polygone différent d'un carré !!!!
-
-# geo_mediterranean_sea <- list(
-#   RDS_name = "mediterranean_sea",
-#   box = c(lon_min = 280, lon_max = 360, lat_min = 0, lat_max = 60)
-# )
-# 
-# df_wm_sst_mediterranean_sea <- get_var_all_weighted_mean(
-#   "sst", geo_mediterranean_sea)
-# df_wm_anom_mediterranean_sea <- get_var_all_weighted_mean(
-#   "anom", geo_mediterranean_sea)
-# df_wm_err_mediterranean_sea <- get_var_all_weighted_mean(
-#   "err", geo_mediterranean_sea)
-# df_wm_ice_mediterranean_sea <- get_var_all_weighted_mean(
-#   "ice", geo_mediterranean_sea)
-
-
-
-
-```
-
-```{r}
-
-```
-
-
-
-
-```{r}
-#| label: json_data_comparison
-#| include: false
-
-## load official json data to compare mine with
-
-# link <- "https://climatereanalyzer.org/clim/sst_daily/json/oisst2.1_world2_sst_day.json"
-# df_wm_sst_60S_60N_json <- jsonlite::fromJSON(link)
-# saveRDS(df_wm_sst_60S_60N_json, "df_wm_sst_60S_60N_json.json")
-# sst_60S_60N_json <- readRDS("df_wm_sst_60S_60N_json.json") |>
-#   unnest_longer(col = "data", values_to = "wm_sst", indices_to = "yday") |>
-#   mutate(year = name) |> 
-#   select(year, yday, wm_sst) |> 
-#   filter(year %in% 1981:2024) |> # eliminate sigma and general mean data
-#   mutate(year = as.integer(year)) |>
-#   drop_na()
-# 
-# sst_60S_60N_json |> 
-#   summarize(.by = year, totday = n()) -> result
-
-
-
-# sst_join <- inner_join(
-#   sst_60S_60N_json,
-#   sst_60S_60N,
-#   by = c("year", "yday") 
-# ) |> 
-#   mutate(
-#     wm_sst_round = round(wm_sst.y, 2),
-#     diff = wm_sst.x - wm_sst_round
-#   ) 
-# 
-# sst_join |> 
-#   filter(abs(diff) > 0) |> 
-#   summarize(
-#     sum_diff_neg = sum(if_else(diff < 0, diff, 0)),
-#     sum_diff_pos = sum(if_else(diff > 0, diff, 0))
-#   )
+# df_wm_anom_north_atlantic <- get_var_all_weighted_mean("anom", geo_north_atlantic)
+# df_wm_ice_north_atlantic <- get_var_all_weighted_mean("ice", geo_north_atlantic)
 
 ```
 
@@ -269,24 +196,24 @@ df_wm_anom_north_atlantic <- get_var_all_weighted_mean("anom", geo_north_atlanti
 
 ```{r}
 
-df_wm_sst_world <- readRDS('wm_sst_world.RDS') |> 
+df_wm_sst <- readRDS('wm_sst_world.RDS') |> 
   mutate(
     year = year(date),
     yday = yday(date),
     month = month(date)
     ) 
-    
-ggplot(data = df_wm_sst_world,
+
+ggplot(data = df_wm_sst,
        aes(x = yday, y = wm_sst, group = year)) +
   geom_line(aes(color = factor(year))) +
   scale_color_grey(start = 0.8, end = 0.2) +
   geom_line(
-    data = df_wm_sst_world |> filter(year == 2023),
+    data = df_wm_sst |> filter(year == 2023),
     aes(x = yday, y = wm_sst),
     color = "orange",
     linewidth = 1) +
   geom_line(
-    data = df_wm_sst_world |> filter(year == 2024),
+    data = df_wm_sst |> filter(year == 2024),
     aes(x = yday, y = wm_sst, group = year),
     color = "black", 
     linewidth = 1) +
@@ -328,7 +255,7 @@ p +
 
 ```{r}
 
-ggplot(data = df_wm_sst_world,
+ggplot(data = df_wm_sst,
        aes(x = date, y = wm_sst)) +
   geom_line() +
   geom_smooth(
@@ -336,13 +263,13 @@ ggplot(data = df_wm_sst_world,
     se = FALSE
   ) + 
   geom_smooth(
-    data = df_wm_sst_world |> 
+    data = df_wm_sst |> 
       filter(year > 2000),
     method = "lm",
     se = FALSE, colour = "#FFA050"
   ) +
   geom_smooth(
-    data = df_wm_sst_world |> 
+    data = df_wm_sst |> 
       filter(year > 2010),
     method = "lm",
     se = FALSE, colour = "#FF0000"
@@ -354,29 +281,10 @@ ggplot(data = df_wm_sst_world,
   
 ```{r}
 
-df_wm_sst_world <- readRDS("wm_sst_world.RDS") |> 
+df_wm_sst <- readRDS("wm_sst_world.RDS") |> 
   mutate(year = year(date))
-ggplot(data = df_wm_sst_world) +
+ggplot(data = df_wm_sst) +
   geom_line(aes(x = date, y = wm_sst, group = year, color = year))
 
 ```
-
-
-```{r}
-#| label: tsibble_test
-#| include: false
-
-# ts_sst_60S_60N <- as_tsibble(sst_60S_60N)
-# autoplot(ts_sst_60S_60N, wm_sst)
-# gg_season(ts_sst_60S_60N, wm_sst, period = "year")
-
-# ts_sst_90S_90N <- as_tsibble(sst_90S_90N)
-# autoplot(ts_sst_90S_90N, wm_sst)
-# gg_season(ts_sst_90S_90N, wm_sst)
-
-```
-
-
-
-
 
