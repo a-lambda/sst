@@ -15,14 +15,7 @@
 #| label: load_libraries
 #| message: false
 
-libs <- c(
-  "glue",
-  "httr",
-  "tidyverse",
-  "terra",
-  "ncdf4",
-  "stringi"
-)
+libs <- c("glue", "httr", "tidyverse", "terra", "ncdf4", "stringi")
 
 #install missing libraries
 installed_libs <- libs %in% rownames(installed.packages())
@@ -271,5 +264,3 @@ tib_sst$data_loaded <- (data_files %in% data_files_loaded)
 saveRDS(tib_sst, "DATA/tib_sst.RDS")
 
 ```
-
-
