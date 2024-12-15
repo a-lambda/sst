@@ -290,11 +290,11 @@ df_sst |>
     subtitle = paste0(
       time_as_date,
       " - mean global = ",
-      round(sst_weighted_mean, 1),
+      round(sst_weighted_mean, 2),
       " °Celsius",
       " | ",
       " mean World(60°S-60°N) = ",
-      round(sst_weighted_mean_60S_60N, 1),
+      round(sst_weighted_mean_60S_60N, 2),
       " °Celsius"
     ),
     caption = "Dataset: NOAA OISST V2.1",
