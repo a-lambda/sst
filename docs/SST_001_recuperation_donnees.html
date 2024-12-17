@@ -308,19 +308,19 @@ Les autres ne possèdent pas ce suffixe.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Dernier fichier finalisé daté du : "</span>, <span class="va">newest_finalized_date</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Dernier fichier finalisé daté du : 2024-11-30"</code></pre>
+<pre><code>[1] "Dernier fichier finalisé daté du : 2024-12-02"</code></pre>
 </div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Dernier fichier temporaire daté du : "</span>, <span class="va">newest_preliminary_date</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Dernier fichier temporaire daté du : 2024-12-14"</code></pre>
+<pre><code>[1] "Dernier fichier temporaire daté du : 2024-12-16"</code></pre>
 </div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Nombre de fichiers finalisés : "</span>, <span class="va">nc_files_count</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Nombre de fichiers finalisés : 15797"</code></pre>
+<pre><code>[1] "Nombre de fichiers finalisés : 15799"</code></pre>
 </div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Nombre de fichiers temporaires : "</span>, <span class="va">preliminary_files_count</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Nombre de fichiers temporaires : 15811"</code></pre>
+<pre><code>[1] "Nombre de fichiers temporaires : 15813"</code></pre>
 </div>
 </div>
 </section><section id="remplissage-de-la-table-des-fichiers-de-données" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="remplissage-de-la-table-des-fichiers-de-données">
@@ -335,7 +335,6 @@ Les autres ne possèdent pas ce suffixe.</p>
 <p>La problématique consiste à mettre à jour au fil de l’eau les données qui sont initialement enregistrées dans un fichier avec l’extension **preliminary.nc” le temps que les données soient “validées”. Cette opération se déroule sur un délai d’approximativement 2 semaines à partir de la récupération des données.</p>
 <div class="cell">
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Les mesures ont démarré le 1er septembre 1981</span></span>
-<span><span class="co"># </span></span>
 <span><span class="va">tib_expected</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
 <span>  date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>, <span class="va">newest_preliminary_date</span>, by <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>

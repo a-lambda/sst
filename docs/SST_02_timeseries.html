@@ -255,7 +255,7 @@ window.Quarto = {
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">yyyymmdd</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">{</span> </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"-"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"-"</span>, <span class="st">""</span>, <span class="va">date</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="weights-to-apply-to-square-of-0.25x0.25-along-the-latitude" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="weights-to-apply-to-square-of-0.25x0.25-along-the-latitude">
@@ -277,66 +277,64 @@ window.Quarto = {
 <p>Si le fichier pris en compte est un fichier temporaire (suffixe _preliminary) on attribuera à la donnée un <code>status_ok</code> de valeur <span class="math inline">\(FALSE\)</span></p>
 <p>Si le fichier pris en compte est un fichier finalisé <code>status_ok</code>vaudra <span class="math inline">\(TRUE\)</span></p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get weighted mean of one variable between lat_min and lat_max</span></span>
-<span><span class="va">get_var_weighted_mean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">file</span>, <span class="va">var</span>, <span class="va">lon_min</span>, <span class="va">lon_max</span>, <span class="va">lat_min</span>, <span class="va">lat_max</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="co"># are we consider preliminary file</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get weighted mean of one variable between longitude and latitude ranges</span></span>
+<span></span>
+<span><span class="va">get_weighted_mean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">file</span>, <span class="va">var</span>, <span class="va">lon_min</span>, <span class="va">lon_max</span>, <span class="va">lat_min</span>, <span class="va">lat_max</span><span class="op">)</span> <span class="op">{</span></span>
+<span></span>
 <span>  <span class="va">status_ok</span> <span class="op">&lt;-</span> <span class="fu">if_else</span><span class="op">(</span><span class="fu">str_detect</span><span class="op">(</span><span class="va">file</span>, <span class="st">'_preliminary'</span><span class="op">)</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="co">#--- get data from NetCDF file</span></span>
 <span>  <span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span>
 <span>  <span class="va">lon</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span><span class="va">nc</span>, varid <span class="op">=</span> <span class="st">"lon"</span><span class="op">)</span></span>
 <span>  <span class="va">lat</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span><span class="va">nc</span>, varid <span class="op">=</span> <span class="st">"lat"</span><span class="op">)</span></span>
 <span>  <span class="va">time</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span><span class="va">nc</span>, varid <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
 <span>  <span class="va">var</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span><span class="va">nc</span>, varid <span class="op">=</span> <span class="va">var</span><span class="op">)</span></span>
 <span>  <span class="fu">nc_close</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span>
-<span>  <span class="co">#--- create the area_weights matrix</span></span>
+<span></span>
 <span>  <span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">area_weights</span>, <span class="fl">1440</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">720</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="va">x_min</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">&gt;=</span> <span class="va">lon_min</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">x_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">&lt;=</span> <span class="va">lon_max</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">y_min</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&gt;=</span> <span class="va">lat_min</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">y_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&lt;=</span> <span class="va">lat_max</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="co">#--- calculate weighted mean</span></span>
 <span>  <span class="va">wm_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span><span class="op">(</span></span>
 <span>    <span class="va">var</span><span class="op">[</span><span class="va">x_min</span><span class="op">:</span><span class="va">x_max</span>, <span class="va">y_min</span><span class="op">:</span><span class="va">y_max</span><span class="op">]</span>, </span>
 <span>    <span class="va">w</span><span class="op">[</span><span class="va">x_min</span><span class="op">:</span><span class="va">x_max</span>, <span class="va">y_min</span><span class="op">:</span><span class="va">y_max</span><span class="op">]</span>, </span>
 <span>    na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
-<span>  <span class="co">#--- </span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">wm_var</span>, <span class="va">status_ok</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># get all weighted mean for one variable for all NetCDF files available</span></span>
-<span><span class="va">get_var_all_weighted_mean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span>, <span class="va">geo_data</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="op">}</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># var : 'sst', 'anom' or 'ice </span></span>
+<span><span class="co"># geo_data : list (RDS_name, bbox)</span></span>
+<span></span>
+<span><span class="va">get_all_weighted_mean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span>, <span class="va">geo_data</span><span class="op">)</span> <span class="op">{</span></span>
+<span></span>
 <span>  <span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"DATA"</span>, pattern <span class="op">=</span> <span class="st">"*.nc"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">files</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">lon_min</span> <span class="op">&lt;-</span> <span class="va">geo_data</span><span class="op">$</span><span class="va">bbox</span><span class="op">[</span><span class="st">"lon_min"</span><span class="op">]</span></span>
 <span>    <span class="va">lon_max</span> <span class="op">&lt;-</span> <span class="va">geo_data</span><span class="op">$</span><span class="va">bbox</span><span class="op">[</span><span class="st">"lon_max"</span><span class="op">]</span></span>
 <span>    <span class="va">lat_min</span> <span class="op">&lt;-</span> <span class="va">geo_data</span><span class="op">$</span><span class="va">bbox</span><span class="op">[</span><span class="st">"lat_min"</span><span class="op">]</span></span>
 <span>    <span class="va">lat_max</span> <span class="op">&lt;-</span> <span class="va">geo_data</span><span class="op">$</span><span class="va">bbox</span><span class="op">[</span><span class="st">"lat_max"</span><span class="op">]</span></span>
-<span>    <span class="co">#--- RDS file format : wm_&lt;var&gt;_&lt;RDS_name&gt;.RDS</span></span>
 <span>    <span class="va">RDS_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'wm_'</span>, <span class="va">var</span>, <span class="st">'_'</span>, <span class="va">geo_data</span><span class="op">$</span><span class="va">RDS_name</span>, <span class="st">'.RDS'</span><span class="op">)</span></span>
-<span>    <span class="co">#message(RDS_file)</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.exists</a></span><span class="op">(</span><span class="va">RDS_file</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="co">#--- return valid files which mean have already been treated</span></span>
+<span>      <span class="co"># les données relatives aux fichiers _preliminary sont supprimées</span></span>
 <span>      <span class="va">RDS_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="va">RDS_file</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">status_ok</span><span class="op">)</span> <span class="co"># élimination des données temporaires</span></span>
+<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">status_ok</span><span class="op">)</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">RDS_data</span>, <span class="va">RDS_file</span><span class="op">)</span> </span>
-<span>      <span class="va">valid_files_already_treated</span> <span class="op">&lt;-</span> <span class="va">RDS_data</span> <span class="op">|&gt;</span></span>
+<span>      <span class="va">finalized_files_processed</span> <span class="op">&lt;-</span> <span class="va">RDS_data</span> <span class="op">|&gt;</span></span>
 <span>        <span class="fu">pull</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>        <span class="fu">yyyymmdd</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'DATA/oisst-avhrr-v02r01.'</span>, <span class="va">x</span>, <span class="st">'.nc'</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span>      <span class="co">#--- return tempo files which mean have already been treated</span></span>
-<span>      <span class="va">files_to_treat</span> <span class="op">&lt;-</span> <span class="va">files</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">files</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">valid_files_already_treated</span><span class="op">)</span><span class="op">]</span></span>
+<span>      <span class="va">files_to_process</span> <span class="op">&lt;-</span> <span class="va">files</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">files</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">finalized_files_processed</span><span class="op">)</span><span class="op">]</span></span>
 <span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>      <span class="va">files_to_treat</span> <span class="op">&lt;-</span> <span class="va">files</span></span>
+<span>      <span class="va">files_to_process</span> <span class="op">&lt;-</span> <span class="va">files</span></span>
 <span>    <span class="op">}</span></span>
-<span>    <span class="co">#--- be aware not to consider old tempo files for later version !!!</span></span>
 <span>    <span class="va">origin_date</span> <span class="op">&lt;-</span> <span class="fu">ymd</span><span class="op">(</span><span class="st">"1978-01-01"</span><span class="op">)</span></span>
-<span>    <span class="va">wm_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">files_to_treat</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>    <span class="va">wm_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">files_to_process</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">wm_matrix</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'time'</span>, <span class="st">'wm'</span>, <span class="st">'status_ok'</span><span class="op">)</span></span>
-<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">files_to_treat</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span> </span>
-<span>      <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">get_var_weighted_mean</span><span class="op">(</span><span class="va">files_to_treat</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">var</span>, <span class="va">lon_min</span>, <span class="va">lon_max</span>, <span class="va">lat_min</span>, <span class="va">lat_max</span><span class="op">)</span></span>
-<span>      <span class="co">#message(paste0("file : ", files_to_treat[i]))</span></span>
+<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">files_to_process</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span> </span>
+<span>      <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">get_weighted_mean</span><span class="op">(</span><span class="va">files_to_process</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">var</span>, <span class="va">lon_min</span>, <span class="va">lon_max</span>, <span class="va">lat_min</span>, <span class="va">lat_max</span><span class="op">)</span></span>
 <span>      <span class="va">wm_matrix</span><span class="op">[</span><span class="va">i</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="co"># time in days from origin date</span></span>
 <span>      <span class="va">wm_matrix</span><span class="op">[</span><span class="va">i</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="co"># weighted mean</span></span>
 <span>      <span class="va">wm_matrix</span><span class="op">[</span><span class="va">i</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="co"># status</span></span>
@@ -357,40 +355,41 @@ window.Quarto = {
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span> </span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"aucun fichier de données à traiter"</span><span class="op">)</span> </span>
 <span>  <span class="op">}</span></span>
+<span>  </span>
 <span><span class="op">}</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="calcul-des-moyennes-pondérées-pour-le-monde-60s-60n" class="level2" data-number="3.5"><h2 data-number="3.5" class="anchored" data-anchor-id="calcul-des-moyennes-pondérées-pour-le-monde-60s-60n">
 <span class="header-section-number">3.5</span> calcul des moyennes pondérées pour le monde (60°S-60°N)</h2>
 <p>Les moyennes pondérées sont calculées consécutivement sur les variables <code>sst</code>, <code>anom</code>, et <code>ice</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get weighted mean var with -60 &lt; latitude &lt; 60</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get weighted mean var with -60 &lt; latitude &lt; 60</span></span>
 <span></span>
 <span><span class="va">geo_world</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
 <span>  RDS_name <span class="op">=</span> <span class="st">"world"</span>, </span>
 <span>  bbox <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>lon_min <span class="op">=</span> <span class="fl">0</span>, lon_max <span class="op">=</span> <span class="fl">360</span>, lat_min <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, lat_max <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df_wm_sst_world</span> <span class="op">&lt;-</span> <span class="fu">get_var_all_weighted_mean</span><span class="op">(</span><span class="st">"sst"</span>, <span class="va">geo_world</span><span class="op">)</span></span>
-<span><span class="co"># df_wm_anom_world &lt;- get_var_all_weighted_mean("anom", geo_world)</span></span>
-<span><span class="co"># df_wm_anom_ice &lt;- get_var_all_weighted_mean("ice", geo_world)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">df_wm_sst_world</span> <span class="op">&lt;-</span> <span class="fu">get_all_weighted_mean</span><span class="op">(</span><span class="st">"sst"</span>, <span class="va">geo_world</span><span class="op">)</span></span>
+<span><span class="va">df_wm_anom_world</span> <span class="op">&lt;-</span> <span class="fu">get_all_weighted_mean</span><span class="op">(</span><span class="st">"anom"</span>, <span class="va">geo_world</span><span class="op">)</span></span>
+<span><span class="va">df_wm_ice_world</span> <span class="op">&lt;-</span> <span class="fu">get_all_weighted_mean</span><span class="op">(</span><span class="st">"ice"</span>, <span class="va">geo_world</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="calcul-des-moyennes-pondérées-pour-latlantique-nord-0-60n-0-80w" class="level2" data-number="3.6"><h2 data-number="3.6" class="anchored" data-anchor-id="calcul-des-moyennes-pondérées-pour-latlantique-nord-0-60n-0-80w">
 <span class="header-section-number">3.6</span> calcul des moyennes pondérées pour l’Atlantique Nord (0-60°N, 0-80W)</h2>
 <p>Les mêmes variables que précédemment sont prises en compte.</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">geo_north_atlantic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">geo_north_atlantic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
 <span>  RDS_name <span class="op">=</span> <span class="st">"north_atlantic"</span>,</span>
 <span>  bbox <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>lon_min <span class="op">=</span> <span class="fl">280</span>, lon_max <span class="op">=</span> <span class="fl">360</span>, lat_min <span class="op">=</span> <span class="fl">0</span>, lat_max <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df_wm_sst_north_atlantic</span> <span class="op">&lt;-</span> <span class="fu">get_var_all_weighted_mean</span><span class="op">(</span><span class="st">"sst"</span>, <span class="va">geo_north_atlantic</span><span class="op">)</span></span>
-<span><span class="co"># df_wm_anom_north_atlantic &lt;- get_var_all_weighted_mean("anom", geo_north_atlantic)</span></span>
-<span><span class="co"># df_wm_ice_north_atlantic &lt;- get_var_all_weighted_mean("ice", geo_north_atlantic)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">df_wm_sst_north_atlantic</span> <span class="op">&lt;-</span> <span class="fu">get_all_weighted_mean</span><span class="op">(</span><span class="st">"sst"</span>, <span class="va">geo_north_atlantic</span><span class="op">)</span></span>
+<span><span class="va">df_wm_anom_north_atlantic</span> <span class="op">&lt;-</span> <span class="fu">get_all_weighted_mean</span><span class="op">(</span><span class="st">"anom"</span>, <span class="va">geo_north_atlantic</span><span class="op">)</span></span>
+<span><span class="va">df_wm_ice_north_atlantic</span> <span class="op">&lt;-</span> <span class="fu">get_all_weighted_mean</span><span class="op">(</span><span class="st">"ice"</span>, <span class="va">geo_north_atlantic</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="impression-de-la-série-temporelle" class="level2" data-number="3.7"><h2 data-number="3.7" class="anchored" data-anchor-id="impression-de-la-série-temporelle">
 <span class="header-section-number">3.7</span> Impression de la série temporelle</h2>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_wm_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">'wm_sst_world.RDS'</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_wm_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">'wm_sst_world.RDS'</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span></span>
 <span>    year <span class="op">=</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,</span>
 <span>    yday <span class="op">=</span> <span class="fu">yday</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,</span>
@@ -444,7 +443,7 @@ window.Quarto = {
 <span>  <span class="op">)</span> </span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -452,7 +451,7 @@ window.Quarto = {
 </section><section id="impression-supplémentaire-1" class="level2" data-number="3.8"><h2 data-number="3.8" class="anchored" data-anchor-id="impression-supplémentaire-1">
 <span class="header-section-number">3.8</span> impression supplémentaire 1</h2>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">df_wm_sst</span>,</span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">df_wm_sst</span>,</span>
 <span>       <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">wm_sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_smooth</span><span class="op">(</span></span>
@@ -478,7 +477,7 @@ window.Quarto = {
 </div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -486,13 +485,13 @@ window.Quarto = {
 </section><section id="impression-supplémentaire-2" class="level2" data-number="3.9"><h2 data-number="3.9" class="anchored" data-anchor-id="impression-supplémentaire-2">
 <span class="header-section-number">3.9</span> impression supplémentaire 2</h2>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_wm_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"wm_sst_world.RDS"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_wm_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"wm_sst_world.RDS"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>year <span class="op">=</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">df_wm_sst</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">wm_sst</span>, group <span class="op">=</span> <span class="va">year</span>, color <span class="op">=</span> <span class="va">year</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

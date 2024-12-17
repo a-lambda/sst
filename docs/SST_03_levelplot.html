@@ -256,9 +256,9 @@ window.Quarto = {
 <p>La connexion au fichier NetCDF s’opère via la commande nc_open.</p>
 <p>Grâce à elle nous pouvons déjà voir quel type d’informations sont enregistrées.</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="st">"DATA/oisst-avhrr-v02r01.20241121.nc"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="st">"DATA/oisst-avhrr-v02r01.20241201.nc"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>File DATA/oisst-avhrr-v02r01.20241121.nc (NC_FORMAT_NETCDF4):
+<pre><code>File DATA/oisst-avhrr-v02r01.20241201.nc (NC_FORMAT_NETCDF4):
 
      4 variables (excluding dimension variables):
         short sst[lon,lat,zlev,time]   (Chunking: [1440,720,1,1])  (Compression: shuffle,level 4)
@@ -317,13 +317,13 @@ window.Quarto = {
         title: NOAA/NCEI 1/4 Degree Daily Optimum Interpolation Sea Surface Temperature (OISST) Analysis, Version 2.1 - Final
         references: Reynolds, et al.(2007) Daily High-Resolution-Blended Analyses for Sea Surface Temperature (available at https://doi.org/10.1175/2007JCLI1824.1). Banzon, et al.(2016) A long-term record of blended satellite and in situ sea-surface temperature for climate monitoring, modeling and environmental studies (available at https://doi.org/10.5194/essd-8-165-2016). Huang et al. (2020) Improvements of the Daily Optimum Interpolation Sea Surface Temperature (DOISST) Version v02r01, submitted.Climatology is based on 1971-2000 OI.v2 SST. Satellite data: Pathfinder AVHRR SST, Navy AVHRR SST, and NOAA ACSPO SST. Ice data: NCEP Ice and GSFC Ice.
         source: ICOADS, NCEP_GTS, GSFC_ICE, NCEP_ICE, Pathfinder_AVHRR, Navy_AVHRR, NOAA_ACSP
-        id: oisst-avhrr-v02r01.20241121.nc
+        id: oisst-avhrr-v02r01.20241201.nc
         naming_authority: gov.noaa.ncei
         summary: NOAAs 1/4-degree Daily Optimum Interpolation Sea Surface Temperature (OISST) (sometimes referred to as Reynolds SST, which however also refers to earlier products at different resolution), currently available as version v02r01, is created by interpolating and extrapolating SST observations from different sources, resulting in a smoothed complete field. The sources of data are satellite (AVHRR) and in situ platforms (i.e., ships and buoys), and the specific datasets employed may change over time. At the marginal ice zone, sea ice concentrations are used to generate proxy SSTs.  A preliminary version of this file is produced in near-real time (1-day latency), and then replaced with a final version after 2 weeks. Note that this is the AVHRR-ONLY DOISST, available from Oct 1981, but there is a companion DOISST product that includes microwave satellite data, available from June 2002
         cdm_data_type: Grid
         history: Final file created using preliminary as first guess, and 3 days of AVHRR data. Preliminary uses only 1 day of AVHRR data.
-        date_modified: 2024-12-06T14:44:00Z
-        date_created: 2024-12-06T14:44:00Z
+        date_modified: 2024-12-16T14:43:00Z
+        date_created: 2024-12-16T14:43:00Z
         product_version: Version v02r01
         processing_level: NOAA Level 4
         institution: NOAA/National Centers for Environmental Information
@@ -344,8 +344,8 @@ window.Quarto = {
         geospatial_lat_resolution: 0.25
         geospatial_lon_units: degrees_east
         geospatial_lon_resolution: 0.25
-        time_coverage_start: 2024-11-21T00:00:00Z
-        time_coverage_end: 2024-11-21T23:59:59Z
+        time_coverage_start: 2024-12-01T00:00:00Z
+        time_coverage_end: 2024-12-01T23:59:59Z
         metadata_link: https://doi.org/10.25921/RE9P-PT57
         ncei_template_version: NCEI_NetCDF_Grid_Template_v2.0
         comment: Data was converted from NetCDF-3 to NetCDF-4 format with metadata updates in November 2017.
@@ -628,7 +628,7 @@ $value
 <span><span class="va">sst_weighted_mean</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    wm_sst
-1 18.46698</code></pre>
+1 18.44787</code></pre>
 </div>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># moyenne pondérée entre -60°S et +60°N</span></span>
 <span><span class="va">df_sst_60S_60N</span> <span class="op">&lt;-</span> <span class="va">df_sst_weights</span> <span class="op">|&gt;</span> </span>
@@ -638,7 +638,7 @@ $value
 <span><span class="va">sst_weighted_mean_60S_60N</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  wm_sst_60S_60N
-1       20.67597</code></pre>
+1       20.65579</code></pre>
 </div>
 </div>
 <p>Si nous souhaitons centrer la carte sur le méridien de Greenwich, il est nécessaire de translater les longitudes.</p>
