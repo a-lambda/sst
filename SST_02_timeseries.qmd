@@ -38,7 +38,7 @@ yyyymm <- function(date) {
 }
 
 yyyymmdd <- function(date) { 
-  return(gsub("-", "", Sys.Date()))
+  return(gsub("-", "", date))
 }
 
 ```
@@ -99,7 +99,8 @@ get_var_weighted_mean <- function(file, var, lon_min, lon_max, lat_min, lat_max)
   c(time, wm_var, status_ok)
 }
 
-# get all weighted mean for one variable for all NetCDF files available
+# var : 'sst', 'anom' or 'ice 
+# geo_data : list (RDS_name, bbox)
 get_var_all_weighted_mean <- function(var, geo_data) {
   files <- list.files(path = "DATA", pattern = "*.nc", full.names = TRUE)
   if (length(files) > 0 ) {
@@ -107,30 +108,25 @@ get_var_all_weighted_mean <- function(var, geo_data) {
     lon_max <- geo_data$bbox["lon_max"]
     lat_min <- geo_data$bbox["lat_min"]
     lat_max <- geo_data$bbox["lat_max"]
-    #--- RDS file format : wm_<var>_<RDS_name>.RDS
     RDS_file <- paste0('wm_', var, '_', geo_data$RDS_name, '.RDS')
-    #message(RDS_file)
     if (file.exists(RDS_file)) {
-      #--- return valid files which mean have already been treated
+      # les données relatives aux fichiers _preliminary sont supprimées
       RDS_data <- readRDS(RDS_file) |> 
-        filter(status_ok) # élimination des données temporaires
+        dplyr::filter(status_ok)
       saveRDS(RDS_data, RDS_file) 
-      valid_files_already_treated <- RDS_data |>
+      finalized_files_processed <- RDS_data |>
         pull(date) |> 
         yyyymmdd() |> 
         vapply(\(x) paste0('DATA/oisst-avhrr-v02r01.', x, '.nc'), character(1))
-      #--- return tempo files which mean have already been treated
-      files_to_treat <- files[!(files %in% valid_files_already_treated)]
+      files_to_process <- files[!(files %in% finalized_files_processed)]
     } else {
-      files_to_treat <- files
+      files_to_process <- files
     }
-    #--- be aware not to consider old tempo files for later version !!!
     origin_date <- ymd("1978-01-01")
-    wm_matrix <- matrix(numeric(0), nrow = length(files_to_treat), ncol = 3)
+    wm_matrix <- matrix(numeric(0), nrow = length(files_to_process), ncol = 3)
     colnames(wm_matrix) <- c('time', 'wm', 'status_ok')
-    for (i in seq_along(files_to_treat)) { 
-      result <- get_var_weighted_mean(files_to_treat[i], var, lon_min, lon_max, lat_min, lat_max)
-      #message(paste0("file : ", files_to_treat[i]))
+    for (i in seq_along(files_to_process)) { 
+      result <- get_var_weighted_mean(files_to_process[i], var, lon_min, lon_max, lat_min, lat_max)
       wm_matrix[i, 1] <- result[1] # time in days from origin date
       wm_matrix[i, 2] <- result[2] # weighted mean
       wm_matrix[i, 3] <- result[3] # status
