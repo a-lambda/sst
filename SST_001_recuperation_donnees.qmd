@@ -143,7 +143,6 @@ La problématique consiste à mettre à jour au fil de l'eau les données qui so
 #| label: tib_expected
 
 # Les mesures ont démarré le 1er septembre 1981
-# 
 tib_expected <- tibble(
   date = seq(ymd("1981-09-01"), newest_preliminary_date, by = "days")
 )
