@@ -53,33 +53,46 @@ yyyymmdd <- function(date) {
 }
 ```
 
+### Détermination de l'url du fichier de données `.nc` 
+
+- en fonction de la date,
+- et du statut (finalisé ou temporaire)
 
 ```{r}
-#| label: url_data
+#| label: get_url
 
-url_data <- function(date, is.preliminary = FALSE) {
+get_url <- function(date, is.preliminary = FALSE) {
   
   url_root <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"
-  file_prefix <- "oisst-avhrr-v02r01." 
-  file_suffix <- ifelse(is.preliminary, "_preliminary.nc", ".nc")
-  return(
-    paste(
-      url_root, 
-      yyyymm(date),
-      paste0(file_prefix, yyyymmdd(date), file_suffix),
-      sep = "/"  
-    )
-  )
+  url_folder <- paste(url_root, yyyymm(date), sep = "/")
+  file_prefix <- "oisst-avhrr-v02r01."
+  file_suffix <- if_else(is.preliminary, "_preliminary.nc", ".nc")
+  url_file <- paste0(file_prefix, yyyymmdd(date), file_suffix)
+  return(paste(url_folder, url_file, sep = '/'))
+  
+}
+
+get_all_url <- function(start_date, end_date, is.preliminary = FALSE) {
+  
+  seq_days <- seq(start_date, end_date, by = "days")
+  all_url <- sapply(seq_days, get_url, is.preliminary = is.preliminary)
+  return(all_url)
   
 }
 
 ```
 
+### Détermination des dates les plus récentes pour les fichiers `.nc`
+
+Principe :
+
+On recherche à partir de la date du jour la présence des données aux urls que l'on aura calculées par ailleurs avec la fonction `get_url`.
+Si la page sollicitée est présente on a fini. Sinon on passe au jour précédent.
 
 ```{r}
-#| label: get_newest_date
+#| label: get_latest_date
 #| 
-get_newest_date <- function(is.preliminary) {
+get_latest_date <- function(is.preliminary) {
   
   init_date <- as.Date(
     ifelse(is.preliminary, Sys.Date(), Sys.Date() - 14)
@@ -87,7 +100,7 @@ get_newest_date <- function(is.preliminary) {
   date <- init_date
   http_200_status_OK <- FALSE
   while (!http_200_status_OK) {
-    url <- url_data(date = date, is.preliminary = is.preliminary)
+    url <- get_url(date = date, is.preliminary = is.preliminary)
     http_status_code <- status_code(
       GET(url)
     )
@@ -102,11 +115,16 @@ get_newest_date <- function(is.preliminary) {
   return(date)
 }
 
-newest_preliminary_date <- get_newest_date(is.preliminary = TRUE)
-newest_finalized_date <- get_newest_date(is.preliminary = FALSE)
+latest_preliminary_date <- get_latest_date(is.preliminary = TRUE)
+latest_finalized_date <- get_latest_date(is.preliminary = FALSE)
 
 ```
 
+::: {.callout-note}
+
+Si des fichiers `preliminary` se retrouvent encore parmi des fichiers finalisés, parce qu'ils n'auront pas encore été traités, alors les décomptes de fichiers finalisés et temporaires seront inexacts.
+
+:::
 
 ```{r}
 #| label: get_data_files_count
@@ -117,13 +135,13 @@ data_files_count <- function(start_date, end_date) {
 
 }
 
-nc_files_count <- data_files_count(ymd("1981-09-01"), newest_finalized_date)
-preliminary_files_count <- data_files_count(ymd("1981-09-01"), newest_preliminary_date)
+nc_files_count <- data_files_count(ymd("1981-09-01"), latest_finalized_date)
+preliminary_files_count <- data_files_count(ymd("1981-09-01"), latest_preliminary_date)
 
-paste0("Dernier fichier finalisé daté du : ", newest_finalized_date)
-paste0("Dernier fichier temporaire daté du : ", newest_preliminary_date)
-paste0("Nombre de fichiers finalisés : ", nc_files_count)
-paste0("Nombre de fichiers temporaires : ", preliminary_files_count)
+paste0("Dernier fichier finalisé daté du : ", latest_finalized_date)
+paste0("Dernier fichier temporaire daté du : ", latest_preliminary_date)
+paste0("Nombre (estimé) de fichiers finalisés : ", nc_files_count)
+paste0("Nombre (estimé) de fichiers temporaires : ", preliminary_files_count)
 
 ```
 
@@ -135,58 +153,42 @@ Création d'un tibble `tib_sst` composée des colonnes suivantes :
 - data_filename : nom local du fichier de données
 - data_url : url permettant d'accéder aux données pour une date donnée
 
-Remarque :
+::: {.callout-note}
 
 La problématique consiste à mettre à jour au fil de l'eau les données qui sont initialement enregistrées dans un fichier avec l'extension **preliminary.nc" le temps que les données soient "validées". Cette opération se déroule sur un délai d'approximativement 2 semaines à partir de la récupération des données.
+
+:::
+
+Le fichier `tib_expected` contient les informations relatives à l'ensemble des données théoriquement entreposées sur le serveur.
 
 ```{r}
 #| label: tib_expected
 
-# Les mesures ont démarré le 1er septembre 1981
+# remplissage du champ date
 tib_expected <- tibble(
-  date = seq(ymd("1981-09-01"), newest_preliminary_date, by = "days")
+  date = seq(ymd("1981-09-01"), latest_preliminary_date, by = "days")
 )
 
-get_data_url <- function(start_date, end_date, is.preliminary) {
-  
-  seq_days <- seq(start_date, end_date, by = "days")
-  url_folder <- yyyymm(seq_days)
-  file_prefix <- "oisst-avhrr-v02r01."
-  file_suffix <- if_else(is.preliminary, "_preliminary.nc", ".nc")
-  url_file <- paste0(file_prefix, yyyymmdd(seq_days), file_suffix)
-  return(list(url_folder, url_file))
-  
-}
-  
-url_finalized_data <- get_data_url(
+# remplissage du champ data_url
+
+url_finalized_data <- get_all_url(
   start_date = ymd("1981-09-01"),
-  end_date = newest_finalized_date,
+  end_date = latest_finalized_date,
   is.preliminary = FALSE
 )
   
-url_preliminary_data <- get_data_url(
-  start_date = newest_finalized_date + 1,
-  end_date = newest_preliminary_date,
+url_preliminary_data <- get_all_url(
+  start_date = latest_finalized_date + 1,
+  end_date = latest_preliminary_date,
   is.preliminary = TRUE
 )
 
-tib_expected$data_filename <- c(
-  url_finalized_data[[2]], 
-  url_preliminary_data[[2]]
-)
+tib_expected$data_url <- c(url_finalized_data, url_preliminary_data)
 
-url_root <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/"
-  
-get_data_urls <- function(url_parts) {
-  
-  return(paste(url_root, url_parts[[1]], url_parts[[2]], sep = "/"))
-         
-} 
-
-tib_expected$data_url <- c(
-  get_data_urls(url_finalized_data),
-  get_data_urls(url_preliminary_data)
-)
+# remplissage du champ data_filename
+tib_expected$data_filename <- tib_expected$data_url |>
+  map(\(x) {tail(stri_split_fixed(x, "/")[[1]], n = 1)}) |> 
+  unlist()
 
 ```
 
