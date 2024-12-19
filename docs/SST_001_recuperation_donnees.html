@@ -174,7 +174,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
 <li><a href="#chargement-de-packages-n%C3%A9cessaires" id="toc-chargement-de-packages-nécessaires" class="nav-link active" data-scroll-target="#chargement-de-packages-n%C3%A9cessaires"><span class="header-section-number">2.1</span> Chargement de packages nécessaires</a></li>
-  <li><a href="#d%C3%A9compte-des-fichiers-exploitables" id="toc-décompte-des-fichiers-exploitables" class="nav-link" data-scroll-target="#d%C3%A9compte-des-fichiers-exploitables"><span class="header-section-number">2.2</span> Décompte des fichiers exploitables</a></li>
+  <li>
+<a href="#d%C3%A9compte-des-fichiers-exploitables" id="toc-décompte-des-fichiers-exploitables" class="nav-link" data-scroll-target="#d%C3%A9compte-des-fichiers-exploitables"><span class="header-section-number">2.2</span> Décompte des fichiers exploitables</a>
+  <ul class="collapse">
+<li><a href="#d%C3%A9termination-de-lurl-du-fichier-de-donn%C3%A9es-.nc" id="toc-détermination-de-lurl-du-fichier-de-données-.nc" class="nav-link" data-scroll-target="#d%C3%A9termination-de-lurl-du-fichier-de-donn%C3%A9es-.nc"><span class="header-section-number">2.2.1</span> Détermination de l’url du fichier de données <code>.nc</code></a></li>
+  <li><a href="#d%C3%A9termination-des-dates-les-plus-r%C3%A9centes-pour-les-fichiers-.nc" id="toc-détermination-des-dates-les-plus-récentes-pour-les-fichiers-.nc" class="nav-link" data-scroll-target="#d%C3%A9termination-des-dates-les-plus-r%C3%A9centes-pour-les-fichiers-.nc"><span class="header-section-number">2.2.2</span> Détermination des dates les plus récentes pour les fichiers <code>.nc</code></a></li>
+  </ul>
+</li>
   <li><a href="#remplissage-de-la-table-des-fichiers-de-donn%C3%A9es" id="toc-remplissage-de-la-table-des-fichiers-de-données" class="nav-link" data-scroll-target="#remplissage-de-la-table-des-fichiers-de-donn%C3%A9es"><span class="header-section-number">2.3</span> Remplissage de la table des fichiers de données</a></li>
   <li><a href="#t%C3%A9l%C3%A9chargement-des-donn%C3%A9es-sst-si-n%C3%A9cessaire-avec-data_loaded-false" id="toc-téléchargement-des-données-sst-si-nécessaire-avec-data_loaded-false" class="nav-link" data-scroll-target="#t%C3%A9l%C3%A9chargement-des-donn%C3%A9es-sst-si-n%C3%A9cessaire-avec-data_loaded-false"><span class="header-section-number">2.4</span> Téléchargement des données SST (si nécessaire avec data_loaded == FALSE)</a></li>
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/a-lambda/sst/edit/main/SST_001_recuperation_donnees.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
@@ -252,25 +258,40 @@ Les autres ne possèdent pas ce suffixe.</p>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"-"</span>, <span class="st">""</span>, <span class="va">date</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="détermination-de-lurl-du-fichier-de-données-.nc" class="level3" data-number="2.2.1"><h3 data-number="2.2.1" class="anchored" data-anchor-id="détermination-de-lurl-du-fichier-de-données-.nc">
+<span class="header-section-number">2.2.1</span> Détermination de l’url du fichier de données <code>.nc</code>
+</h3>
+<ul>
+<li>en fonction de la date,</li>
+<li>et du statut (finalisé ou temporaire)</li>
+</ul>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">url_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span>, <span class="va">is.preliminary</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_url</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">date</span>, <span class="va">is.preliminary</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  </span>
 <span>  <span class="va">url_root</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr"</span></span>
-<span>  <span class="va">file_prefix</span> <span class="op">&lt;-</span> <span class="st">"oisst-avhrr-v02r01."</span> </span>
-<span>  <span class="va">file_suffix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">is.preliminary</span>, <span class="st">"_preliminary.nc"</span>, <span class="st">".nc"</span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span></span>
-<span>      <span class="va">url_root</span>, </span>
-<span>      <span class="fu">yyyymm</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">file_prefix</span>, <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="va">file_suffix</span><span class="op">)</span>,</span>
-<span>      sep <span class="op">=</span> <span class="st">"/"</span>  </span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
+<span>  <span class="va">url_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">url_root</span>, <span class="fu">yyyymm</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
+<span>  <span class="va">file_prefix</span> <span class="op">&lt;-</span> <span class="st">"oisst-avhrr-v02r01."</span></span>
+<span>  <span class="va">file_suffix</span> <span class="op">&lt;-</span> <span class="fu">if_else</span><span class="op">(</span><span class="va">is.preliminary</span>, <span class="st">"_preliminary.nc"</span>, <span class="st">".nc"</span><span class="op">)</span></span>
+<span>  <span class="va">url_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">file_prefix</span>, <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, <span class="va">file_suffix</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">url_folder</span>, <span class="va">url_file</span>, sep <span class="op">=</span> <span class="st">'/'</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">get_all_url</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span>, <span class="va">is.preliminary</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">seq_days</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span>, by <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span></span>
+<span>  <span class="va">all_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">seq_days</span>, <span class="va">get_url</span>, is.preliminary <span class="op">=</span> <span class="va">is.preliminary</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">all_url</span><span class="op">)</span></span>
 <span>  </span>
 <span><span class="op">}</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section><section id="détermination-des-dates-les-plus-récentes-pour-les-fichiers-.nc" class="level3" data-number="2.2.2"><h3 data-number="2.2.2" class="anchored" data-anchor-id="détermination-des-dates-les-plus-récentes-pour-les-fichiers-.nc">
+<span class="header-section-number">2.2.2</span> Détermination des dates les plus récentes pour les fichiers <code>.nc</code>
+</h3>
+<p>Principe :</p>
+<p>On recherche à partir de la date du jour la présence des données aux urls que l’on aura calculées par ailleurs avec la fonction <code>get_url</code>. Si la page sollicitée est présente on a fini. Sinon on passe au jour précédent.</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_newest_date</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">is.preliminary</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_latest_date</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">is.preliminary</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  </span>
 <span>  <span class="va">init_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">is.preliminary</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">14</span><span class="op">)</span></span>
@@ -278,7 +299,7 @@ Les autres ne possèdent pas ce suffixe.</p>
 <span>  <span class="va">date</span> <span class="op">&lt;-</span> <span class="va">init_date</span></span>
 <span>  <span class="va">http_200_status_OK</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
 <span>  <span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">http_200_status_OK</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">url</span> <span class="op">&lt;-</span> <span class="fu">url_data</span><span class="op">(</span>date <span class="op">=</span> <span class="va">date</span>, is.preliminary <span class="op">=</span> <span class="va">is.preliminary</span><span class="op">)</span></span>
+<span>    <span class="va">url</span> <span class="op">&lt;-</span> <span class="fu">get_url</span><span class="op">(</span>date <span class="op">=</span> <span class="va">date</span>, is.preliminary <span class="op">=</span> <span class="va">is.preliminary</span><span class="op">)</span></span>
 <span>    <span class="va">http_status_code</span> <span class="op">&lt;-</span> <span class="fu">status_code</span><span class="op">(</span></span>
 <span>      <span class="fu">GET</span><span class="op">(</span><span class="va">url</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
@@ -293,8 +314,21 @@ Les autres ne possèdent pas ce suffixe.</p>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">newest_preliminary_date</span> <span class="op">&lt;-</span> <span class="fu">get_newest_date</span><span class="op">(</span>is.preliminary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">newest_finalized_date</span> <span class="op">&lt;-</span> <span class="fu">get_newest_date</span><span class="op">(</span>is.preliminary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">latest_preliminary_date</span> <span class="op">&lt;-</span> <span class="fu">get_latest_date</span><span class="op">(</span>is.preliminary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">latest_finalized_date</span> <span class="op">&lt;-</span> <span class="fu">get_latest_date</span><span class="op">(</span>is.preliminary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Si des fichiers <code>preliminary</code> se retrouvent encore parmi des fichiers finalisés, parce qu’ils n’auront pas encore été traités, alors les décomptes de fichiers finalisés et temporaires seront inexacts.</p>
+</div>
 </div>
 <div class="cell">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_files_count</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span> <span class="op">{</span></span>
@@ -303,27 +337,27 @@ Les autres ne possèdent pas ce suffixe.</p>
 <span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">nc_files_count</span> <span class="op">&lt;-</span> <span class="fu">data_files_count</span><span class="op">(</span><span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>, <span class="va">newest_finalized_date</span><span class="op">)</span></span>
-<span><span class="va">preliminary_files_count</span> <span class="op">&lt;-</span> <span class="fu">data_files_count</span><span class="op">(</span><span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>, <span class="va">newest_preliminary_date</span><span class="op">)</span></span>
+<span><span class="va">nc_files_count</span> <span class="op">&lt;-</span> <span class="fu">data_files_count</span><span class="op">(</span><span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>, <span class="va">latest_finalized_date</span><span class="op">)</span></span>
+<span><span class="va">preliminary_files_count</span> <span class="op">&lt;-</span> <span class="fu">data_files_count</span><span class="op">(</span><span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>, <span class="va">latest_preliminary_date</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Dernier fichier finalisé daté du : "</span>, <span class="va">newest_finalized_date</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Dernier fichier finalisé daté du : "</span>, <span class="va">latest_finalized_date</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Dernier fichier finalisé daté du : 2024-12-02"</code></pre>
+<pre><code>[1] "Dernier fichier finalisé daté du : 2024-12-04"</code></pre>
 </div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Dernier fichier temporaire daté du : "</span>, <span class="va">newest_preliminary_date</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Dernier fichier temporaire daté du : "</span>, <span class="va">latest_preliminary_date</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Dernier fichier temporaire daté du : 2024-12-16"</code></pre>
+<pre><code>[1] "Dernier fichier temporaire daté du : 2024-12-18"</code></pre>
 </div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Nombre de fichiers finalisés : "</span>, <span class="va">nc_files_count</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Nombre (estimé) de fichiers finalisés : "</span>, <span class="va">nc_files_count</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Nombre de fichiers finalisés : 15799"</code></pre>
+<pre><code>[1] "Nombre (estimé) de fichiers finalisés : 15801"</code></pre>
 </div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Nombre de fichiers temporaires : "</span>, <span class="va">preliminary_files_count</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Nombre (estimé) de fichiers temporaires : "</span>, <span class="va">preliminary_files_count</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Nombre de fichiers temporaires : 15813"</code></pre>
+<pre><code>[1] "Nombre (estimé) de fichiers temporaires : 15815"</code></pre>
 </div>
 </div>
-</section><section id="remplissage-de-la-table-des-fichiers-de-données" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="remplissage-de-la-table-des-fichiers-de-données">
+</section></section><section id="remplissage-de-la-table-des-fichiers-de-données" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="remplissage-de-la-table-des-fichiers-de-données">
 <span class="header-section-number">2.3</span> Remplissage de la table des fichiers de données</h2>
 <p>Création d’un tibble <code>tib_sst</code> composée des colonnes suivantes :</p>
 <ul>
@@ -331,54 +365,46 @@ Les autres ne possèdent pas ce suffixe.</p>
 <li>data_filename : nom local du fichier de données</li>
 <li>data_url : url permettant d’accéder aux données pour une date donnée</li>
 </ul>
-<p>Remarque :</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>La problématique consiste à mettre à jour au fil de l’eau les données qui sont initialement enregistrées dans un fichier avec l’extension **preliminary.nc” le temps que les données soient “validées”. Cette opération se déroule sur un délai d’approximativement 2 semaines à partir de la récupération des données.</p>
+</div>
+</div>
+<p>Le fichier <code>tib_expected</code> contient les informations relatives à l’ensemble des données théoriquement entreposées sur le serveur.</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Les mesures ont démarré le 1er septembre 1981</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># remplissage du champ date</span></span>
 <span><span class="va">tib_expected</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
-<span>  date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>, <span class="va">newest_preliminary_date</span>, by <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span></span>
+<span>  date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>, <span class="va">latest_preliminary_date</span>, by <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">get_data_url</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span>, <span class="va">is.preliminary</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  </span>
-<span>  <span class="va">seq_days</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span>, by <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span></span>
-<span>  <span class="va">url_folder</span> <span class="op">&lt;-</span> <span class="fu">yyyymm</span><span class="op">(</span><span class="va">seq_days</span><span class="op">)</span></span>
-<span>  <span class="va">file_prefix</span> <span class="op">&lt;-</span> <span class="st">"oisst-avhrr-v02r01."</span></span>
-<span>  <span class="va">file_suffix</span> <span class="op">&lt;-</span> <span class="fu">if_else</span><span class="op">(</span><span class="va">is.preliminary</span>, <span class="st">"_preliminary.nc"</span>, <span class="st">".nc"</span><span class="op">)</span></span>
-<span>  <span class="va">url_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">file_prefix</span>, <span class="fu">yyyymmdd</span><span class="op">(</span><span class="va">seq_days</span><span class="op">)</span>, <span class="va">file_suffix</span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">url_folder</span>, <span class="va">url_file</span><span class="op">)</span><span class="op">)</span></span>
-<span>  </span>
-<span><span class="op">}</span></span>
-<span>  </span>
-<span><span class="va">url_finalized_data</span> <span class="op">&lt;-</span> <span class="fu">get_data_url</span><span class="op">(</span></span>
+<span><span class="co"># remplissage du champ data_url</span></span>
+<span></span>
+<span><span class="va">url_finalized_data</span> <span class="op">&lt;-</span> <span class="fu">get_all_url</span><span class="op">(</span></span>
 <span>  start_date <span class="op">=</span> <span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>,</span>
-<span>  end_date <span class="op">=</span> <span class="va">newest_finalized_date</span>,</span>
+<span>  end_date <span class="op">=</span> <span class="va">latest_finalized_date</span>,</span>
 <span>  is.preliminary <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span>  </span>
-<span><span class="va">url_preliminary_data</span> <span class="op">&lt;-</span> <span class="fu">get_data_url</span><span class="op">(</span></span>
-<span>  start_date <span class="op">=</span> <span class="va">newest_finalized_date</span> <span class="op">+</span> <span class="fl">1</span>,</span>
-<span>  end_date <span class="op">=</span> <span class="va">newest_preliminary_date</span>,</span>
+<span><span class="va">url_preliminary_data</span> <span class="op">&lt;-</span> <span class="fu">get_all_url</span><span class="op">(</span></span>
+<span>  start_date <span class="op">=</span> <span class="va">latest_finalized_date</span> <span class="op">+</span> <span class="fl">1</span>,</span>
+<span>  end_date <span class="op">=</span> <span class="va">latest_preliminary_date</span>,</span>
 <span>  is.preliminary <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">tib_expected</span><span class="op">$</span><span class="va">data_filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
-<span>  <span class="va">url_finalized_data</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, </span>
-<span>  <span class="va">url_preliminary_data</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="op">)</span></span>
+<span><span class="va">tib_expected</span><span class="op">$</span><span class="va">data_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">url_finalized_data</span>, <span class="va">url_preliminary_data</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">url_root</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/"</span></span>
-<span>  </span>
-<span><span class="va">get_data_urls</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">url_parts</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">url_root</span>, <span class="va">url_parts</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">url_parts</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
-<span>         </span>
-<span><span class="op">}</span> </span>
-<span></span>
-<span><span class="va">tib_expected</span><span class="op">$</span><span class="va">data_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
-<span>  <span class="fu">get_data_urls</span><span class="op">(</span><span class="va">url_finalized_data</span><span class="op">)</span>,</span>
-<span>  <span class="fu">get_data_urls</span><span class="op">(</span><span class="va">url_preliminary_data</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co"># remplissage du champ data_filename</span></span>
+<span><span class="va">tib_expected</span><span class="op">$</span><span class="va">data_filename</span> <span class="op">&lt;-</span> <span class="va">tib_expected</span><span class="op">$</span><span class="va">data_url</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">map</span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="fu">stri_split_fixed</span><span class="op">(</span><span class="va">x</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le champ data_files_loaded de type logique permet de connaître la liste des fichiers de données déjà présents dans le dossier <code>DATA</code></p>
 <div class="cell">
