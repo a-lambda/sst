@@ -219,7 +219,7 @@ Les poids relatifs à chaque mesure ont été fixés comme étant les ratio des 
 ### Calcul des poids à affecter aux mesures suivant la latitude associée
 
 ```{r}
-#| label: calculate_weights
+#| label: calculate_polygone_weights
 
 # fonction génératrice de "carré géographique" de n degrés de côté
 # le point de base (lon, lat) est le point inférieur gauche. 
@@ -241,6 +241,7 @@ polygone_sfc <- seq(-90, 89.75, by = 0.25) |>
 
 area_weights <- as.numeric(st_area(polygone_sfc) / max(st_area(polygone_sfc)))
 head(area_weights)
+
 ```
 
 
