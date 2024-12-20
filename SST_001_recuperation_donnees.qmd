@@ -9,40 +9,45 @@
     3.  `purrr`, entre autres.
 -   `terra`,
 -   `ncdf4` pour la gestion des fichiers NetCDF,
--   `stringi` pour la fonction stri_sub 
+-   `stringi` pour la fonction stri_sub
+-   `gt` pour la représentation tabulaire
 
 ```{r}
-#| label: load_libraries
+#| label: install_and_load_libraries
 #| message: false
+#| code-fold: true
 
 libs <- c("glue", "httr", "tidyverse", "terra", "ncdf4", "stringi", "gt")
 
-#install missing libraries
 installed_libs <- libs %in% rownames(installed.packages())
 if (any(installed_libs == FALSE)) {
   install.packages(libs[!installed_libs])
 }
 
-#load libraries
 invisible(lapply(libs, library, character.only = TRUE))
 
 ```
 
-## Décompte des fichiers exploitables 
+## Décompte des fichiers exploitables
 
-Les fichiers de données NectCDF temporaires ont le suffixe "\_preliminary".   
+Les fichiers de données NectCDF temporaires ont le suffixe "\_preliminary".\
 Les autres ne possèdent pas ce suffixe.
 
-Le premier fichier NetCDF exploitable date du 1er septembre 1981. 
-En date du `Sys.Date()` nous allons déterminer :
+Le premier fichier NetCDF exploitable date du 1er septembre 1981. En date du `Sys.Date()` nous allons déterminer :
 
-- la date du dernier fichier finalisé disponible
-- la date du dernier fichier temporaire disponible
-- le nombre total de fichiers finalisés
-- le nombre total de fichiers temporaires
+-   la date du dernier fichier finalisé disponible
+-   la date du dernier fichier temporaire disponible
+-   le nombre total de fichiers finalisés
+-   le nombre total de fichiers temporaires
+
+### Détermination de l'url du fichier de données `.nc`
+
+-   en fonction de la date,
+-   et du statut (finalisé ou temporaire)
 
 ```{r}
-#| label: tools
+#| label: get_url_and_get_all_url
+#| code-fold: true
 
 yyyymm <- function(date) {
   return(gsub("-", "", stri_sub(date, 1, 7)))
@@ -51,15 +56,6 @@ yyyymm <- function(date) {
 yyyymmdd <- function(date) { 
   return(gsub("-", "", date))
 }
-```
-
-### Détermination de l'url du fichier de données `.nc` 
-
-- en fonction de la date,
-- et du statut (finalisé ou temporaire)
-
-```{r}
-#| label: get_url
 
 get_url <- function(date, is.preliminary = FALSE) {
   
@@ -82,15 +78,23 @@ get_all_url <- function(start_date, end_date, is.preliminary = FALSE) {
 
 ```
 
-### Détermination des dates les plus récentes pour les fichiers `.nc`
+### Datation des derniers fichiers (**temporaire** et **finalisé**)
 
 Principe :
 
-On recherche à partir de la date du jour la présence des données aux urls que l'on aura calculées par ailleurs avec la fonction `get_url`.
-Si la page sollicitée est présente on a fini. Sinon on passe au jour précédent.
+On recherche à partir de la date du jour la présence des données aux urls que l'on aura calculées par ailleurs avec la fonction `get_url`. Si la page sollicitée est présente on a fini.
+
+Sinon on passe au jour précédent, et ainsi de suite si nécessaire, jusqu'à tomber sur un code réponse http de valeur 200.
+
+::: callout-note
+Les données collectées qualifiées de **temporaires** sont enregistrées dans un fichier avec l'extension `_preliminary.nc` le temps que les données soient **vérifiées et validées**.
+
+Cette opération se déroule sur un délai d'approximativement 2 semaines à partir de la date de collecte des données.
+:::
 
 ```{r}
 #| label: get_latest_date
+#| code-fold: true
 #| 
 get_latest_date <- function(init_date, increment = -1, is.preliminary) {
   
@@ -122,14 +126,13 @@ latest_finalized_date <- get_latest_date(
 
 ```
 
-::: {.callout-note}
-
+::: callout-note
 Si des fichiers `preliminary` se retrouvent encore parmi des fichiers finalisés, parce qu'ils n'auront pas encore été traités, alors les décomptes de fichiers finalisés et temporaires seront inexacts.
-
 :::
 
 ```{r}
 #| label: get_data_files_count
+#| code-fold: true
 #| 
 data_files_count <- function(start_date, end_date) {
   
@@ -156,33 +159,27 @@ gt_summary
 
 ```
 
-## Remplissage de la table des fichiers de données
+## Comptabilisation des fichiers de données théoriquement disponibles
 
-Création d'un tibble `tib_sst` composée des colonnes suivantes :
+### Comptabilisation **théorique** dans le tibble `tib_expected`
 
-- date : date de récupération des données
-- data_filename : nom local du fichier de données
-- data_url : url permettant d'accéder aux données pour une date donnée
+Le tibble `tib_expected` contient les informations relatives à l'ensemble des données théoriquement entreposées sur le serveur (basées sur le protocole de production et de nommage des données)
 
-::: {.callout-note}
+-   date : date de production du fichier (temporaire ou finalisé)\
+-   data_url : url du fichier de données
+-   data_filename : nom du fichier de données
 
-La problématique consiste à mettre à jour au fil de l'eau les données qui sont initialement enregistrées dans un fichier avec l'extension **preliminary.nc" le temps que les données soient "validées". Cette opération se déroule sur un délai d'approximativement 2 semaines à partir de la récupération des données.
+Il contient en plus une information permettant de savoir si le fichier a dèjà été téléchargé.
 
-:::
-
-Le fichier `tib_expected` contient les informations relatives à l'ensemble des données théoriquement entreposées sur le serveur.
+-   data_loaded : champ de type logique indiquant la présence des données du fichier en local dans le dossier `DATA/RAW`
 
 ```{r}
 #| label: tib_expected
 #| code-fold: true
 #| 
-# remplissage du champ date
-
 tib_expected <- tibble(
   date = seq(ymd("1981-09-01"), latest_preliminary_date, by = "days")
 )
-
-# remplissage du champ data_url
 
 url_finalized_data <- get_all_url(
   start_date = ymd("1981-09-01"),
@@ -198,20 +195,10 @@ url_preliminary_data <- get_all_url(
 
 tib_expected$data_url <- c(url_finalized_data, url_preliminary_data)
 
-# remplissage du champ data_filename
-
 tib_expected$data_filename <- tib_expected$data_url |>
   map(\(x) {tail(stri_split_fixed(x, "/")[[1]], n = 1)}) |> 
   unlist()
 
-```
-
-Le champ data_files_loaded de type logique permet de connaître la liste des fichiers de données déjà présents dans le dossier `DATA/RAW`
-
-```{r}
-#| label: is_data_expected_loaded
-#| 
-# data_loaded renseigne sur la présence du fichier en local (dossier DATA/RAW)
 
 data_files <- tib_expected$data_filename
 data_files_loaded <- list.files(path = "DATA/RAW", pattern = "*.nc*")
@@ -220,11 +207,19 @@ data_preliminary_loaded <- list.files(
 )
 tib_expected$data_loaded <- (data_files %in% data_files_loaded)
 
+tail(tib_expected, n = 20)
+
 ```
 
+### Suppression des fichiers inutiles présents dans `DATA/RAW`
+
+Cela concerne principalement les fichiers **temporaires** qui sont encore présents dans ce dossier alors qu'ils ont été supprimés sur le serveur.
+
+C'est la variable `latest_finalized_date` contenant la date du fichier finalisé le plus récent qui permet cette discrimination.
 
 ```{r}
 #| label: delete_preliminary_data
+#| code-fold: true
 
 data_files_to_delete <- data_files_loaded[!(data_files_loaded %in% data_files)]
 if (length(data_files_to_delete > 0)) {
@@ -233,12 +228,13 @@ if (length(data_files_to_delete > 0)) {
 
 ```
 
-## Téléchargement des données SST (si nécessaire avec data_loaded == FALSE)
+### Téléchargement des données SST (citère data_loaded == FALSE)
 
 ```{r}
 #| label: data_download
 #| message: false
-
+#| code-fold: true
+#| 
 get_unloaded_data <- function(data_filename, data_url) {
   
   file_path <- paste("DATA/RAW" , data_filename, sep = "/")
@@ -263,6 +259,7 @@ pwalk(list(data_filenames, data_urls), get_unloaded_data)
 
 ```
 
+### Comptabilisation **réelle** dans le tibble `tib_sst`
 
 ```{r}
 #| label: get_data_state_after_download_and_save
