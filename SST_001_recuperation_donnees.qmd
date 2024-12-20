@@ -153,13 +153,26 @@ tib_summary <- tibble(
 gt_summary <- gt(tib_summary) |> 
   tab_header(
     title = md("**Informations relatives aux fichiers de données**"),
-    subtitle = md("*(Les dates sont estimées)*")
+    subtitle = md("(Valeurs théoriques)")
+  ) |> 
+  tab_footnote(
+    footnote = md("Première collecte quotidienne datée du **01/09/1981**"),
+    locations = cells_body(
+      columns = file_count, rows = all()
+    )
+  ) |> 
+  tab_footnote(
+    footnote = md("Dates **estimées** selon le protocole de traitement des données"),
+    locations = cells_body(
+      columns = latest_date, rows = all()
+    )
   )
+
 gt_summary
 
 ```
 
-## Comptabilisation des fichiers de données théoriquement disponibles
+## Comptabilisation des fichiers de données
 
 ### Comptabilisation **théorique** dans le tibble `tib_expected`
 
@@ -207,13 +220,11 @@ data_preliminary_loaded <- list.files(
 )
 tib_expected$data_loaded <- (data_files %in% data_files_loaded)
 
-tail(tib_expected, n = 20)
-
 ```
 
-### Suppression des fichiers inutiles présents dans `DATA/RAW`
+### Suppression des fichiers devenus inutiles
 
-Cela concerne principalement les fichiers **temporaires** qui sont encore présents dans ce dossier alors qu'ils ont été supprimés sur le serveur.
+Cela concerne principalement les fichiers **temporaires** qui sont encore présents dans le dossier `DATA/RAW` alors qu'ils ont été supprimés sur le serveur.
 
 C'est la variable `latest_finalized_date` contenant la date du fichier finalisé le plus récent qui permet cette discrimination.
 
@@ -228,7 +239,9 @@ if (length(data_files_to_delete > 0)) {
 
 ```
 
-### Téléchargement des données SST (citère data_loaded == FALSE)
+### Téléchargement des données SST 
+
+- critère de sélection : `data_loaded == FALSE`
 
 ```{r}
 #| label: data_download
@@ -263,8 +276,8 @@ pwalk(list(data_filenames, data_urls), get_unloaded_data)
 
 ```{r}
 #| label: get_data_state_after_download_and_save
+#| code-fold: true
 #| 
-# data_loaded renseigne sur la présence du fichier en local (dossier DATA)
 
 tib_sst <- tib_expected
 data_files <- tib_sst$data_filename
@@ -274,3 +287,4 @@ tib_sst$data_loaded <- (data_files %in% data_files_loaded)
 saveRDS(tib_sst, "DATA/tib_sst.RDS")
 
 ```
+
