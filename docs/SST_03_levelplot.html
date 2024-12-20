@@ -256,9 +256,9 @@ window.Quarto = {
 <p>La connexion au fichier NetCDF s’opère via la commande nc_open.</p>
 <p>Grâce à elle nous pouvons déjà voir quel type d’informations sont enregistrées.</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="st">"DATA/oisst-avhrr-v02r01.20241201.nc"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="st">"DATA/RAW/oisst-avhrr-v02r01.20241201.nc"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>File DATA/oisst-avhrr-v02r01.20241201.nc (NC_FORMAT_NETCDF4):
+<pre><code>File DATA/RAW/oisst-avhrr-v02r01.20241201.nc (NC_FORMAT_NETCDF4):
 
      4 variables (excluding dimension variables):
         short sst[lon,lat,zlev,time]   (Chunking: [1440,720,1,1])  (Compression: shuffle,level 4)

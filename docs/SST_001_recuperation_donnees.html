@@ -227,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <code>stringi</code> pour la fonction stri_sub</li>
 </ul>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">libs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"glue"</span>, <span class="st">"httr"</span>, <span class="st">"tidyverse"</span>, <span class="st">"terra"</span>, <span class="st">"ncdf4"</span>, <span class="st">"stringi"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">libs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"glue"</span>, <span class="st">"httr"</span>, <span class="st">"tidyverse"</span>, <span class="st">"terra"</span>, <span class="st">"ncdf4"</span>, <span class="st">"stringi"</span>, <span class="st">"gt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#install missing libraries</span></span>
 <span><span class="va">installed_libs</span> <span class="op">&lt;-</span> <span class="va">libs</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
@@ -291,20 +291,15 @@ Les autres ne possèdent pas ce suffixe.</p>
 <p>Principe :</p>
 <p>On recherche à partir de la date du jour la présence des données aux urls que l’on aura calculées par ailleurs avec la fonction <code>get_url</code>. Si la page sollicitée est présente on a fini. Sinon on passe au jour précédent.</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_latest_date</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">is.preliminary</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_latest_date</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">init_date</span>, <span class="va">increment</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, <span class="va">is.preliminary</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  </span>
-<span>  <span class="va">init_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">is.preliminary</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">14</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
 <span>  <span class="va">date</span> <span class="op">&lt;-</span> <span class="va">init_date</span></span>
 <span>  <span class="va">http_200_status_OK</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
 <span>  <span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">http_200_status_OK</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">url</span> <span class="op">&lt;-</span> <span class="fu">get_url</span><span class="op">(</span>date <span class="op">=</span> <span class="va">date</span>, is.preliminary <span class="op">=</span> <span class="va">is.preliminary</span><span class="op">)</span></span>
-<span>    <span class="va">http_status_code</span> <span class="op">&lt;-</span> <span class="fu">status_code</span><span class="op">(</span></span>
-<span>      <span class="fu">GET</span><span class="op">(</span><span class="va">url</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
+<span>    <span class="va">http_status_code</span> <span class="op">&lt;-</span> <span class="fu">status_code</span><span class="op">(</span><span class="fu">GET</span><span class="op">(</span><span class="va">url</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="va">http_status_code</span> <span class="op">==</span> <span class="fl">404</span><span class="op">)</span> <span class="op">{</span> </span>
-<span>      <span class="va">date</span> <span class="op">&lt;-</span> <span class="va">date</span> <span class="op">-</span> <span class="fl">1</span></span>
+<span>      <span class="va">date</span> <span class="op">&lt;-</span> <span class="va">date</span> <span class="op">+</span> <span class="va">increment</span></span>
 <span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>      <span class="kw">if</span> <span class="op">(</span><span class="va">http_status_code</span> <span class="op">==</span> <span class="fl">200</span><span class="op">)</span> <span class="op">{</span> </span>
 <span>        <span class="va">http_200_status_OK</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span> </span>
@@ -314,8 +309,15 @@ Les autres ne possèdent pas ce suffixe.</p>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">latest_preliminary_date</span> <span class="op">&lt;-</span> <span class="fu">get_latest_date</span><span class="op">(</span>is.preliminary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">latest_finalized_date</span> <span class="op">&lt;-</span> <span class="fu">get_latest_date</span><span class="op">(</span>is.preliminary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">latest_preliminary_date</span> <span class="op">&lt;-</span> <span class="fu">get_latest_date</span><span class="op">(</span></span>
+<span>  init_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  is.preliminary <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">latest_finalized_date</span> <span class="op">&lt;-</span> <span class="fu">get_latest_date</span><span class="op">(</span></span>
+<span>  init_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">14</span>,</span>
+<span>  is.preliminary <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -340,21 +342,500 @@ Note
 <span><span class="va">nc_files_count</span> <span class="op">&lt;-</span> <span class="fu">data_files_count</span><span class="op">(</span><span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>, <span class="va">latest_finalized_date</span><span class="op">)</span></span>
 <span><span class="va">preliminary_files_count</span> <span class="op">&lt;-</span> <span class="fu">data_files_count</span><span class="op">(</span><span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>, <span class="va">latest_preliminary_date</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Dernier fichier finalisé daté du : "</span>, <span class="va">latest_finalized_date</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Dernier fichier finalisé daté du : 2024-12-04"</code></pre>
+<span><span class="va">tib_summary</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>  file_extension <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">".nc"</span>, <span class="st">"_preliminary.nc"</span><span class="op">)</span>,</span>
+<span>  file_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Finalisé"</span>, <span class="st">"Temporaire"</span><span class="op">)</span>,</span>
+<span>  latest_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">latest_finalized_date</span>, <span class="va">latest_preliminary_date</span><span class="op">)</span>,</span>
+<span>  file_count  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nc_files_count</span>, <span class="va">preliminary_files_count</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">gt_summary</span> <span class="op">&lt;-</span> <span class="fu">gt</span><span class="op">(</span><span class="va">tib_summary</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">tab_header</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="fu">md</span><span class="op">(</span><span class="st">"**Informations relatives aux fichiers de données**"</span><span class="op">)</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="fu">md</span><span class="op">(</span><span class="st">"*(Les dates sont estimées)*"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="va">gt_summary</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="tnoebgginx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tnoebgginx table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tnoebgginx thead, #tnoebgginx tbody, #tnoebgginx tfoot, #tnoebgginx tr, #tnoebgginx td, #tnoebgginx th {
+  border-style: none;
+}
+
+#tnoebgginx p {
+  margin: 0;
+  padding: 0;
+}
+
+#tnoebgginx .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tnoebgginx .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tnoebgginx .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tnoebgginx .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tnoebgginx .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tnoebgginx .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tnoebgginx .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tnoebgginx .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tnoebgginx .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tnoebgginx .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tnoebgginx .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tnoebgginx .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tnoebgginx .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tnoebgginx .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tnoebgginx .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tnoebgginx .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tnoebgginx .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tnoebgginx .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tnoebgginx .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tnoebgginx .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tnoebgginx .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tnoebgginx .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tnoebgginx .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tnoebgginx .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tnoebgginx .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tnoebgginx .gt_left {
+  text-align: left;
+}
+
+#tnoebgginx .gt_center {
+  text-align: center;
+}
+
+#tnoebgginx .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tnoebgginx .gt_font_normal {
+  font-weight: normal;
+}
+
+#tnoebgginx .gt_font_bold {
+  font-weight: bold;
+}
+
+#tnoebgginx .gt_font_italic {
+  font-style: italic;
+}
+
+#tnoebgginx .gt_super {
+  font-size: 65%;
+}
+
+#tnoebgginx .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tnoebgginx .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tnoebgginx .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tnoebgginx .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tnoebgginx .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tnoebgginx .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tnoebgginx .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#tnoebgginx .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tnoebgginx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="4" class="gt_heading gt_title gt_font_normal"><strong>Informations relatives aux fichiers de données</strong></th>
+</tr>
+<tr class="gt_heading even">
+<th colspan="4" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border"><em>(Les dates sont estimées)</em></th>
+</tr>
+<tr class="gt_col_headings header">
+<th id="file_extension" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">file_extension</th>
+<th id="file_type" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">file_type</th>
+<th id="latest_date" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">latest_date</th>
+<th id="file_count" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">file_count</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="file_extension">.nc</td>
+<td class="gt_row gt_left" headers="file_type">Finalisé</td>
+<td class="gt_row gt_right" headers="latest_date">2024-12-04</td>
+<td class="gt_row gt_right" headers="file_count">15801</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="file_extension">_preliminary.nc</td>
+<td class="gt_row gt_left" headers="file_type">Temporaire</td>
+<td class="gt_row gt_right" headers="latest_date">2024-12-18</td>
+<td class="gt_row gt_right" headers="file_count">15815</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Dernier fichier temporaire daté du : "</span>, <span class="va">latest_preliminary_date</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Dernier fichier temporaire daté du : 2024-12-18"</code></pre>
-</div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Nombre (estimé) de fichiers finalisés : "</span>, <span class="va">nc_files_count</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Nombre (estimé) de fichiers finalisés : 15801"</code></pre>
-</div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Nombre (estimé) de fichiers temporaires : "</span>, <span class="va">preliminary_files_count</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Nombre (estimé) de fichiers temporaires : 15815"</code></pre>
 </div>
 </div>
 </section></section><section id="remplissage-de-la-table-des-fichiers-de-données" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="remplissage-de-la-table-des-fichiers-de-données">
@@ -380,7 +861,8 @@ Note
 </div>
 <p>Le fichier <code>tib_expected</code> contient les informations relatives à l’ensemble des données théoriquement entreposées sur le serveur.</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># remplissage du champ date</span></span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># remplissage du champ date</span></span>
+<span></span>
 <span><span class="va">tib_expected</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
 <span>  date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu">ymd</span><span class="op">(</span><span class="st">"1981-09-01"</span><span class="op">)</span>, <span class="va">latest_preliminary_date</span>, by <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -402,33 +884,35 @@ Note
 <span><span class="va">tib_expected</span><span class="op">$</span><span class="va">data_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">url_finalized_data</span>, <span class="va">url_preliminary_data</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># remplissage du champ data_filename</span></span>
+<span></span>
 <span><span class="va">tib_expected</span><span class="op">$</span><span class="va">data_filename</span> <span class="op">&lt;-</span> <span class="va">tib_expected</span><span class="op">$</span><span class="va">data_url</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">map</span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="fu">stri_split_fixed</span><span class="op">(</span><span class="va">x</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<p>Le champ data_files_loaded de type logique permet de connaître la liste des fichiers de données déjà présents dans le dossier <code>DATA</code></p>
+<p>Le champ data_files_loaded de type logique permet de connaître la liste des fichiers de données déjà présents dans le dossier <code>DATA/RAW</code></p>
 <div class="cell">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># data_loaded renseigne sur la présence du fichier en local (dossier DATA)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># data_loaded renseigne sur la présence du fichier en local (dossier DATA/RAW)</span></span>
 <span></span>
 <span><span class="va">data_files</span> <span class="op">&lt;-</span> <span class="va">tib_expected</span><span class="op">$</span><span class="va">data_filename</span></span>
-<span><span class="va">data_files_loaded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"DATA"</span>, pattern <span class="op">=</span> <span class="st">"*.nc*"</span><span class="op">)</span></span>
+<span><span class="va">data_files_loaded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"DATA/RAW"</span>, pattern <span class="op">=</span> <span class="st">"*.nc*"</span><span class="op">)</span></span>
 <span><span class="va">data_preliminary_loaded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span></span>
-<span>  path <span class="op">=</span> <span class="st">"DATA"</span>, pattern <span class="op">=</span> <span class="st">"*_preliminary.nc*"</span></span>
+<span>  path <span class="op">=</span> <span class="st">"DATA/RAW"</span>, pattern <span class="op">=</span> <span class="st">"*_preliminary.nc*"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">tib_expected</span><span class="op">$</span><span class="va">data_loaded</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">data_files</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">data_files_loaded</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_files_to_delete</span> <span class="op">&lt;-</span> <span class="va">data_files_loaded</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">data_files_loaded</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">data_files</span><span class="op">)</span><span class="op">]</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_files_to_delete</span> <span class="op">&lt;-</span> <span class="va">data_files_loaded</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">data_files_loaded</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">data_files</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">data_files_to_delete</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"DATA"</span>, <span class="va">data_files_to_delete</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"DATA/RAW"</span>, <span class="va">data_files_to_delete</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="téléchargement-des-données-sst-si-nécessaire-avec-data_loaded-false" class="level2" data-number="2.4"><h2 data-number="2.4" class="anchored" data-anchor-id="téléchargement-des-données-sst-si-nécessaire-avec-data_loaded-false">
 <span class="header-section-number">2.4</span> Téléchargement des données SST (si nécessaire avec data_loaded == FALSE)</h2>
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_unloaded_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_filename</span>, <span class="va">data_url</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_unloaded_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_filename</span>, <span class="va">data_url</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  </span>
-<span>  <span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"DATA"</span> , <span class="va">data_filename</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
+<span>  <span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"DATA/RAW"</span> , <span class="va">data_filename</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
 <span>  <span class="va">status_code</span> <span class="op">&lt;-</span> <span class="fu">status_code</span><span class="op">(</span><span class="fu">GET</span><span class="op">(</span><span class="va">data_url</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="va">status_code</span><span class="op">)</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">status_code</span> <span class="op">==</span> <span class="fl">200</span><span class="op">)</span> <span class="op">{</span></span>
@@ -444,18 +928,16 @@ Note
 <span></span>
 <span><span class="va">data_files_unloaded</span> <span class="op">&lt;-</span> <span class="va">tib_expected</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">data_loaded</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">data_filenames</span> <span class="op">&lt;-</span> <span class="va">data_files_unloaded</span><span class="op">$</span><span class="va">data_filename</span></span>
 <span><span class="va">data_urls</span> <span class="op">&lt;-</span> <span class="va">data_files_unloaded</span><span class="op">$</span><span class="va">data_url</span></span>
-<span></span>
 <span><span class="fu">pwalk</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">data_filenames</span>, <span class="va">data_urls</span><span class="op">)</span>, <span class="va">get_unloaded_data</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># data_loaded renseigne sur la présence du fichier en local (dossier DATA)</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># data_loaded renseigne sur la présence du fichier en local (dossier DATA)</span></span>
 <span></span>
 <span><span class="va">tib_sst</span> <span class="op">&lt;-</span> <span class="va">tib_expected</span></span>
 <span><span class="va">data_files</span> <span class="op">&lt;-</span> <span class="va">tib_sst</span><span class="op">$</span><span class="va">data_filename</span></span>
-<span><span class="va">data_files_loaded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"DATA"</span>, pattern <span class="op">=</span> <span class="st">"*.nc*"</span><span class="op">)</span></span>
+<span><span class="va">data_files_loaded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"DATA/RAW"</span>, pattern <span class="op">=</span> <span class="st">"*.nc*"</span><span class="op">)</span></span>
 <span><span class="va">tib_sst</span><span class="op">$</span><span class="va">data_loaded</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">data_files</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">data_files_loaded</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">tib_sst</span>, <span class="st">"DATA/tib_sst.RDS"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
