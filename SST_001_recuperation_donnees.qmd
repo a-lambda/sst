@@ -15,7 +15,7 @@
 #| label: load_libraries
 #| message: false
 
-libs <- c("glue", "httr", "tidyverse", "terra", "ncdf4", "stringi")
+libs <- c("glue", "httr", "tidyverse", "terra", "ncdf4", "stringi", "gt")
 
 #install missing libraries
 installed_libs <- libs %in% rownames(installed.packages())
@@ -140,10 +140,19 @@ data_files_count <- function(start_date, end_date) {
 nc_files_count <- data_files_count(ymd("1981-09-01"), latest_finalized_date)
 preliminary_files_count <- data_files_count(ymd("1981-09-01"), latest_preliminary_date)
 
-paste0("Dernier fichier finalisé daté du : ", latest_finalized_date)
-paste0("Dernier fichier temporaire daté du : ", latest_preliminary_date)
-paste0("Nombre (estimé) de fichiers finalisés : ", nc_files_count)
-paste0("Nombre (estimé) de fichiers temporaires : ", preliminary_files_count)
+tib_summary <- tibble(
+  file_extension = c(".nc", "_preliminary.nc"),
+  file_type = c("Finalisé", "Temporaire"),
+  latest_date = c(latest_finalized_date, latest_preliminary_date),
+  file_count  = c(nc_files_count, preliminary_files_count)
+)
+
+gt_summary <- gt(tib_summary) |> 
+  tab_header(
+    title = md("**Informations relatives aux fichiers de données**"),
+    subtitle = md("*(Les dates sont estimées)*")
+  )
+gt_summary
 
 ```
 
