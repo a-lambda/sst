@@ -48,7 +48,7 @@ yyyymmdd <- function(date) {
 ```{r}
 
 area_weights <- fread(
-  file = "area_weights.csv",
+  file = "DATA/area_weights.csv",
   dec = ","
 ) |> pull( w )
 # matrix_area_weights <- matrix(rep(area_weights, 1440), nrow = 1440, byrow = TRUE)
@@ -63,7 +63,7 @@ Le principe consiste à détecter un fichier de moyenne (fichier RDS) déjà pr�
 
 Si ce dernier est présent il est lu et complété.
 
-Dans le cas contraire la constition de ce fichier est réalisée à partir de tous les fichiers NetCDF contenus dans le répertoire DATA.
+Dans le cas contraire la constition de ce fichier est réalisée à partir de tous les fichiers NetCDF contenus dans le répertoire `DATA/RAW`.
 
 Si le fichier pris en compte est un fichier temporaire (suffixe _preliminary) on attribuera à la donnée un `status_ok` de valeur $FALSE$
 
@@ -109,22 +109,23 @@ get_weighted_mean <- function(file, var, lon_min, lon_max, lat_min, lat_max) {
 
 get_all_weighted_mean <- function(var, geo_data) {
 
-  files <- list.files(path = "DATA", pattern = "*.nc", full.names = TRUE)
+  files <- list.files(path = "DATA/RAW", pattern = "*.nc", full.names = TRUE)
   if (length(files) > 0 ) {
     lon_min <- geo_data$bbox["lon_min"]
     lon_max <- geo_data$bbox["lon_max"]
     lat_min <- geo_data$bbox["lat_min"]
     lat_max <- geo_data$bbox["lat_max"]
     RDS_file <- paste0('wm_', var, '_', geo_data$RDS_name, '.RDS')
-    if (file.exists(RDS_file)) {
+    RDS_file_path <- paste("DATA", RDS_file, sep = '/')
+    if (file.exists(RDS_file_path)) {
       # les données relatives aux fichiers _preliminary sont supprimées
-      RDS_data <- readRDS(RDS_file) |> 
+      RDS_data <- readRDS(RDS_file_path) |> 
         dplyr::filter(status_ok)
-      saveRDS(RDS_data, RDS_file) 
+      saveRDS(RDS_data, RDS_file_path) 
       finalized_files_processed <- RDS_data |>
         pull(date) |> 
         yyyymmdd() |> 
-        vapply(\(x) paste0('DATA/oisst-avhrr-v02r01.', x, '.nc'), character(1))
+        vapply(\(x) paste0('DATA/RAW/oisst-avhrr-v02r01.', x, '.nc'), character(1))
       files_to_process <- files[!(files %in% finalized_files_processed)]
     } else {
       files_to_process <- files
@@ -144,12 +145,12 @@ get_all_weighted_mean <- function(var, geo_data) {
         date = lubridate::as_date(time, origin = origin_date),
         status_ok = as.logical(status_ok)
       )
-    if (file.exists(RDS_file)) {
+    if (file.exists(RDS_file_path)) {
       RDS_data <- rbind(RDS_data, df_wm_var)
     } else {
       RDS_data <- df_wm_var
     }
-    saveRDS(RDS_data, RDS_file)
+    saveRDS(RDS_data, RDS_file_path)
     RDS_data
   } else { 
     message("aucun fichier de données à traiter") 
@@ -200,7 +201,7 @@ df_wm_ice_north_atlantic <- get_all_weighted_mean("ice", geo_north_atlantic)
 
 ```{r}
 
-df_wm_sst <- readRDS('wm_sst_world.RDS') |> 
+df_wm_sst <- readRDS('DATA/wm_sst_world.RDS') |> 
   mutate(
     year = year(date),
     yday = yday(date),
@@ -285,7 +286,7 @@ ggplot(data = df_wm_sst,
   
 ```{r}
 
-df_wm_sst <- readRDS("wm_sst_world.RDS") |> 
+df_wm_sst <- readRDS("DATA/wm_sst_world.RDS") |> 
   mutate(year = year(date))
 ggplot(data = df_wm_sst) +
   geom_line(aes(x = date, y = wm_sst, group = year, color = year))
