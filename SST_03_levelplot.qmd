@@ -34,7 +34,7 @@ Grâce à elle nous pouvons déjà voir quel type d'informations sont enregistr�
 ```{r}
 #| label: load_nc_file
 
-(nc <- nc_open("DATA/oisst-avhrr-v02r01.20241201.nc"))
+(nc <- nc_open("DATA/RAW/oisst-avhrr-v02r01.20241201.nc"))
 
 ```
 
