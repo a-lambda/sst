@@ -92,20 +92,15 @@ Si la page sollicitée est présente on a fini. Sinon on passe au jour précéde
 ```{r}
 #| label: get_latest_date
 #| 
-get_latest_date <- function(is.preliminary) {
+get_latest_date <- function(init_date, increment = -1, is.preliminary) {
   
-  init_date <- as.Date(
-    ifelse(is.preliminary, Sys.Date(), Sys.Date() - 14)
-  )
   date <- init_date
   http_200_status_OK <- FALSE
   while (!http_200_status_OK) {
     url <- get_url(date = date, is.preliminary = is.preliminary)
-    http_status_code <- status_code(
-      GET(url)
-    )
+    http_status_code <- status_code(GET(url))
     if (http_status_code == 404) { 
-      date <- date - 1
+      date <- date + increment
     } else {
       if (http_status_code == 200) { 
         http_200_status_OK <- TRUE 
@@ -115,8 +110,15 @@ get_latest_date <- function(is.preliminary) {
   return(date)
 }
 
-latest_preliminary_date <- get_latest_date(is.preliminary = TRUE)
-latest_finalized_date <- get_latest_date(is.preliminary = FALSE)
+latest_preliminary_date <- get_latest_date(
+  init_date = Sys.Date(),
+  is.preliminary = TRUE
+)
+
+latest_finalized_date <- get_latest_date(
+  init_date = Sys.Date() - 14,
+  is.preliminary = FALSE
+)
 
 ```
 
@@ -163,8 +165,10 @@ Le fichier `tib_expected` contient les informations relatives à l'ensemble des 
 
 ```{r}
 #| label: tib_expected
-
+#| code-fold: true
+#| 
 # remplissage du champ date
+
 tib_expected <- tibble(
   date = seq(ymd("1981-09-01"), latest_preliminary_date, by = "days")
 )
@@ -186,23 +190,24 @@ url_preliminary_data <- get_all_url(
 tib_expected$data_url <- c(url_finalized_data, url_preliminary_data)
 
 # remplissage du champ data_filename
+
 tib_expected$data_filename <- tib_expected$data_url |>
   map(\(x) {tail(stri_split_fixed(x, "/")[[1]], n = 1)}) |> 
   unlist()
 
 ```
 
-Le champ data_files_loaded de type logique permet de connaître la liste des fichiers de données déjà présents dans le dossier `DATA`
+Le champ data_files_loaded de type logique permet de connaître la liste des fichiers de données déjà présents dans le dossier `DATA/RAW`
 
 ```{r}
 #| label: is_data_expected_loaded
 #| 
-# data_loaded renseigne sur la présence du fichier en local (dossier DATA)
+# data_loaded renseigne sur la présence du fichier en local (dossier DATA/RAW)
 
 data_files <- tib_expected$data_filename
-data_files_loaded <- list.files(path = "DATA", pattern = "*.nc*")
+data_files_loaded <- list.files(path = "DATA/RAW", pattern = "*.nc*")
 data_preliminary_loaded <- list.files(
-  path = "DATA", pattern = "*_preliminary.nc*"
+  path = "DATA/RAW", pattern = "*_preliminary.nc*"
 )
 tib_expected$data_loaded <- (data_files %in% data_files_loaded)
 
@@ -214,7 +219,7 @@ tib_expected$data_loaded <- (data_files %in% data_files_loaded)
 
 data_files_to_delete <- data_files_loaded[!(data_files_loaded %in% data_files)]
 if (length(data_files_to_delete > 0)) {
-  unlink(paste("DATA", data_files_to_delete, sep = "/"))
+  unlink(paste("DATA/RAW", data_files_to_delete, sep = "/"))
 }
 
 ```
@@ -227,7 +232,7 @@ if (length(data_files_to_delete > 0)) {
 
 get_unloaded_data <- function(data_filename, data_url) {
   
-  file_path <- paste("DATA" , data_filename, sep = "/")
+  file_path <- paste("DATA/RAW" , data_filename, sep = "/")
   status_code <- status_code(GET(data_url))
   message(status_code)
   if (status_code == 200) {
@@ -243,10 +248,8 @@ get_unloaded_data <- function(data_filename, data_url) {
 
 data_files_unloaded <- tib_expected |> 
   dplyr::filter(!data_loaded)
-
 data_filenames <- data_files_unloaded$data_filename
 data_urls <- data_files_unloaded$data_url
-
 pwalk(list(data_filenames, data_urls), get_unloaded_data)
 
 ```
@@ -259,7 +262,7 @@ pwalk(list(data_filenames, data_urls), get_unloaded_data)
 
 tib_sst <- tib_expected
 data_files <- tib_sst$data_filename
-data_files_loaded <- list.files(path = "DATA", pattern = "*.nc*")
+data_files_loaded <- list.files(path = "DATA/RAW", pattern = "*.nc*")
 tib_sst$data_loaded <- (data_files %in% data_files_loaded)
 
 saveRDS(tib_sst, "DATA/tib_sst.RDS")
