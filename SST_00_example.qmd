@@ -1,20 +1,18 @@
 ---
-title: "Données SST du 21 novembre 2024"
+title: "Données SST du 1er décembre 2024"
 format: html
 ---
 
-## Exploration du fichier NetCDF (comme décrit [ici](https://pjbartlein.github.io/REarthSysSci/netCDF.html))
+## Exploration du fichier NetCDF
+
+Il est possible de trouver de plus amples informations sur le traitement des fichiers netCDF avec R [@netcdfi]
 
 ```{r}
 #| label: load_libraries
 #| message: false
+#| code-fold: true
 
-libs <- c(
-  "ncdf4",
-  "tidyverse",
-  "terra",
-  "sf"
-)
+libs <- c("ncdf4", "tidyverse", "terra", "sf")
 
 #install missing libraries
 installed_libs <- libs %in% rownames(installed.packages())
@@ -44,17 +42,15 @@ les variables principales sont discriminées suivant plusieurs dimensions.
 
 Ici, ce sont :
 
-- lon : la longitude (de taille $1440=\frac{360}{0.25}$) 
-- lat : la latitude (de taille $720=\frac{180}{0.25}$)
-- zlev : La hauteur de la surface de l'eau de mer
-- time : temps central de la journée
+-   lon : la longitude (de taille $1440=\frac{360}{0.25}$)
+-   lat : la latitude (de taille $720=\frac{180}{0.25}$)
+-   zlev : La hauteur de la surface de l'eau de mer
+-   time : temps central de la journée
 
 ::: {.callout-note collapse="false"}
+-   Les longitudes sont ordonnées de l'Est vers l'Ouest en partant du méridien de Greenwich depuis la valeur $0.125$ jusqu'à la valeur $0.125+1439*0.25=359.875$
 
-- Les longitudes sont ordonnées de l'Est vers l'Ouest en partant du méridien de Greenwich depuis la valeur $0.125$ jusqu'à la valeur $0.125+1439*0.25=359.875$
-
-- Les latitudes sont ordonnées du Sud au Nord dans l'array `lat` en partant du pôle Sud depuis la valeur $-90+0.125=-89.875$ jusqu'à la valeur $-89.875+719*0.25=89.875$
-
+-   Les latitudes sont ordonnées du Sud au Nord dans l'array `lat` en partant du pôle Sud depuis la valeur $-90+0.125=-89.875$ jusqu'à la valeur $-89.875+719*0.25=89.875$
 :::
 
 Il est possible d'avoir accès aux données des dimensions via la fonction `ncvar_get` et l'accès aux attributs avec la fonction `ncatt_get`
@@ -80,10 +76,10 @@ zlev <- ncvar_get(nc, "zlev")
 
 Nous avons quatre variables stockées dans le fichier :
 
-- sst : la température quotidienne de la surface de l'eau
-- anom : les anomalies quotidiennes de température de surface de l'eau
-- err : estimated error standard deviation of analysed_sst
-- ice : la concentration en glace
+-   sst : la température quotidienne de la surface de l'eau
+-   anom : les anomalies quotidiennes de température de surface de l'eau
+-   err : estimated error standard deviation of analysed_sst
+-   ice : la concentration en glace
 
 ```{r}
 #| label: info_variables
@@ -164,13 +160,13 @@ walk(nc_var, nc_charge_var)
 
 ```
 
-La variable sst est enregistrée en tant que `r class(sst)` avec les dimensions `r dim(sst)` 
+La variable sst est enregistrée en tant que `r class(sst)` avec les dimensions `r dim(sst)`
 
-- La longitude correspond à la 1ère dimension (lignes de la matrice)
+-   La longitude correspond à la 1ère dimension (lignes de la matrice)
 
-- La latitude correspond à la 2ème dimension (colonnes de la matrice)
+-   La latitude correspond à la 2ème dimension (colonnes de la matrice)
 
-- Le vecteur associé est obtenu en parcourant d'abord les 1440 longitudes d'un parallèle avant de passer à la latitude suivante.
+-   Le vecteur associé est obtenu en parcourant d'abord les 1440 longitudes d'un parallèle avant de passer à la latitude suivante.
 
 ```{r}
 #| label: conversion_to_dataframe
@@ -184,7 +180,6 @@ head(df_sst)
 ## Affichage de la carte des données sst
 
 Avec positionnement en rouge du point de test donné en exemple :
-
 
 ```{r}
 #|label: plot_sst
@@ -243,7 +238,6 @@ area_weights <- as.numeric(st_area(polygone_sfc) / max(st_area(polygone_sfc)))
 head(area_weights)
 
 ```
-
 
 ```{r}
 #| label: weighted_mean_sst
@@ -309,4 +303,3 @@ df_sst |>
   )
 
 ```
-
