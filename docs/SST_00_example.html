@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.33">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>2&nbsp; Données SST du 1er décembre 2024 – Fichiers NetCDF</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./SST_01_recuperation_donnees.html" rel="next">
+<link href="./intro.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-9c801443a31852693991529736dcdd3d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./SST_00_example.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Un fichier SST</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Fichiers NetCDF</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/a-lambda/sst/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./SST_00_example.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Un fichier SST</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./SST_01_recuperation_donnees.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Données SST</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./SST_02_timeseries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Données temporelles</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+<li>
+<a href="#exploration-du-fichier-netcdf" id="toc-exploration-du-fichier-netcdf" class="nav-link active" data-scroll-target="#exploration-du-fichier-netcdf"><span class="header-section-number">2.1</span> Exploration du fichier NetCDF</a>
+  <ul class="collapse">
+<li><a href="#les-dimensions" id="toc-les-dimensions" class="nav-link" data-scroll-target="#les-dimensions"><span class="header-section-number">2.1.1</span> Les dimensions</a></li>
+  <li><a href="#les-variables-principales" id="toc-les-variables-principales" class="nav-link" data-scroll-target="#les-variables-principales"><span class="header-section-number">2.1.2</span> Les variables principales</a></li>
+  <li><a href="#les-attributs-globaux-du-fichier" id="toc-les-attributs-globaux-du-fichier" class="nav-link" data-scroll-target="#les-attributs-globaux-du-fichier"><span class="header-section-number">2.1.3</span> Les attributs globaux du fichier</a></li>
+  </ul>
+</li>
+  <li><a href="#exploration-des-variables" id="toc-exploration-des-variables" class="nav-link" data-scroll-target="#exploration-des-variables"><span class="header-section-number">2.2</span> Exploration des variables</a></li>
+  <li><a href="#affichage-de-la-carte-des-donn%C3%A9es-sst" id="toc-affichage-de-la-carte-des-données-sst" class="nav-link" data-scroll-target="#affichage-de-la-carte-des-donn%C3%A9es-sst"><span class="header-section-number">2.3</span> Affichage de la carte des données sst</a></li>
+  <li>
+<a href="#calcul-de-moyenne-globale" id="toc-calcul-de-moyenne-globale" class="nav-link" data-scroll-target="#calcul-de-moyenne-globale"><span class="header-section-number">2.4</span> Calcul de moyenne globale</a>
+  <ul class="collapse">
+<li><a href="#calcul-des-poids-%C3%A0-affecter-aux-mesures-suivant-la-latitude-associ%C3%A9e" id="toc-calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée" class="nav-link" data-scroll-target="#calcul-des-poids-%C3%A0-affecter-aux-mesures-suivant-la-latitude-associ%C3%A9e"><span class="header-section-number">2.4.1</span> Calcul des poids à affecter aux mesures suivant la latitude associée</a></li>
+  </ul>
+</li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/a-lambda/sst/edit/main/SST_00_example.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Données SST du 1er décembre 2024</span>
+</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><section id="exploration-du-fichier-netcdf" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="exploration-du-fichier-netcdf">
+<span class="header-section-number">2.1</span> Exploration du fichier NetCDF</h2>
+<p>Il est possible de trouver de plus amples informations sur le traitement des fichiers netCDF avec R <span class="citation" data-cites="netcdfi">(<a href="references.html#ref-netcdfi" role="doc-biblioref"><span>«&nbsp;netCDF in R&nbsp;»</span>, s.&nbsp;d.</a>)</span></p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">libs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ncdf4"</span>, <span class="st">"tidyverse"</span>, <span class="st">"terra"</span>, <span class="st">"sf"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#install missing libraries</span></span>
+<span><span class="va">installed_libs</span> <span class="op">&lt;-</span> <span class="va">libs</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="va">installed_libs</span> <span class="op">==</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">libs</span><span class="op">[</span><span class="op">!</span><span class="va">installed_libs</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co">#load libraries</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">libs</span>, <span class="va">library</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>La connexion au fichier NetCDF s’opère via la commande nc_open.</p>
+<p>Grâce à elle nous pouvons déjà voir quel type d’informations sont enregistrées.</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="st">"DATA/RAW/oisst-avhrr-v02r01.20241201.nc"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>File DATA/RAW/oisst-avhrr-v02r01.20241201.nc (NC_FORMAT_NETCDF4):
+
+     4 variables (excluding dimension variables):
+        short sst[lon,lat,zlev,time]   (Chunking: [1440,720,1,1])  (Compression: shuffle,level 4)
+            long_name: Daily sea surface temperature
+            units: Celsius
+            _FillValue: -999
+            add_offset: 0
+            scale_factor: 0.00999999977648258
+            valid_min: -300
+            valid_max: 4500
+        short anom[lon,lat,zlev,time]   (Chunking: [1440,720,1,1])  (Compression: shuffle,level 4)
+            long_name: Daily sea surface temperature anomalies
+            units: Celsius
+            _FillValue: -999
+            add_offset: 0
+            scale_factor: 0.00999999977648258
+            valid_min: -1200
+            valid_max: 1200
+        short err[lon,lat,zlev,time]   (Chunking: [1440,720,1,1])  (Compression: shuffle,level 4)
+            long_name: Estimated error standard deviation of analysed_sst
+            units: Celsius
+            _FillValue: -999
+            add_offset: 0
+            scale_factor: 0.00999999977648258
+            valid_min: 0
+            valid_max: 1000
+        short ice[lon,lat,zlev,time]   (Chunking: [1440,720,1,1])  (Compression: shuffle,level 4)
+            long_name: Sea ice concentration
+            units: %
+            _FillValue: -999
+            add_offset: 0
+            scale_factor: 0.00999999977648258
+            valid_min: 0
+            valid_max: 100
+
+     4 dimensions:
+        time  Size:1   *** is unlimited *** 
+            long_name: Center time of the day
+            units: days since 1978-01-01 12:00:00
+        zlev  Size:1 
+            long_name: Sea surface height
+            units: meters
+            positive: down
+            actual_range: 0, 0
+        lat  Size:720 
+            long_name: Latitude
+            units: degrees_north
+            grids: Uniform grid from -89.875 to 89.875 by 0.25
+        lon  Size:1440 
+            long_name: Longitude
+            units: degrees_east
+            grids: Uniform grid from 0.125 to 359.875 by 0.25
+
+    37 global attributes:
+        Conventions: CF-1.6, ACDD-1.3
+        title: NOAA/NCEI 1/4 Degree Daily Optimum Interpolation Sea Surface Temperature (OISST) Analysis, Version 2.1 - Final
+        references: Reynolds, et al.(2007) Daily High-Resolution-Blended Analyses for Sea Surface Temperature (available at https://doi.org/10.1175/2007JCLI1824.1). Banzon, et al.(2016) A long-term record of blended satellite and in situ sea-surface temperature for climate monitoring, modeling and environmental studies (available at https://doi.org/10.5194/essd-8-165-2016). Huang et al. (2020) Improvements of the Daily Optimum Interpolation Sea Surface Temperature (DOISST) Version v02r01, submitted.Climatology is based on 1971-2000 OI.v2 SST. Satellite data: Pathfinder AVHRR SST, Navy AVHRR SST, and NOAA ACSPO SST. Ice data: NCEP Ice and GSFC Ice.
+        source: ICOADS, NCEP_GTS, GSFC_ICE, NCEP_ICE, Pathfinder_AVHRR, Navy_AVHRR, NOAA_ACSP
+        id: oisst-avhrr-v02r01.20241201.nc
+        naming_authority: gov.noaa.ncei
+        summary: NOAAs 1/4-degree Daily Optimum Interpolation Sea Surface Temperature (OISST) (sometimes referred to as Reynolds SST, which however also refers to earlier products at different resolution), currently available as version v02r01, is created by interpolating and extrapolating SST observations from different sources, resulting in a smoothed complete field. The sources of data are satellite (AVHRR) and in situ platforms (i.e., ships and buoys), and the specific datasets employed may change over time. At the marginal ice zone, sea ice concentrations are used to generate proxy SSTs.  A preliminary version of this file is produced in near-real time (1-day latency), and then replaced with a final version after 2 weeks. Note that this is the AVHRR-ONLY DOISST, available from Oct 1981, but there is a companion DOISST product that includes microwave satellite data, available from June 2002
+        cdm_data_type: Grid
+        history: Final file created using preliminary as first guess, and 3 days of AVHRR data. Preliminary uses only 1 day of AVHRR data.
+        date_modified: 2024-12-16T14:43:00Z
+        date_created: 2024-12-16T14:43:00Z
+        product_version: Version v02r01
+        processing_level: NOAA Level 4
+        institution: NOAA/National Centers for Environmental Information
+        creator_url: https://www.ncei.noaa.gov/
+        creator_email: oisst-help@noaa.gov
+        keywords: Earth Science &gt; Oceans &gt; Ocean Temperature &gt; Sea Surface Temperature
+        keywords_vocabulary: Global Change Master Directory (GCMD) Earth Science Keywords
+        platform: Ships, buoys, Argo floats, MetOp-A, MetOp-B
+        platform_vocabulary: Global Change Master Directory (GCMD) Platform Keywords
+        instrument: Earth Remote Sensing Instruments &gt; Passive Remote Sensing &gt; Spectrometers/Radiometers &gt; Imaging Spectrometers/Radiometers &gt; AVHRR &gt; Advanced Very High Resolution Radiometer
+        instrument_vocabulary: Global Change Master Directory (GCMD) Instrument Keywords
+        standard_name_vocabulary: CF Standard Name Table (v40, 25 January 2017)
+        geospatial_lat_min: -90
+        geospatial_lat_max: 90
+        geospatial_lon_min: 0
+        geospatial_lon_max: 360
+        geospatial_lat_units: degrees_north
+        geospatial_lat_resolution: 0.25
+        geospatial_lon_units: degrees_east
+        geospatial_lon_resolution: 0.25
+        time_coverage_start: 2024-12-01T00:00:00Z
+        time_coverage_end: 2024-12-01T23:59:59Z
+        metadata_link: https://doi.org/10.25921/RE9P-PT57
+        ncei_template_version: NCEI_NetCDF_Grid_Template_v2.0
+        comment: Data was converted from NetCDF-3 to NetCDF-4 format with metadata updates in November 2017.
+        sensor: Thermometer, AVHRR</code></pre>
+</div>
+</div>
+<section id="les-dimensions" class="level3" data-number="2.1.1"><h3 data-number="2.1.1" class="anchored" data-anchor-id="les-dimensions">
+<span class="header-section-number">2.1.1</span> Les dimensions</h3>
+<p>les variables principales sont discriminées suivant plusieurs dimensions.</p>
+<p>Ici, ce sont :</p>
+<ul>
+<li>lon : la longitude (de taille <span class="math inline">\(1440=\frac{360}{0.25}\)</span>)</li>
+<li>lat : la latitude (de taille <span class="math inline">\(720=\frac{180}{0.25}\)</span>)</li>
+<li>zlev : La hauteur de la surface de l’eau de mer</li>
+<li>time : temps central de la journée</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Les longitudes sont ordonnées de l’Est vers l’Ouest en partant du méridien de Greenwich depuis la valeur <span class="math inline">\(0.125\)</span> jusqu’à la valeur <span class="math inline">\(0.125+1439*0.25=359.875\)</span></p></li>
+<li><p>Les latitudes sont ordonnées du Sud au Nord dans l’array <code>lat</code> en partant du pôle Sud depuis la valeur <span class="math inline">\(-90+0.125=-89.875\)</span> jusqu’à la valeur <span class="math inline">\(-89.875+719*0.25=89.875\)</span></p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Il est possible d’avoir accès aux données des dimensions via la fonction <code>ncvar_get</code> et l’accès aux attributs avec la fonction <code>ncatt_get</code></p>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about latitudes</span></span>
+<span><span class="va">lat</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"lat"</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">lat_units</span> <span class="op">&lt;-</span> <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"lat"</span>, <span class="st">"units"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$hasatt
+[1] TRUE
+
+$value
+[1] "degrees_north"</code></pre>
+</div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about longitudes</span></span>
+<span><span class="va">lon</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"lon"</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">lon_units</span> <span class="op">&lt;-</span> <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"lon"</span>, <span class="st">"units"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$hasatt
+[1] TRUE
+
+$value
+[1] "degrees_east"</code></pre>
+</div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about time</span></span>
+<span><span class="va">time</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"time"</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">time_units</span> <span class="op">&lt;-</span> <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"time"</span>, <span class="st">"units"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$hasatt
+[1] TRUE
+
+$value
+[1] "days since 1978-01-01 12:00:00"</code></pre>
+</div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">time_as_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="va">time</span>, origin <span class="op">=</span> <span class="st">"1978-01-01 12:00:0"</span>, tz <span class="op">=</span> <span class="st">"UTC"</span><span class="op">)</span></span>
+<span><span class="co"># get info about zlev</span></span>
+<span><span class="va">zlev</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"zlev"</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">zlev_units</span> <span class="op">&lt;-</span> <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="st">"zlev"</span>, <span class="st">"units"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$hasatt
+[1] TRUE
+
+$value
+[1] "meters"</code></pre>
+</div>
+</div>
+</section><section id="les-variables-principales" class="level3" data-number="2.1.2"><h3 data-number="2.1.2" class="anchored" data-anchor-id="les-variables-principales">
+<span class="header-section-number">2.1.2</span> Les variables principales</h3>
+<p>Nous avons quatre variables stockées dans le fichier :</p>
+<ul>
+<li>sst : la température quotidienne de la surface de l’eau</li>
+<li>anom : les anomalies quotidiennes de température de surface de l’eau</li>
+<li>err : estimated error standard deviation of analysed_sst</li>
+<li>ice : la concentration en glace</li>
+</ul>
+<div class="cell">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="op">(</span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "sst"  "anom" "err"  "ice" </code></pre>
+</div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get info about variable attribute</span></span>
+<span><span class="va">get_var_attribute</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span>, <span class="va">attribute</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">var</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">nc_var</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"la variable"</span>, <span class="va">var</span>, <span class="st">"est inexistante"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>  <span class="va">ln</span> <span class="op">&lt;-</span> <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="va">var</span>, attname <span class="op">=</span> <span class="va">attribute</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">ln</span><span class="op">$</span><span class="va">hasatt</span>, <span class="va">ln</span><span class="op">$</span><span class="va">value</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"pas d'attribut "</span>, <span class="va">attribute</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># long names</span></span>
+<span><span class="va">get_var_long_name</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span></span>
+<span>  <span class="va">nc_var</span>, </span>
+<span>  <span class="va">get_var_attribute</span>, </span>
+<span>  FUN.VALUE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, </span>
+<span>  <span class="st">"long_name"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="op">(</span><span class="op">(</span><span class="fu">get_var_long_name</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                 sst 
+                     "Daily sea surface temperature" 
+                                                anom 
+           "Daily sea surface temperature anomalies" 
+                                                 err 
+"Estimated error standard deviation of analysed_sst" 
+                                                 ice 
+                             "Sea ice concentration" </code></pre>
+</div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># source</span></span>
+<span><span class="va">get_var_units</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span></span>
+<span>  <span class="va">nc_var</span>, </span>
+<span>  <span class="va">get_var_attribute</span>, </span>
+<span>  FUN.VALUE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, </span>
+<span>  <span class="st">"units"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="op">(</span><span class="op">(</span><span class="fu">get_var_units</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      sst      anom       err       ice 
+"Celsius" "Celsius" "Celsius"       "%" </code></pre>
+</div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># fill value</span></span>
+<span><span class="va">get_var_fill_value</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span></span>
+<span>  <span class="va">nc_var</span>, </span>
+<span>  <span class="va">get_var_attribute</span>, </span>
+<span>  FUN.VALUE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, </span>
+<span>  <span class="st">"_FillValue"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="op">(</span><span class="op">(</span><span class="fu">get_var_fill_value</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> sst anom  err  ice 
+-999 -999 -999 -999 </code></pre>
+</div>
+</div>
+</section><section id="les-attributs-globaux-du-fichier" class="level3" data-number="2.1.3"><h3 data-number="2.1.3" class="anchored" data-anchor-id="les-attributs-globaux-du-fichier">
+<span class="header-section-number">2.1.3</span> Les attributs globaux du fichier</h3>
+<div class="cell">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">att</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"title"</span>, <span class="st">"institution"</span>, <span class="st">"source"</span>, <span class="st">"references"</span>, <span class="st">"history"</span>, <span class="st">"Conventions"</span><span class="op">)</span> </span>
+<span><span class="va">get_global_attribute</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">att</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="fl">0</span>, <span class="va">att</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
+<span><span class="op">}</span></span>
+<span><span class="op">(</span><span class="va">global_attributes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">att</span>, <span class="va">get_global_attribute</span>, FUN.VALUE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        title 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             "NOAA/NCEI 1/4 Degree Daily Optimum Interpolation Sea Surface Temperature (OISST) Analysis, Version 2.1 - Final" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  institution 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "NOAA/National Centers for Environmental Information" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       source 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              "ICOADS, NCEP_GTS, GSFC_ICE, NCEP_ICE, Pathfinder_AVHRR, Navy_AVHRR, NOAA_ACSP" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   references 
+"Reynolds, et al.(2007) Daily High-Resolution-Blended Analyses for Sea Surface Temperature (available at https://doi.org/10.1175/2007JCLI1824.1). Banzon, et al.(2016) A long-term record of blended satellite and in situ sea-surface temperature for climate monitoring, modeling and environmental studies (available at https://doi.org/10.5194/essd-8-165-2016). Huang et al. (2020) Improvements of the Daily Optimum Interpolation Sea Surface Temperature (DOISST) Version v02r01, submitted.Climatology is based on 1971-2000 OI.v2 SST. Satellite data: Pathfinder AVHRR SST, Navy AVHRR SST, and NOAA ACSPO SST. Ice data: NCEP Ice and GSFC Ice." 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      history 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "Final file created using preliminary as first guess, and 3 days of AVHRR data. Preliminary uses only 1 day of AVHRR data." 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Conventions 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           "CF-1.6, ACDD-1.3" </code></pre>
+</div>
+</div>
+</section></section><section id="exploration-des-variables" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="exploration-des-variables">
+<span class="header-section-number">2.2</span> Exploration des variables</h2>
+<div class="cell">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nc_charge_var</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span>nc <span class="op">=</span> <span class="va">nc</span>, varid <span class="op">=</span> <span class="va">var</span> <span class="op">)</span></span>
+<span>  <span class="va">envir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html">globalenv</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/assign.html">assign</a></span><span class="op">(</span><span class="va">var</span>, <span class="va">nc_var</span>, envir <span class="op">=</span> <span class="va">envir</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu">walk</span><span class="op">(</span><span class="va">nc_var</span>, <span class="va">nc_charge_var</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La variable sst est enregistrée en tant que matrix, array avec les dimensions 1440, 720</p>
+<ul>
+<li><p>La longitude correspond à la 1ère dimension (lignes de la matrice)</p></li>
+<li><p>La latitude correspond à la 2ème dimension (colonnes de la matrice)</p></li>
+<li><p>Le vecteur associé est obtenu en parcourant d’abord les 1440 longitudes d’un parallèle avant de passer à la latitude suivante.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lonlat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span>
+<span><span class="va">df_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">lonlat</span>, <span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="va">sst</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_sst</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span>, <span class="st">"sst"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df_sst</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    lon     lat sst
+1 0.125 -89.875  NA
+2 0.375 -89.875  NA
+3 0.625 -89.875  NA
+4 0.875 -89.875  NA
+5 1.125 -89.875  NA
+6 1.375 -89.875  NA</code></pre>
+</div>
+</div>
+</section><section id="affichage-de-la-carte-des-données-sst" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="affichage-de-la-carte-des-données-sst">
+<span class="header-section-number">2.3</span> Affichage de la carte des données sst</h2>
+<p>Avec positionnement en rouge du point de test donné en exemple :</p>
+<div class="cell">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|label: plot_sst</span></span>
+<span></span>
+<span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lon</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_fixed</span><span class="op">(</span>expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_colour_distiller</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Sea Surface Temperature"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="va">time_as_date</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"°C"</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="SST_00_example_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="calcul-de-moyenne-globale" class="level2" data-number="2.4"><h2 data-number="2.4" class="anchored" data-anchor-id="calcul-de-moyenne-globale">
+<span class="header-section-number">2.4</span> Calcul de moyenne globale</h2>
+<p>Il semble qu’il faille appliquer un poids fonction de <span class="math inline">\(\alpha\)</span> en radians pour pondérer les mesures de surface en fonction de la latitude considérée.</p>
+<p>Pour calculer ces poids j’ai construit tous les polygones “carrés” de 0.25° de côté suivant un même méridien.</p>
+<p>Ces polygones ont pour centre les coordonnées (longitude et latitude) de la mesure SST correspondante.</p>
+<p>J’ai ensuite calculé les aires de ces polygones avec le système de coordonnées de référence EPSG:4326 (WGS84).</p>
+<p>Les poids relatifs à chaque mesure ont été fixés comme étant les ratio des aires obtenues avec celle de la plus grande aire (aire du polygone situé à l’équateur).</p>
+<section id="calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée" class="level3" data-number="2.4.1"><h3 data-number="2.4.1" class="anchored" data-anchor-id="calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée">
+<span class="header-section-number">2.4.1</span> Calcul des poids à affecter aux mesures suivant la latitude associée</h3>
+<div class="cell">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># fonction génératrice de "carré géographique" de n degrés de côté</span></span>
+<span><span class="co"># le point de base (lon, lat) est le point inférieur gauche. </span></span>
+<span></span>
+<span><span class="va">polygone_geo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">n</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">polygon_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">+</span> <span class="va">n</span>, <span class="va">lat</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">+</span> <span class="va">n</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">n</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">n</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">st_polygon</span><span class="op">(</span><span class="va">polygon_list</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">polygone_sfc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span>, <span class="fl">89.75</span>, by <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">map</span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">polygone_geo</span><span class="op">(</span>lon <span class="op">=</span> <span class="fl">0</span>, lat <span class="op">=</span> <span class="va">x</span>, n <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">st_sfc</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">area_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">polygone_sfc</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">polygone_sfc</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">area_weights</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.002181655 0.006544922 0.010908066 0.015271001 0.019633646 0.023995917</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_area_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">area_weights</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_area_weights</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"w"</span><span class="op">)</span></span>
+<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="va">df_area_weights</span><span class="op">$</span><span class="va">w</span></span>
+<span><span class="va">df_sst_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">df_sst</span>, <span class="va">w</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># moyenne pondérée globale</span></span>
+<span><span class="va">sst_weighted_mean</span> <span class="op">&lt;-</span> <span class="va">df_sst_weights</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">summarize</span><span class="op">(</span>wm_sst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span><span class="op">(</span><span class="va">sst</span>, <span class="va">w</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">sst_weighted_mean</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    wm_sst
+1 18.44787</code></pre>
+</div>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># moyenne pondérée entre -60°S et +60°N</span></span>
+<span><span class="va">df_sst_60S_60N</span> <span class="op">&lt;-</span> <span class="va">df_sst_weights</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&gt;=</span> <span class="op">-</span><span class="fl">60</span> <span class="op">&amp;</span> <span class="va">lat</span> <span class="op">&lt;=</span> <span class="fl">60</span><span class="op">)</span></span>
+<span><span class="va">sst_weighted_mean_60S_60N</span> <span class="op">&lt;-</span> <span class="va">df_sst_60S_60N</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">summarize</span><span class="op">(</span>wm_sst_60S_60N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span><span class="op">(</span><span class="va">sst</span>, <span class="va">w</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">sst_weighted_mean_60S_60N</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  wm_sst_60S_60N
+1       20.65579</code></pre>
+</div>
+</div>
+<p>Si nous souhaitons centrer la carte sur le méridien de Greenwich, il est nécessaire de translater les longitudes.</p>
+<div class="cell">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|label: plot_sst_greenwich</span></span>
+<span></span>
+<span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>lon <span class="op">=</span> <span class="fu">if_else</span><span class="op">(</span><span class="va">lon</span> <span class="op">&gt;</span> <span class="fl">180</span>, <span class="va">lon</span> <span class="op">-</span> <span class="fl">360</span>, <span class="va">lon</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lon</span>, y <span class="op">=</span> <span class="va">lat</span>, fill <span class="op">=</span> <span class="va">sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_raster</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_gradient2</span><span class="op">(</span></span>
+<span>    low <span class="op">=</span> <span class="st">"darkblue"</span>,</span>
+<span>    mid <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>    high <span class="op">=</span> <span class="st">"darkred"</span>,</span>
+<span>    midpoint <span class="op">=</span> <span class="fl">15</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_fixed</span><span class="op">(</span>expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co">#scale_colour_distiller(palette = "RdBu") +</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Sea Surface Temperature"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
+<span>      <span class="va">time_as_date</span>,</span>
+<span>      <span class="st">" - mean global = "</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">sst_weighted_mean</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>      <span class="st">" °Celsius"</span>,</span>
+<span>      <span class="st">" | "</span>,</span>
+<span>      <span class="st">" mean World(60°S-60°N) = "</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">sst_weighted_mean_60S_60N</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>      <span class="st">" °Celsius"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">"°C"</span>,</span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span></span>
+<span>    axis.text <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    axis.ticks <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    <span class="co"># panel.background = element_rect(fill = "black"),</span></span>
+<span>    <span class="co"># plot.background = element_rect(fill = "black")</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="SST_00_example_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-netcdfi" class="csl-entry" role="listitem">
+<span>«&nbsp;netCDF in R&nbsp;»</span>. s.&nbsp;d. <a href="https://pjbartlein.github.io/REarthSysSci/netCDF.html">https://pjbartlein.github.io/REarthSysSci/netCDF.html</a>.
+</div>
+</div>
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copié");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copié");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./intro.html" class="pagination-link" aria-label="Introduction">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./SST_01_recuperation_donnees.html" class="pagination-link" aria-label="Données SST">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Données SST</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/a-lambda/sst/edit/main/SST_00_example.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></div></div></footer></body></html>
