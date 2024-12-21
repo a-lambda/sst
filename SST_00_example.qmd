@@ -235,7 +235,11 @@ polygone_sfc <- seq(-90, 89.75, by = 0.25) |>
   st_sfc(crs = "EPSG:4326")
 
 area_weights <- as.numeric(st_area(polygone_sfc) / max(st_area(polygone_sfc)))
-head(area_weights)
+
+tib_area_weights <- as_tibble(area_weights)
+names(tib_area_weights) <- c("n", "w")
+write_csv2(tib_area_weights, 
+           file = "DATA/area_weights")
 
 ```
 
