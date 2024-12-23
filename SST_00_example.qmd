@@ -230,11 +230,22 @@ polygone_geo <- function(lon, lat, n) {
   st_polygon(polygon_list)
 }
 
-polygone_sfc <- seq(-90, 89.75, by = 0.25) |>
-  map(\(x) polygone_geo(lon = 0, lat = x, n = 0.25)) |> 
-  st_sfc(crs = "EPSG:4326")
+get_polygone_sf <- function(lon = 0) {
+  
+  seq(-90, 89.75, by = 0.25) |>
+  map(\(x) polygone_geo(lon = lon, lat = x, n = 0.25)) |> 
+  st_sfc(crs = "EPSG:4326") |> 
+  st_as_sf()
+  
+}
 
-area_weights <- as.numeric(st_area(polygone_sfc) / max(st_area(polygone_sfc)))
+# polygone_sf_world <- seq(0, 359.75, by = 0.25) |> 
+#   map(get_polygone_sf) |> 
+#   data.table::rbindlist() |> 
+#   st_as_sf()
+
+polygone_sf <- get_polygone_sf()
+area_weights <- as.numeric(st_area(polygone_sf) / max(st_area(polygone_sf)))
 
 tib_area_weights <- as_tibble(area_weights)
 names(tib_area_weights) <- c("n", "w")
