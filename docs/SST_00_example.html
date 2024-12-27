@@ -612,29 +612,41 @@ $value
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># fonction génératrice de "carré géographique" de n degrés de côté</span></span>
 <span><span class="co"># le point de base (lon, lat) est le point inférieur gauche. </span></span>
 <span></span>
-<span><span class="va">polygone_geo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">n</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">polygon_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span></span>
+<span><span class="va">get_geo_square</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">n</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">+</span> <span class="va">n</span>, <span class="va">lat</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">+</span> <span class="va">n</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">n</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">n</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu">st_polygon</span><span class="op">(</span><span class="va">polygon_list</span><span class="op">)</span></span>
+<span>  <span class="fu">st_polygon</span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">polygone_sfc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span>, <span class="fl">89.75</span>, by <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">map</span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">polygone_geo</span><span class="op">(</span>lon <span class="op">=</span> <span class="fl">0</span>, lat <span class="op">=</span> <span class="va">x</span>, n <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">st_sfc</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span></span>
+<span><span class="va">get_geo_squares_sf</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lon</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span>, <span class="fl">89.75</span>, by <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">map</span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">get_geo_square</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">lon</span>, lat <span class="op">=</span> <span class="va">x</span>, n <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">st_sfc</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">st_as_sf</span><span class="op">(</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">area_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">polygone_sfc</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">polygone_sfc</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">area_weights</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.002181655 0.006544922 0.010908066 0.015271001 0.019633646 0.023995917</code></pre>
-</div>
+<span><span class="co"># polygone_sf_world &lt;- seq(0, 359.75, by = 0.25) |&gt; </span></span>
+<span><span class="co">#   map(get_polygone_sf) |&gt; </span></span>
+<span><span class="co">#   data.table::rbindlist() |&gt; </span></span>
+<span><span class="co">#   st_as_sf()</span></span>
+<span></span>
+<span><span class="va">squares_sf</span> <span class="op">&lt;-</span> <span class="fu">get_geo_squares_sf</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">area_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">squares_sf</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">squares_sf</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tib_area_weights</span> <span class="op">&lt;-</span> <span class="fu">as_tibble</span><span class="op">(</span><span class="va">area_weights</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">tib_area_weights</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"w"</span><span class="op">)</span></span>
+<span><span class="fu">write_csv2</span><span class="op">(</span><span class="va">tib_area_weights</span>, </span>
+<span>           file <span class="op">=</span> <span class="st">"DATA/area_weights"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_area_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">area_weights</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_area_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">area_weights</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_area_weights</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"w"</span><span class="op">)</span></span>
 <span><span class="va">w</span> <span class="op">&lt;-</span> <span class="va">df_area_weights</span><span class="op">$</span><span class="va">w</span></span>
 <span><span class="va">df_sst_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">df_sst</span>, <span class="va">w</span><span class="op">)</span></span>
@@ -647,7 +659,7 @@ $value
 <pre><code>    wm_sst
 1 18.44787</code></pre>
 </div>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># moyenne pondérée entre -60°S et +60°N</span></span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># moyenne pondérée entre -60°S et +60°N</span></span>
 <span><span class="va">df_sst_60S_60N</span> <span class="op">&lt;-</span> <span class="va">df_sst_weights</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&gt;=</span> <span class="op">-</span><span class="fl">60</span> <span class="op">&amp;</span> <span class="va">lat</span> <span class="op">&lt;=</span> <span class="fl">60</span><span class="op">)</span></span>
 <span><span class="va">sst_weighted_mean_60S_60N</span> <span class="op">&lt;-</span> <span class="va">df_sst_60S_60N</span> <span class="op">|&gt;</span> </span>
@@ -660,7 +672,7 @@ $value
 </div>
 <p>Si nous souhaitons centrer la carte sur le méridien de Greenwich, il est nécessaire de translater les longitudes.</p>
 <div class="cell">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|label: plot_sst_greenwich</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|label: plot_sst_greenwich</span></span>
 <span></span>
 <span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>lon <span class="op">=</span> <span class="fu">if_else</span><span class="op">(</span><span class="va">lon</span> <span class="op">&gt;</span> <span class="fl">180</span>, <span class="va">lon</span> <span class="op">-</span> <span class="fl">360</span>, <span class="va">lon</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
