@@ -214,30 +214,41 @@ Les poids relatifs à chaque mesure ont été fixés comme étant les ratio des 
 ### Calcul des poids à affecter aux mesures suivant la latitude associée
 
 ```{r}
-#| label: calculate_polygone_weights
+#| label: calculate_geo_squares_weights
 
 # fonction génératrice de "carré géographique" de n degrés de côté
 # le point de base (lon, lat) est le point inférieur gauche. 
 
-polygone_geo <- function(lon, lat, n) {
-  polygon_list <- list(rbind(
+get_geo_square <- function(lon, lat, n) {
+  points <- list(rbind(
     c(lon, lat),
     c(lon + n, lat),
     c(lon + n, lat + n),
     c(lon, lat + n),
     c(lon, lat)
   ))
-  st_polygon(polygon_list)
+  st_polygon(points)
 }
 
-polygone_sfc <- seq(-90, 89.75, by = 0.25) |>
-  map(\(x) polygone_geo(lon = 0, lat = x, n = 0.25)) |> 
-  st_sfc(crs = "EPSG:4326")
+get_geo_squares_sf <- function(lon = 0) {
+  
+  seq(-90, 89.75, by = 0.25) |>
+  map(\(x) get_geo_square(lon = lon, lat = x, n = 0.25)) |> 
+  st_sfc(crs = "EPSG:4326") |> 
+  st_as_sf()
+  
+}
 
-area_weights <- as.numeric(st_area(polygone_sfc) / max(st_area(polygone_sfc)))
+# polygone_sf_world <- seq(0, 359.75, by = 0.25) |> 
+#   map(get_polygone_sf) |> 
+#   data.table::rbindlist() |> 
+#   st_as_sf()
+
+squares_sf <- get_geo_squares_sf()
+area_weights <- as.numeric(st_area(squares_sf) / max(st_area(squares_sf)))
 
 tib_area_weights <- as_tibble(area_weights)
-names(tib_area_weights) <- c("n", "w")
+names(tib_area_weights) <- c("w")
 write_csv2(tib_area_weights, 
            file = "DATA/area_weights")
 
