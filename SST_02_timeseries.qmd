@@ -49,10 +49,6 @@ yyyymmdd <- function(date) {
 
 area_weights <- fread(file = "DATA/area_weights.csv", dec = ",") |> pull( w )
 
-# matrix_area_weights <- matrix(rep(area_weights, 1440), nrow = 1440, byrow = TRUE)
-# wmean <- weighted.mean(sst, matrix_area_weights, na.rm = TRUE)
-# wmean_60_60 <- weighted.mean(sst[,121:600], matrix_area_weights[,121:600], na.rm = TRUE)
-
 ```
 
 ## fonctions de calcul de moyenne pondérée
@@ -290,4 +286,5 @@ ggplot(data = df_wm_sst) +
   geom_line(aes(x = date, y = wm_sst, group = year, color = year))
 
 ```
+
 
