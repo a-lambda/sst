@@ -255,8 +255,8 @@ get_unloaded_data <- function(data_filename, data_url) {
   message(status_code)
   if (status_code == 200) {
     res <- httr::GET(data_url,
-                     write_disk(file_path, overwrite = TRUE),
-                     progress()
+                     write_disk(file_path, overwrite = TRUE) #,
+                     # progress()
                     )
   } else {
     message(glue("The data for file {data_filename} are inaccessible"))
