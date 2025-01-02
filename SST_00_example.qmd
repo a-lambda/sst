@@ -219,21 +219,27 @@ Les poids relatifs à chaque mesure ont été fixés comme étant les ratio des 
 # fonction génératrice de "carré géographique" de n degrés de côté
 # le point de base (lon, lat) est le point inférieur gauche. 
 
-get_geo_square <- function(lon, lat, n) {
-  points <- list(rbind(
-    c(lon, lat),
-    c(lon + n, lat),
-    c(lon + n, lat + n),
-    c(lon, lat + n),
-    c(lon, lat)
-  ))
+get_geo_square <- function(lon, lat, alpha) {
+  
+  points <- list(
+    matrix(
+      c(lon, lat,
+        lon + alpha, lat,
+        lon + alpha, lat + alpha,
+        lon, lat + alpha,
+        lon, lat),
+      ncol = 2,
+      byrow = TRUE
+    )
+  )
   st_polygon(points)
+  
 }
 
 get_geo_squares_sf <- function(lon = 0) {
   
   seq(-90, 89.75, by = 0.25) |>
-  map(\(x) get_geo_square(lon = lon, lat = x, n = 0.25)) |> 
+  map(\(x) get_geo_square(lon = lon, lat = x, alpha = 0.25)) |> 
   st_sfc(crs = "EPSG:4326") |> 
   st_as_sf()
   
