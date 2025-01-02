@@ -612,21 +612,27 @@ $value
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># fonction génératrice de "carré géographique" de n degrés de côté</span></span>
 <span><span class="co"># le point de base (lon, lat) est le point inférieur gauche. </span></span>
 <span></span>
-<span><span class="va">get_geo_square</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">n</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">+</span> <span class="va">n</span>, <span class="va">lat</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span> <span class="op">+</span> <span class="va">n</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">n</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">n</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span>
-<span>  <span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">get_geo_square</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">alpha</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>,</span>
+<span>        <span class="va">lon</span> <span class="op">+</span> <span class="va">alpha</span>, <span class="va">lat</span>,</span>
+<span>        <span class="va">lon</span> <span class="op">+</span> <span class="va">alpha</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">alpha</span>,</span>
+<span>        <span class="va">lon</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">alpha</span>,</span>
+<span>        <span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span>,</span>
+<span>      ncol <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>      byrow <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="fu">st_polygon</span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
+<span>  </span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">get_geo_squares_sf</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lon</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span>, <span class="fl">89.75</span>, by <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">map</span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">get_geo_square</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">lon</span>, lat <span class="op">=</span> <span class="va">x</span>, n <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">map</span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">get_geo_square</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">lon</span>, lat <span class="op">=</span> <span class="va">x</span>, alpha <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">st_sfc</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">st_as_sf</span><span class="op">(</span><span class="op">)</span></span>
 <span>  </span>

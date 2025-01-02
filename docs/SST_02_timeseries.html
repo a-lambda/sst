@@ -261,11 +261,7 @@ window.Quarto = {
 </section><section id="weights-to-apply-to-square-of-0.25x0.25-along-the-latitude" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="weights-to-apply-to-square-of-0.25x0.25-along-the-latitude">
 <span class="header-section-number">4.3</span> weights to apply to square of 0.25°x0.25° along the latitude</h2>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">area_weights</span> <span class="op">&lt;-</span> <span class="fu">fread</span><span class="op">(</span>file <span class="op">=</span> <span class="st">"DATA/area_weights.csv"</span>, dec <span class="op">=</span> <span class="st">","</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">pull</span><span class="op">(</span> <span class="va">w</span> <span class="op">)</span></span>
-<span></span>
-<span><span class="co"># matrix_area_weights &lt;- matrix(rep(area_weights, 1440), nrow = 1440, byrow = TRUE)</span></span>
-<span><span class="co"># wmean &lt;- weighted.mean(sst, matrix_area_weights, na.rm = TRUE)</span></span>
-<span><span class="co"># wmean_60_60 &lt;- weighted.mean(sst[,121:600], matrix_area_weights[,121:600], na.rm = TRUE)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">area_weights</span> <span class="op">&lt;-</span> <span class="fu">fread</span><span class="op">(</span>file <span class="op">=</span> <span class="st">"DATA/area_weights.csv"</span>, dec <span class="op">=</span> <span class="st">","</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">pull</span><span class="op">(</span> <span class="va">w</span> <span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="fonctions-de-calcul-de-moyenne-pondérée" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="fonctions-de-calcul-de-moyenne-pondérée">
 <span class="header-section-number">4.4</span> fonctions de calcul de moyenne pondérée</h2>
