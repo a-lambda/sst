@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.33">
+<meta name="generator" content="quarto-1.6.40">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>4&nbsp; Données temporelles – Fichiers NetCDF</title>
 <style>
@@ -67,10 +67,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-9c801443a31852693991529736dcdd3d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-2ef01e258a497a70032e58193e2c5164.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -366,7 +366,7 @@ window.Quarto = {
 <span></span>
 <span><span class="va">df_wm_sst_world</span> <span class="op">&lt;-</span> <span class="fu">get_all_weighted_mean</span><span class="op">(</span><span class="st">"sst"</span>, <span class="va">geo_world</span><span class="op">)</span></span>
 <span><span class="va">df_wm_anom_world</span> <span class="op">&lt;-</span> <span class="fu">get_all_weighted_mean</span><span class="op">(</span><span class="st">"anom"</span>, <span class="va">geo_world</span><span class="op">)</span></span>
-<span><span class="va">df_wm_ice_world</span> <span class="op">&lt;-</span> <span class="fu">get_all_weighted_mean</span><span class="op">(</span><span class="st">"ice"</span>, <span class="va">geo_world</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">df_wm_ice_world</span> <span class="op">&lt;-</span> <span class="fu">get_all_weighted_mean</span><span class="op">(</span><span class="st">"ice"</span>, <span class="va">geo_world</span><span class="op">)</span> <span class="co"># à corriger !!!</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="calcul-des-moyennes-pondérées-pour-latlantique-nord-0-60n-0-80w" class="level2" data-number="4.6"><h2 data-number="4.6" class="anchored" data-anchor-id="calcul-des-moyennes-pondérées-pour-latlantique-nord-0-60n-0-80w">
 <span class="header-section-number">4.6</span> calcul des moyennes pondérées pour l’Atlantique Nord (0-60°N, 0-80W)</h2>
@@ -383,6 +383,9 @@ window.Quarto = {
 </div>
 </section><section id="impression-de-la-série-temporelle" class="level2" data-number="4.7"><h2 data-number="4.7" class="anchored" data-anchor-id="impression-de-la-série-temporelle">
 <span class="header-section-number">4.7</span> Impression de la série temporelle</h2>
+<ul>
+<li>température de l’eau entre les latitudes 60°S et 60°N</li>
+</ul>
 <div class="cell">
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_wm_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">'DATA/wm_sst_world.RDS'</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span></span>
@@ -398,17 +401,22 @@ window.Quarto = {
 <span>  <span class="fu">geom_line</span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">df_wm_sst</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2023</span><span class="op">)</span>,</span>
 <span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">yday</span>, y <span class="op">=</span> <span class="va">wm_sst</span><span class="op">)</span>,</span>
-<span>    color <span class="op">=</span> <span class="st">"orange"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"black"</span>,</span>
 <span>    linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_line</span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">df_wm_sst</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2024</span><span class="op">)</span>,</span>
 <span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">yday</span>, y <span class="op">=</span> <span class="va">wm_sst</span>, group <span class="op">=</span> <span class="va">year</span><span class="op">)</span>,</span>
-<span>    color <span class="op">=</span> <span class="st">"black"</span>, </span>
+<span>    color <span class="op">=</span> <span class="st">"orange"</span>, </span>
+<span>    linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="va">df_wm_sst</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2025</span><span class="op">)</span>,</span>
+<span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">yday</span>, y <span class="op">=</span> <span class="va">wm_sst</span>, group <span class="op">=</span> <span class="va">year</span><span class="op">)</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"red"</span>, </span>
 <span>    linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">labs</span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Daily Sea Surface Temperature, World (60°S-60°N, 0-360°E)"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
-<span>    caption <span class="op">=</span> <span class="st">'caption test'</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">''</span>,</span>
 <span>    color <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -425,7 +433,7 @@ window.Quarto = {
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">guides</span><span class="op">(</span></span>
 <span>    color <span class="op">=</span> <span class="fu">guide_legend</span><span class="op">(</span></span>
-<span>      ncol <span class="op">=</span> <span class="fl">7</span>, </span>
+<span>      ncol <span class="op">=</span> <span class="fl">10</span>, </span>
 <span>      byrow <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>      reverse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>      label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -443,10 +451,78 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<ul>
+<li>température de l’eau en Atlantique Nord</li>
+</ul>
+<div class="cell">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_wm_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">'DATA/wm_sst_north_atlantic.RDS'</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span></span>
+<span>    year <span class="op">=</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,</span>
+<span>    yday <span class="op">=</span> <span class="fu">yday</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,</span>
+<span>    month <span class="op">=</span> <span class="fu">month</span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> </span>
+<span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">df_wm_sst</span>,</span>
+<span>       <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">yday</span>, y <span class="op">=</span> <span class="va">wm_sst</span>, group <span class="op">=</span> <span class="va">year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_color_grey</span><span class="op">(</span>start <span class="op">=</span> <span class="fl">0.8</span>, end <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="va">df_wm_sst</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2023</span><span class="op">)</span>,</span>
+<span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">yday</span>, y <span class="op">=</span> <span class="va">wm_sst</span><span class="op">)</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>    linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="va">df_wm_sst</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2024</span><span class="op">)</span>,</span>
+<span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">yday</span>, y <span class="op">=</span> <span class="va">wm_sst</span>, group <span class="op">=</span> <span class="va">year</span><span class="op">)</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"orange"</span>, </span>
+<span>    linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="va">df_wm_sst</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2025</span><span class="op">)</span>,</span>
+<span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">yday</span>, y <span class="op">=</span> <span class="va">wm_sst</span>, group <span class="op">=</span> <span class="va">year</span><span class="op">)</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"red"</span>, </span>
+<span>    linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Daily See Surface Temperature, North Atlantic"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">''</span>,</span>
+<span>    color <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p</span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">+</span> </span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span></span>
+<span>    legend.position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
+<span>    plot.caption <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>margin <span class="op">=</span> <span class="fu">margin</span><span class="op">(</span>t <span class="op">=</span> <span class="fl">0</span>, unit <span class="op">=</span> <span class="st">'cm'</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    legend.spacing.x <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fl">0.5</span>, <span class="st">'cm'</span><span class="op">)</span>,</span>
+<span>    legend.key <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    legend.text <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>colour <span class="op">=</span> <span class="st">'black'</span><span class="op">)</span>,</span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">guides</span><span class="op">(</span></span>
+<span>    color <span class="op">=</span> <span class="fu">guide_legend</span><span class="op">(</span></span>
+<span>      ncol <span class="op">=</span> <span class="fl">10</span>, </span>
+<span>      byrow <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>      reverse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>      label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>      <span class="co">#label.hjust = 1,</span></span>
+<span>      <span class="co">#keywidth = unit(0.8, 'cm'),</span></span>
+<span>      label.position <span class="op">=</span> <span class="st">"right"</span>,</span>
+<span>      x.intersp <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>      text.width <span class="op">=</span> <span class="fl">0.045</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> </span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section><section id="impression-supplémentaire-1" class="level2" data-number="4.8"><h2 data-number="4.8" class="anchored" data-anchor-id="impression-supplémentaire-1">
 <span class="header-section-number">4.8</span> impression supplémentaire 1</h2>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">df_wm_sst</span>,</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">df_wm_sst</span>,</span>
 <span>       <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">wm_sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_smooth</span><span class="op">(</span></span>
@@ -464,6 +540,14 @@ window.Quarto = {
 <span>      <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">2010</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"lm"</span>,</span>
 <span>    se <span class="op">=</span> <span class="cn">FALSE</span>, colour <span class="op">=</span> <span class="st">"#FF0000"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Daily Sea Surface Temperature, World (60°S-60°N, 0-360°E)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">''</span>,</span>
+<span>    color <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"(°C)"</span></span>
 <span>  <span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'
@@ -472,7 +556,7 @@ window.Quarto = {
 </div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -480,13 +564,22 @@ window.Quarto = {
 </section><section id="impression-supplémentaire-2" class="level2" data-number="4.9"><h2 data-number="4.9" class="anchored" data-anchor-id="impression-supplémentaire-2">
 <span class="header-section-number">4.9</span> impression supplémentaire 2</h2>
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_wm_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"DATA/wm_sst_world.RDS"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_wm_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"DATA/wm_sst_world.RDS"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>year <span class="op">=</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">df_wm_sst</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">wm_sst</span>, group <span class="op">=</span> <span class="va">year</span>, color <span class="op">=</span> <span class="va">year</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">wm_sst</span>, group <span class="op">=</span> <span class="va">year</span>, color <span class="op">=</span> <span class="va">year</span><span class="op">)</span>,</span>
+<span>            show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Daily Sea Surface Temperature, World (60°S-60°N, 0-360°E)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">''</span>,</span>
+<span>    color <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"(°C)"</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="SST_02_timeseries_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -575,8 +668,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -692,7 +783,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
