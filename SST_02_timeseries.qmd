@@ -170,7 +170,7 @@ geo_world <- list(
 
 df_wm_sst_world <- get_all_weighted_mean("sst", geo_world)
 df_wm_anom_world <- get_all_weighted_mean("anom", geo_world)
-df_wm_ice_world <- get_all_weighted_mean("ice", geo_world)
+df_wm_ice_world <- get_all_weighted_mean("ice", geo_world) # à corriger !!!
 
 ```
 
@@ -193,6 +193,8 @@ df_wm_ice_north_atlantic <- get_all_weighted_mean("ice", geo_north_atlantic)
 
 ## Impression de la série temporelle 
 
+  - température de l'eau entre les latitudes 60°S et 60°N
+  
 ```{r}
 
 df_wm_sst <- readRDS('DATA/wm_sst_world.RDS') |> 
@@ -209,17 +211,22 @@ ggplot(data = df_wm_sst,
   geom_line(
     data = df_wm_sst |> filter(year == 2023),
     aes(x = yday, y = wm_sst),
-    color = "orange",
+    color = "black",
     linewidth = 1) +
   geom_line(
     data = df_wm_sst |> filter(year == 2024),
     aes(x = yday, y = wm_sst, group = year),
-    color = "black", 
+    color = "orange", 
+    linewidth = 1) +
+  geom_line(
+    data = df_wm_sst |> filter(year == 2025),
+    aes(x = yday, y = wm_sst, group = year),
+    color = "red", 
     linewidth = 1) +
   labs(
     title = "Daily Sea Surface Temperature, World (60°S-60°N, 0-360°E)",
     subtitle = "Dataset: NOAA OISST V2.1",
-    caption = 'caption test',
+    caption = '',
     color = NULL,
     x = NULL,
     y = NULL
@@ -236,7 +243,71 @@ p +
   ) +
   guides(
     color = guide_legend(
-      ncol = 7, 
+      ncol = 10, 
+      byrow = TRUE, 
+      reverse = FALSE,
+      label = TRUE,
+      #label.hjust = 1,
+      #keywidth = unit(0.8, 'cm'),
+      label.position = "right",
+      x.intersp = 0.2,
+      text.width = 0.045
+    )
+  ) 
+
+```
+
+  - température de l'eau en Atlantique Nord
+
+```{r}
+
+df_wm_sst <- readRDS('DATA/wm_sst_north_atlantic.RDS') |> 
+  mutate(
+    year = year(date),
+    yday = yday(date),
+    month = month(date)
+    ) 
+
+ggplot(data = df_wm_sst,
+       aes(x = yday, y = wm_sst, group = year)) +
+  geom_line(aes(color = factor(year))) +
+  scale_color_grey(start = 0.8, end = 0.2) +
+  geom_line(
+    data = df_wm_sst |> filter(year == 2023),
+    aes(x = yday, y = wm_sst),
+    color = "black",
+    linewidth = 1) +
+  geom_line(
+    data = df_wm_sst |> filter(year == 2024),
+    aes(x = yday, y = wm_sst, group = year),
+    color = "orange", 
+    linewidth = 1) +
+  geom_line(
+    data = df_wm_sst |> filter(year == 2025),
+    aes(x = yday, y = wm_sst, group = year),
+    color = "red", 
+    linewidth = 1) +
+  labs(
+    title = "Daily See Surface Temperature, North Atlantic",
+    subtitle = "Dataset: NOAA OISST V2.1",
+    caption = '',
+    color = NULL,
+    x = NULL,
+    y = NULL
+  ) -> p
+
+p + 
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    plot.caption = element_text(margin = margin(t = 0, unit = 'cm')),
+    legend.spacing.x = unit(0.5, 'cm'),
+    legend.key = element_blank(),
+    legend.text = element_text(colour = 'black'),
+  ) +
+  guides(
+    color = guide_legend(
+      ncol = 10, 
       byrow = TRUE, 
       reverse = FALSE,
       label = TRUE,
@@ -272,6 +343,14 @@ ggplot(data = df_wm_sst,
       filter(year > 2010),
     method = "lm",
     se = FALSE, colour = "#FF0000"
+  ) +
+  labs(
+    title = "Daily Sea Surface Temperature, World (60°S-60°N, 0-360°E)",
+    subtitle = "Dataset: NOAA OISST V2.1",
+    caption = '',
+    color = NULL,
+    x = NULL,
+    y = "(°C)"
   )
 
 ```
@@ -283,8 +362,17 @@ ggplot(data = df_wm_sst,
 df_wm_sst <- readRDS("DATA/wm_sst_world.RDS") |> 
   mutate(year = year(date))
 ggplot(data = df_wm_sst) +
-  geom_line(aes(x = date, y = wm_sst, group = year, color = year))
+  geom_line(aes(x = date, y = wm_sst, group = year, color = year),
+            show.legend = FALSE) +
+  labs(
+    title = "Daily Sea Surface Temperature, World (60°S-60°N, 0-360°E)",
+    subtitle = "Dataset: NOAA OISST V2.1",
+    caption = '',
+    color = NULL,
+    x = NULL,
+    y = "(°C)"
+  )
+
 
 ```
-
 
