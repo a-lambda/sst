@@ -12,7 +12,7 @@ Il est possible de trouver de plus amples informations sur le traitement des fic
 #| message: false
 #| code-fold: true
 
-pkg <- c("ncdf4", "tidyverse", "terra", "sf")
+#------------------- functions definition---------------------------------------
 
 install_pkg_not_installed <- function(pkg) {
   
@@ -28,6 +28,9 @@ load_pkg <- function(pkg) {
 
 }
 
+#-------------------------------------------------------------------------------
+
+pkg <- c("ncdf4", "tidyverse", "terra", "sf")
 install_pkg_not_installed(pkg)
 load_pkg(pkg)
 
