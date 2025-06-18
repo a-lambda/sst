@@ -8,20 +8,28 @@ format: html
 Il est possible de trouver de plus amples informations sur le traitement des fichiers netCDF avec R [@netcdfi]
 
 ```{r}
-#| label: load_libraries
+#| label: install_and_load_packages
 #| message: false
 #| code-fold: true
 
-libs <- c("ncdf4", "tidyverse", "terra", "sf")
+pkg <- c("ncdf4", "tidyverse", "terra", "sf")
 
-#install missing libraries
-installed_libs <- libs %in% rownames(installed.packages())
-if (any(installed_libs == FALSE)) {
-  install.packages(libs[!installed_libs])
+install_pkg_not_installed <- function(pkg) {
+  
+  pkg_not_installed <- 
+    pkg[!(pkg %in% rownames(installed.packages()))]
+  install.packages(pkg_not_installed)
+
 }
 
-#load libraries
-invisible(lapply(libs, library, character.only = TRUE))
+load_pkg <- function(pkg) {
+  
+  invisible(lapply(pkg, FUN = library, character.only = TRUE))
+
+}
+
+install_pkg_not_installed(pkg)
+load_pkg(pkg)
 
 ```
 
