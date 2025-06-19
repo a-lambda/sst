@@ -1,7 +1,76 @@
 ---
 title: "Données SST du 1er janvier 2025"
 format: html
+editor_options: 
+  chunk_output_type: console
 ---
+
+## All required functions in this qmd file
+
+```{r}
+#| label: functions_definitions_for_that_qmd_file
+
+#------------------- functions definition --------------------------------------
+
+# I want have all the packages installed whose names belong to a vector
+install_pkg_not_installed <- function(pkg) {
+
+  pkg_not_installed <- pkg[!(pkg %in% rownames(installed.packages()))]
+  install.packages(pkg_not_installed)
+
+}
+
+# I want to load all necessary packages from their names that belong to a vector
+load_pkg <- function(pkg) {
+
+  invisible(lapply(pkg, FUN = library, character.only = TRUE))
+
+}
+
+# I want to know how many dimensions are included in the ncdf file
+nc_get_dim_qty <- function(nc_file) { return(nc_file$ndims) }
+
+# I want to get the names of all dimensions in the ndcf file
+nc_get_dim_names <- function(nc_file) {
+  
+  n <- nc_get_dim_qty(nc)
+  dim_names <- sapply(1:n, \(x) nc_file$dim[[x]]$name)
+  return(dim_names)
+  
+}
+
+# I want to know which units are used for every dimension in the ncdf file 
+nc_get_dim_units <- function(nc_file) {
+  
+  dim_names <- nc_get_dim_names(nc_file)
+  dim_units <- sapply(dim_names, \(x) ncatt_get(nc_file, x, "units")$value)
+  return(dim_units)
+  
+}
+
+# I just group names and units dimensions info from the ncdf file into a tibble
+nc_get_dim_info <- function(nc_file) {
+  
+  return(tibble(name = nc_get_dim_names(nc_file), 
+                unit = nc_get_dim_units(nc_file)))
+
+}
+
+# I want to get data linked to a variable name from a ncdf file
+# Variable name is assigned to the symbol variable that references data
+# Example : 
+# after executing nc_get_var_date("lon", nc), lon (symbol) contains asked data
+nc_get_var_data <- function(var, nc_file) {
+  
+  ncvar_data <- ncvar_get(nc = nc_file, varid = var )
+  envir <- globalenv()
+  assign(var, ncvar_data, envir = envir)
+
+}
+
+#-------------------------------------------------------------------------------
+
+```
 
 ## Exploration du fichier NetCDF
 
@@ -12,25 +81,7 @@ Il est possible de trouver de plus amples informations sur le traitement des fic
 #| message: false
 #| code-fold: true
 
-#------------------- functions definition---------------------------------------
-
-install_pkg_not_installed <- function(pkg) {
-  
-  pkg_not_installed <- 
-    pkg[!(pkg %in% rownames(installed.packages()))]
-  install.packages(pkg_not_installed)
-
-}
-
-load_pkg <- function(pkg) {
-  
-  invisible(lapply(pkg, FUN = library, character.only = TRUE))
-
-}
-
-#-------------------------------------------------------------------------------
-
-pkg <- c("ncdf4", "tidyverse", "terra", "sf")
+pkg <- c("ncdf4", "tidyverse", "terra", "sf", "gt")
 install_pkg_not_installed(pkg)
 load_pkg(pkg)
 
@@ -41,15 +92,38 @@ La connexion au fichier NetCDF s'opère via la commande nc_open.
 Grâce à elle nous pouvons déjà voir quel type d'informations sont enregistrées.
 
 ```{r}
-#| label: load_nc_file
+#| label: load_nc_data_for_example
+#| message: false
 
-(nc <- nc_open("DATA/RAW/oisst-avhrr-v02r01.20250101.nc"))
+nc <- nc_open("DATA/RAW/oisst-avhrr-v02r01.20250101.nc")
 
 ```
 
 ### Les dimensions
 
 les variables principales sont discriminées suivant plusieurs dimensions.
+
+```{r}
+#| label: get_dimensions_info
+#| message: false
+#| code-fold: true
+
+
+#-------------------------------------------------------------------------------
+
+tib_dim_info <- nc_get_dim_info(nc)
+
+tib_dim_info |> 
+  gt() |> 
+  tab_header(
+    title    = md("**Nom et unités des dimensions**"),
+    subtitle = md(paste("(fichier :", basename(nc$filename), ")"))
+  ) 
+
+# I want get all considered variable names reference data with same symbol name
+walk(nc_get_dim_names(nc), nc_get_var_data, nc_file = nc)
+
+```
 
 Ici, ce sont :
 
@@ -67,20 +141,9 @@ Ici, ce sont :
 Il est possible d'avoir accès aux données des dimensions via la fonction `ncvar_get` et l'accès aux attributs avec la fonction `ncatt_get`
 
 ```{r}
-#| label: info_dimensions
-# get info about latitudes
-lat <- ncvar_get(nc, "lat")
-(lat_units <- ncatt_get(nc, "lat", "units"))
-# get info about longitudes
-lon <- ncvar_get(nc, "lon")
-(lon_units <- ncatt_get(nc, "lon", "units"))
-# get info about time
-time <- ncvar_get(nc, "time")
-(time_units <- ncatt_get(nc, "time", "units"))
+
 time_as_date <- as.Date(time, origin = "1978-01-01 12:00:0", tz = "UTC")
-# get info about zlev
-zlev <- ncvar_get(nc, "zlev")
-(zlev_units <- ncatt_get(nc, "zlev", "units"))
+
 ```
 
 ### Les variables principales
