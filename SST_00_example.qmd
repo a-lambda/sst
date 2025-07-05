@@ -9,63 +9,91 @@ editor_options:
 
 ```{r}
 #| label: functions_definitions_for_that_qmd_file
+#| message: false
+#| code-fold: true
 
-#------------------- functions definition --------------------------------------
+################################
+# Package management functions #
+################################
 
-# I want have all the packages installed whose names belong to a vector
-install_pkg_not_installed <- function(pkg) {
+install_pkg_not_installed <- function(pkg_names) {
 
-  pkg_not_installed <- pkg[!(pkg %in% rownames(installed.packages()))]
+  pkg_not_installed <- 
+    pkg_names[!(pkg_names %in% rownames(installed.packages()))]
   install.packages(pkg_not_installed)
 
 }
 
-# I want to load all necessary packages from their names that belong to a vector
-load_pkg <- function(pkg) {
+#-------------------------------------------------------------------------------
 
-  invisible(lapply(pkg, FUN = library, character.only = TRUE))
+load_pkg <- function(pkg_names) {
+
+  invisible(lapply(pkg_names, FUN = library, character.only = TRUE))
 
 }
 
-# I want to know how many dimensions are included in the ncdf file
-nc_get_dim_qty <- function(nc_file) { return(nc_file$ndims) }
+#-------------------------------------------------------------------------------
 
-# I want to get the names of all dimensions in the ndcf file
-nc_get_dim_names <- function(nc_file) {
+install_pkg_if_needed_and_load_it <- function(pkg_names) {
   
-  n <- nc_get_dim_qty(nc)
+  install_pkg_not_installed(pkg_names)
+  load_pkg(pkg_names)
+  
+}
+
+################################################################
+# ncdf files specific dimension variables management functions #
+################################################################
+
+nc_get_dim_var_qty <- function(nc_file) { return(nc_file$ndims) }
+
+#-------------------------------------------------------------------------------
+
+nc_get_dim_var_names <- function(nc_file) {
+  
+  n <- nc_get_dim_var_qty(nc)
   dim_names <- sapply(1:n, \(x) nc_file$dim[[x]]$name)
   return(dim_names)
   
 }
 
-# I want to know which units are used for every dimension in the ncdf file 
-nc_get_dim_units <- function(nc_file) {
+#-------------------------------------------------------------------------------
+
+nc_get_dim_var_units <- function(nc_file) {
   
-  dim_names <- nc_get_dim_names(nc_file)
+  dim_names <- nc_get_dim_var_names(nc_file)
   dim_units <- sapply(dim_names, \(x) ncatt_get(nc_file, x, "units")$value)
   return(dim_units)
   
 }
 
-# I just group names and units dimensions info from the ncdf file into a tibble
-nc_get_dim_info <- function(nc_file) {
+#################################################
+# ncdf files all variables management functions #
+#################################################
+
+nc_get_var_data_and_assign_to_symbol_named_like_var <- function(var, nc_file) {
   
-  return(tibble(name = nc_get_dim_names(nc_file), 
-                unit = nc_get_dim_units(nc_file)))
+  nc_var_data <- ncvar_get(nc = nc_file, varid = var )
+  envir <- globalenv()
+  assign(var, nc_var_data, envir = envir)
 
 }
 
-# I want to get data linked to a variable name from a ncdf file
-# Variable name is assigned to the symbol variable that references data
-# Example : 
-# after executing nc_get_var_date("lon", nc), lon (symbol) contains asked data
-nc_get_var_data <- function(var, nc_file) {
-  
-  ncvar_data <- ncvar_get(nc = nc_file, varid = var )
-  envir <- globalenv()
-  assign(var, ncvar_data, envir = envir)
+#-------------------------------------------------------------------------------
 
+nc_get_all_var_all_attributes <- function(nc_file) {
+  
+  nc_var <- names(nc_file$var)
+  list_of_attributes <- nc_var |> purrr::map(ncatt_get, nc = nc_file)
+  attribute_names <- names(list_of_attributes[[1]])
+  matrix_of_attributes <- cbind(
+    nc_var,
+    t(matrix(unlist(list_of_attributes), ncol = length(nc_var)))
+  )
+  tib_of_attributes <- as_tibble(matrix_of_attributes)
+  names(tib_of_attributes) <- c("variable", attribute_names)
+  return(tib_of_attributes)
+  
 }
 
 #-------------------------------------------------------------------------------
@@ -81,9 +109,8 @@ Il est possible de trouver de plus amples informations sur le traitement des fic
 #| message: false
 #| code-fold: true
 
-pkg <- c("ncdf4", "tidyverse", "terra", "sf", "gt")
-install_pkg_not_installed(pkg)
-load_pkg(pkg)
+pkg_names <- c("ncdf4", "tidyverse", "terra", "sf", "gt")
+install_pkg_if_needed_and_load_it(pkg_names)
 
 ```
 
@@ -99,29 +126,37 @@ nc <- nc_open("DATA/RAW/oisst-avhrr-v02r01.20250101.nc")
 
 ```
 
-### Les dimensions
+### Les dimensions associées aux variables principales
 
-les variables principales sont discriminées suivant plusieurs dimensions.
+les variables d'intérêt sont discriminées suivant plusieurs dimensions.
+
+Il est possible d'avoir accès aux données des dimensions via la fonction `ncvar_get`
 
 ```{r}
-#| label: get_dimensions_info
+#| label: get_dimensions_names_and_units
 #| message: false
 #| code-fold: true
 
+tib_dim_var_info <- tibble(name = nc_get_dim_var_names(nc_file = nc), 
+                           unit = nc_get_dim_var_units(nc_file = nc))
 
-#-------------------------------------------------------------------------------
-
-tib_dim_info <- nc_get_dim_info(nc)
-
-tib_dim_info |> 
+tib_dim_var_info |> 
   gt() |> 
   tab_header(
     title    = md("**Nom et unités des dimensions**"),
     subtitle = md(paste("(fichier :", basename(nc$filename), ")"))
-  ) 
+  ) |>
+  opt_stylize(style = 4, color = "cyan")
 
-# I want get all considered variable names reference data with same symbol name
-walk(nc_get_dim_names(nc), nc_get_var_data, nc_file = nc)
+```
+
+```{r}
+#| label: load_and_assign_nc_dimension_variables
+#| message: false
+#| code-fold: true
+
+walk(nc_get_dim_var_names(nc), 
+     nc_get_var_data_and_assign_to_symbol_named_like_var, nc_file = nc)
 
 ```
 
@@ -138,70 +173,37 @@ Ici, ce sont :
 -   Les latitudes sont ordonnées du Sud au Nord dans l'array `lat` en partant du pôle Sud depuis la valeur $-90+0.125=-89.875$ jusqu'à la valeur $-89.875+719*0.25=89.875$
 :::
 
-Il est possible d'avoir accès aux données des dimensions via la fonction `ncvar_get` et l'accès aux attributs avec la fonction `ncatt_get`
-
 ```{r}
 
 time_as_date <- as.Date(time, origin = "1978-01-01 12:00:0", tz = "UTC")
 
 ```
 
-### Les variables principales
+Le fichier pris pour exemple daté au `r time_as_date` est le `r format(time, scientific=FALSE)` $^{ème}$ depuis le début du recensement.
 
-Nous avons quatre variables stockées dans le fichier :
+### Les variables d'intérêt et leurs attributs
+
+Nous avons `r length(names(nc$var))` variables d'intérêt :
 
 -   sst : la température quotidienne de la surface de l'eau
 -   anom : les anomalies quotidiennes de température de surface de l'eau
 -   err : estimated error standard deviation of analysed_sst
 -   ice : la concentration en glace
 
+Il est possible d'avoir accès aux données des attributs avec la fonction `ncatt_get`
+
 ```{r}
-#| label: info_variables
-(nc_var <- names(nc$var))
+#| label: get_all_var_all_attributes
+#| message: false
+#| code-fold: true
+#| warning: false
 
-# get info about variable attribute
-get_var_attribute <- function(var, attribute) {
-  nc_var <- names(nc$var)
-  if (!(var %in% nc_var)) {
-    message(paste("la variable", var, "est inexistante"))
-  } else {
-  ln <- ncatt_get(nc, var, attname = attribute)
-  ifelse(ln$hasatt, ln$value, paste("pas d'attribut ", attribute))
-  }
-}
-
-# long names
-get_var_long_name <- function() {
-  vapply(
-  nc_var, 
-  get_var_attribute, 
-  FUN.VALUE = character(1), 
-  "long_name"
-  )
-}
-((get_var_long_name()))
-
-# source
-get_var_units <- function() {
-  vapply(
-  nc_var, 
-  get_var_attribute, 
-  FUN.VALUE = character(1), 
-  "units"
-  )
-}
-((get_var_units()))
-
-# fill value
-get_var_fill_value <- function() {
-  vapply(
-  nc_var, 
-  get_var_attribute, 
-  FUN.VALUE = numeric(1), 
-  "_FillValue"
-  )
-}
-((get_var_fill_value()))
+nc_get_all_var_all_attributes(nc) |> 
+  gt() |> 
+  tab_header(
+    title    = md("**Nom et valeur des variables d'intérêts et des attributs associés**")
+  ) |>
+  opt_stylize(style = 4, color = "cyan")
 
 ```
 
@@ -220,17 +222,12 @@ get_global_attribute <- function(att) {
 ## Exploration des variables
 
 ```{r}
-#| label: load_variables
+#| label: load_and_assign_nc_variables
 
-nc_var <- names(nc$var)
+# names(nc$var) : vecteur des noms des variables d'intérêt du fichier ncdf 'nc'
 
-nc_charge_var <- function(var) {
-  nc_var <- ncvar_get(nc = nc, varid = var )
-  envir <- globalenv()
-  assign(var, nc_var, envir = envir)
-}
-
-walk(nc_var, nc_charge_var)
+walk(names(nc$var),
+     nc_get_var_data_and_assign_to_symbol_named_like_var, nc_file = nc)
 
 ```
 
