@@ -122,7 +122,7 @@ Grâce à elle nous pouvons déjà voir quel type d'informations sont enregistr�
 #| label: load_nc_data_for_example
 #| message: false
 
-nc <- nc_open("DATA/RAW/oisst-avhrr-v02r01.20250101.nc")
+nc <- nc_open("data/raw/oisst-avhrr-v02r01.20250101.nc")
 
 ```
 
@@ -137,10 +137,8 @@ Il est possible d'avoir accès aux données des dimensions via la fonction `ncva
 #| message: false
 #| code-fold: true
 
-tib_dim_var_info <- tibble(name = nc_get_dim_var_names(nc_file = nc), 
-                           unit = nc_get_dim_var_units(nc_file = nc))
-
-tib_dim_var_info |> 
+tibble(name = nc_get_dim_var_names(nc_file = nc), 
+       unit = nc_get_dim_var_units(nc_file = nc)) |> 
   gt() |> 
   tab_header(
     title    = md("**Nom et unités des dimensions**"),
@@ -327,7 +325,7 @@ area_weights <- as.numeric(st_area(squares_sf) / max(st_area(squares_sf)))
 tib_area_weights <- as_tibble(area_weights)
 names(tib_area_weights) <- c("w")
 write_csv2(tib_area_weights, 
-           file = "DATA/area_weights")
+           file = "data/area_weights")
 
 ```
 

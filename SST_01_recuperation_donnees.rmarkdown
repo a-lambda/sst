@@ -12,6 +12,11 @@
 -   `stringi` pour la fonction stri_sub
 -   `gt` pour la représentation tabulaire
 
+
+
+
+
+
 ```{r}
 #| label: install_and_load_libraries
 #| message: false
@@ -27,6 +32,11 @@ if (any(installed_libs == FALSE)) {
 invisible(lapply(libs, library, character.only = TRUE))
 
 ```
+
+
+
+
+
 
 ## Décompte des fichiers exploitables
 
@@ -44,6 +54,11 @@ Le premier fichier NetCDF exploitable date du 1er septembre 1981. En date du `Sy
 
 -   en fonction de la date,
 -   et du statut (finalisé ou temporaire)
+
+
+
+
+
 
 ```{r}
 #| label: get_url_and_get_all_url
@@ -78,6 +93,11 @@ get_all_url <- function(start_date, end_date, is.preliminary = FALSE) {
 
 ```
 
+
+
+
+
+
 ### Datation des derniers fichiers (**temporaire** et **finalisé**)
 
 Principe :
@@ -91,6 +111,11 @@ Les données collectées qualifiées de **temporaires** sont enregistrées dans 
 
 Cette opération se déroule sur un délai d'approximativement 2 semaines à partir de la date de collecte des données.
 :::
+
+
+
+
+
 
 ```{r}
 #| label: get_latest_date
@@ -126,9 +151,19 @@ latest_finalized_date <- get_latest_date(
 
 ```
 
+
+
+
+
+
 ::: callout-note
 Si des fichiers `preliminary` se retrouvent encore parmi des fichiers finalisés, parce qu'ils n'auront pas encore été traités, alors les décomptes de fichiers finalisés et temporaires seront inexacts.
 :::
+
+
+
+
+
 
 ```{r}
 #| label: get_data_files_count
@@ -172,6 +207,11 @@ gt_summary
 
 ```
 
+
+
+
+
+
 ## Comptabilisation des fichiers de données
 
 ### Comptabilisation **théorique** dans le tibble `tib_expected`
@@ -185,6 +225,11 @@ Le tibble `tib_expected` contient les informations relatives à l'ensemble des d
 Il contient en plus une information permettant de savoir si le fichier a dèjà été téléchargé.
 
 -   data_loaded : champ de type logique indiquant la présence des données du fichier en local dans le dossier `data/raw`
+
+
+
+
+
 
 ```{r}
 #| label: tib_expected
@@ -222,11 +267,21 @@ tib_expected$data_loaded <- (data_files %in% data_files_loaded)
 
 ```
 
+
+
+
+
+
 ### Suppression des fichiers devenus inutiles
 
 Cela concerne principalement les fichiers **temporaires** qui sont encore présents dans le dossier `data/raw` alors qu'ils ont été supprimés sur le serveur.
 
 C'est la variable `latest_finalized_date` contenant la date du fichier finalisé le plus récent qui permet cette discrimination.
+
+
+
+
+
 
 ```{r}
 #| label: delete_preliminary_data
@@ -239,9 +294,19 @@ if (length(data_files_to_delete > 0)) {
 
 ```
 
+
+
+
+
+
 ### Téléchargement des données SST 
 
 - critère de sélection : `data_loaded == FALSE`
+
+
+
+
+
 
 ```{r}
 #| label: data_download
@@ -272,7 +337,17 @@ pwalk(list(data_filenames, data_urls), get_unloaded_data)
 
 ```
 
+
+
+
+
+
 ### Comptabilisation **réelle** dans le tibble `tib_sst`
+
+
+
+
+
 
 ```{r}
 #| label: get_data_state_after_download_and_save

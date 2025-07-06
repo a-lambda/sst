@@ -2,6 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-DATA/RAW/
+data/raw/
 /.quarto/
-
