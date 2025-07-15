@@ -1,0 +1,70 @@
+```{r}
+#| label: functions_definitions_for_that_qmd_file
+#| message: false
+#| code-fold: true
+
+################################
+# Package management functions #
+################################
+
+library("remotes")
+remotes::install_github("a-lambda/pkg")
+
+################################################################
+# ncdf files specific dimension variables management functions #
+################################################################
+
+nc_get_dim_var_qty <- function(nc_file) { return(nc_file$ndims) }
+
+#-------------------------------------------------------------------------------
+
+nc_get_dim_var_names <- function(nc_file) {
+  
+  n <- nc_get_dim_var_qty(nc)
+  dim_names <- sapply(1:n, \(x) nc_file$dim[[x]]$name)
+  return(dim_names)
+  
+}
+
+#-------------------------------------------------------------------------------
+
+nc_get_dim_var_units <- function(nc_file) {
+  
+  dim_names <- nc_get_dim_var_names(nc_file)
+  dim_units <- sapply(dim_names, \(x) ncatt_get(nc_file, x, "units")$value)
+  return(dim_units)
+  
+}
+
+#################################################
+# ncdf files all variables management functions #
+#################################################
+
+nc_get_var_data_and_assign_to_symbol_named_like_var <- function(var, nc_file) {
+  
+  nc_var_data <- ncvar_get(nc = nc_file, varid = var )
+  envir <- globalenv()
+  assign(var, nc_var_data, envir = envir)
+
+}
+
+#-------------------------------------------------------------------------------
+
+nc_get_all_var_all_attributes <- function(nc_file) {
+  
+  nc_var <- names(nc_file$var)
+  list_of_attributes <- nc_var |> purrr::map(ncatt_get, nc = nc_file)
+  attribute_names <- names(list_of_attributes[[1]])
+  matrix_of_attributes <- cbind(
+    nc_var,
+    t(matrix(unlist(list_of_attributes), ncol = length(nc_var)))
+  )
+  tib_of_attributes <- as_tibble(matrix_of_attributes)
+  names(tib_of_attributes) <- c("variable", attribute_names)
+  return(tib_of_attributes)
+  
+}
+
+#-------------------------------------------------------------------------------
+
+```

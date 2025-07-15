@@ -5,100 +5,19 @@ editor_options:
   chunk_output_type: console
 ---
 
-## All required functions in this qmd file
+## Install initial package for package management
 
 ```{r}
-#| label: functions_definitions_for_that_qmd_file
-#| message: false
-#| code-fold: true
-
-################################
-# Package management functions #
-################################
-
-install_pkg_not_installed <- function(pkg_names) {
-
-  pkg_not_installed <- 
-    pkg_names[!(pkg_names %in% rownames(installed.packages()))]
-  install.packages(pkg_not_installed)
-
-}
-
-#-------------------------------------------------------------------------------
-
-load_pkg <- function(pkg_names) {
-
-  invisible(lapply(pkg_names, FUN = library, character.only = TRUE))
-
-}
-
-#-------------------------------------------------------------------------------
-
-install_pkg_if_needed_and_load_it <- function(pkg_names) {
-  
-  install_pkg_not_installed(pkg_names)
-  load_pkg(pkg_names)
-  
-}
-
-################################################################
-# ncdf files specific dimension variables management functions #
-################################################################
-
-nc_get_dim_var_qty <- function(nc_file) { return(nc_file$ndims) }
-
-#-------------------------------------------------------------------------------
-
-nc_get_dim_var_names <- function(nc_file) {
-  
-  n <- nc_get_dim_var_qty(nc)
-  dim_names <- sapply(1:n, \(x) nc_file$dim[[x]]$name)
-  return(dim_names)
-  
-}
-
-#-------------------------------------------------------------------------------
-
-nc_get_dim_var_units <- function(nc_file) {
-  
-  dim_names <- nc_get_dim_var_names(nc_file)
-  dim_units <- sapply(dim_names, \(x) ncatt_get(nc_file, x, "units")$value)
-  return(dim_units)
-  
-}
-
-#################################################
-# ncdf files all variables management functions #
-#################################################
-
-nc_get_var_data_and_assign_to_symbol_named_like_var <- function(var, nc_file) {
-  
-  nc_var_data <- ncvar_get(nc = nc_file, varid = var )
-  envir <- globalenv()
-  assign(var, nc_var_data, envir = envir)
-
-}
-
-#-------------------------------------------------------------------------------
-
-nc_get_all_var_all_attributes <- function(nc_file) {
-  
-  nc_var <- names(nc_file$var)
-  list_of_attributes <- nc_var |> purrr::map(ncatt_get, nc = nc_file)
-  attribute_names <- names(list_of_attributes[[1]])
-  matrix_of_attributes <- cbind(
-    nc_var,
-    t(matrix(unlist(list_of_attributes), ncol = length(nc_var)))
-  )
-  tib_of_attributes <- as_tibble(matrix_of_attributes)
-  names(tib_of_attributes) <- c("variable", attribute_names)
-  return(tib_of_attributes)
-  
-}
-
-#-------------------------------------------------------------------------------
-
+#| label: install_pkg_package
+library("remotes")
+remotes::install_github("a-lambda/pkg",
+                        force = TRUE)
+library("pkg")
 ```
+
+## All required functions in this qmd file
+
+{{< include _functions.qmd >}}
 
 ## Exploration du fichier NetCDF
 
@@ -110,7 +29,7 @@ Il est possible de trouver de plus amples informations sur le traitement des fic
 #| code-fold: true
 
 pkg_names <- c("ncdf4", "tidyverse", "terra", "sf", "gt")
-install_pkg_if_needed_and_load_it(pkg_names)
+install_packages_if_needed_and_load(pkg_names)
 
 ```
 

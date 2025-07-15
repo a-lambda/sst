@@ -6,11 +6,9 @@ library(ncdf4)
 library(purrr)
 
 nc_get_var_data_and_assign_to_symbol_named_like_var <- function(var, nc_file) {
-  
   nc_var_data <- ncvar_get(nc = nc_file, varid = var )
   envir <- globalenv()
   assign(var, nc_var_data, envir = envir)
-  
 }
 
 create_df_sst <- function(nc_file) {
@@ -20,15 +18,15 @@ create_df_sst <- function(nc_file) {
   lonlat <- expand.grid(lon, lat)
   df_sst <- cbind(lonlat, as.vector(sst))
   names(df_sst) <- c("lon", "lat", "sst")
-  return(df_sst)
+  df_sst
 }
 
 get_sst_na_indices <- function(nc_file) {
   df_sst <- create_df_sst(nc_file)
-  sst_na_indices <- which(is.na(df_sst$sst))
+  which(is.na(df_sst$sst))
 }
 
-nc_files <- list.files(path = "DATA/RAW/", 
+nc_files <- list.files(path = "data/raw/",
                        pattern = "*.nc",
                        full.names = TRUE)
 
@@ -36,10 +34,7 @@ identique          <- logical(0)
 sst_na_indices_ref <- get_sst_na_indices(nc_files[1])
 
 for (i in 2:(length(nc_files))) {
-  
   message(paste("comparaison avec le ", i, "ème fichier"))
   sst_na_indices <- get_sst_na_indices(nc_files[i])
   identique[i] <- identical(sst_na_indices_ref, sst_na_indices)
-
 }
-

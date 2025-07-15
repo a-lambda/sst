@@ -239,9 +239,9 @@ if (length(data_files_to_delete > 0)) {
 
 ```
 
-### Téléchargement des données SST 
+### Téléchargement des données SST
 
-- critère de sélection : `data_loaded == FALSE`
+-   critère de sélection : `data_loaded == FALSE`
 
 ```{r}
 #| label: data_download
@@ -287,4 +287,3 @@ tib_sst$data_loaded <- (data_files %in% data_files_loaded)
 saveRDS(tib_sst, "data/tib_sst.RDS")
 
 ```
-

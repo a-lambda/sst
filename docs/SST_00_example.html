@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.42">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
 <title>2&nbsp; Données SST du 1er janvier 2025 – Fichiers NetCDF</title>
 <style>
 code{white-space: pre-wrap;}
@@ -76,7 +73,6 @@ div.csl-indent {
   margin-left: 2em;
 }</style>
 
-
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -94,8 +90,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-24cc7bc34b07ce4c51481bc4d3695b74.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-24cc7bc34b07ce4c51481bc4d3695b74.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -121,12 +116,7 @@ div.csl-indent {
     "search-submit-button-title": "Envoyer",
     "search-label": "Recherche"
   }
-}</script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -152,15 +142,11 @@ window.Quarto = {
   typesetMath
 };
 </script>
-
 </head>
-
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -171,13 +157,9 @@ window.Quarto = {
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Fichiers NetCDF</a> 
         <div class="sidebar-tools-main">
@@ -192,7 +174,7 @@ window.Quarto = {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Preface</span></a>
@@ -229,37 +211,38 @@ window.Quarto = {
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table des matières</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#all-required-functions-in-this-qmd-file" id="toc-all-required-functions-in-this-qmd-file" class="nav-link active" data-scroll-target="#all-required-functions-in-this-qmd-file"><span class="header-section-number">2.1</span> All required functions in this qmd file</a></li>
-  <li><a href="#exploration-du-fichier-netcdf" id="toc-exploration-du-fichier-netcdf" class="nav-link" data-scroll-target="#exploration-du-fichier-netcdf"><span class="header-section-number">2.2</span> Exploration du fichier NetCDF</a>
+<li><a href="#install-initial-package-for-package-management" id="toc-install-initial-package-for-package-management" class="nav-link active" data-scroll-target="#install-initial-package-for-package-management"><span class="header-section-number">2.1</span> Install initial package for package management</a></li>
+  <li><a href="#all-required-functions-in-this-qmd-file" id="toc-all-required-functions-in-this-qmd-file" class="nav-link" data-scroll-target="#all-required-functions-in-this-qmd-file"><span class="header-section-number">2.2</span> All required functions in this qmd file</a></li>
+  <li>
+<a href="#exploration-du-fichier-netcdf" id="toc-exploration-du-fichier-netcdf" class="nav-link" data-scroll-target="#exploration-du-fichier-netcdf"><span class="header-section-number">2.3</span> Exploration du fichier NetCDF</a>
   <ul class="collapse">
-  <li><a href="#les-dimensions-associées-aux-variables-principales" id="toc-les-dimensions-associées-aux-variables-principales" class="nav-link" data-scroll-target="#les-dimensions-associées-aux-variables-principales"><span class="header-section-number">2.2.1</span> Les dimensions associées aux variables principales</a></li>
-  <li><a href="#les-variables-dintérêt-et-leurs-attributs" id="toc-les-variables-dintérêt-et-leurs-attributs" class="nav-link" data-scroll-target="#les-variables-dintérêt-et-leurs-attributs"><span class="header-section-number">2.2.2</span> Les variables d’intérêt et leurs attributs</a></li>
-  <li><a href="#les-attributs-globaux-du-fichier" id="toc-les-attributs-globaux-du-fichier" class="nav-link" data-scroll-target="#les-attributs-globaux-du-fichier"><span class="header-section-number">2.2.3</span> Les attributs globaux du fichier</a></li>
-  </ul></li>
-  <li><a href="#exploration-des-variables" id="toc-exploration-des-variables" class="nav-link" data-scroll-target="#exploration-des-variables"><span class="header-section-number">2.3</span> Exploration des variables</a></li>
-  <li><a href="#affichage-de-la-carte-des-données-sst" id="toc-affichage-de-la-carte-des-données-sst" class="nav-link" data-scroll-target="#affichage-de-la-carte-des-données-sst"><span class="header-section-number">2.4</span> Affichage de la carte des données sst</a></li>
-  <li><a href="#calcul-de-moyenne-globale" id="toc-calcul-de-moyenne-globale" class="nav-link" data-scroll-target="#calcul-de-moyenne-globale"><span class="header-section-number">2.5</span> Calcul de moyenne globale</a>
-  <ul class="collapse">
-  <li><a href="#calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée" id="toc-calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée" class="nav-link" data-scroll-target="#calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée"><span class="header-section-number">2.5.1</span> Calcul des poids à affecter aux mesures suivant la latitude associée</a></li>
-  </ul></li>
+<li><a href="#les-dimensions-associ%C3%A9es-aux-variables-principales" id="toc-les-dimensions-associées-aux-variables-principales" class="nav-link" data-scroll-target="#les-dimensions-associ%C3%A9es-aux-variables-principales"><span class="header-section-number">2.3.1</span> Les dimensions associées aux variables principales</a></li>
+  <li><a href="#les-variables-dint%C3%A9r%C3%AAt-et-leurs-attributs" id="toc-les-variables-dintérêt-et-leurs-attributs" class="nav-link" data-scroll-target="#les-variables-dint%C3%A9r%C3%AAt-et-leurs-attributs"><span class="header-section-number">2.3.2</span> Les variables d’intérêt et leurs attributs</a></li>
+  <li><a href="#les-attributs-globaux-du-fichier" id="toc-les-attributs-globaux-du-fichier" class="nav-link" data-scroll-target="#les-attributs-globaux-du-fichier"><span class="header-section-number">2.3.3</span> Les attributs globaux du fichier</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/a-lambda/sst/edit/main/SST_00_example.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
+</li>
+  <li><a href="#exploration-des-variables" id="toc-exploration-des-variables" class="nav-link" data-scroll-target="#exploration-des-variables"><span class="header-section-number">2.4</span> Exploration des variables</a></li>
+  <li><a href="#affichage-de-la-carte-des-donn%C3%A9es-sst" id="toc-affichage-de-la-carte-des-données-sst" class="nav-link" data-scroll-target="#affichage-de-la-carte-des-donn%C3%A9es-sst"><span class="header-section-number">2.5</span> Affichage de la carte des données sst</a></li>
+  <li>
+<a href="#calcul-de-moyenne-globale" id="toc-calcul-de-moyenne-globale" class="nav-link" data-scroll-target="#calcul-de-moyenne-globale"><span class="header-section-number">2.6</span> Calcul de moyenne globale</a>
+  <ul class="collapse">
+<li><a href="#calcul-des-poids-%C3%A0-affecter-aux-mesures-suivant-la-latitude-associ%C3%A9e" id="toc-calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée" class="nav-link" data-scroll-target="#calcul-des-poids-%C3%A0-affecter-aux-mesures-suivant-la-latitude-associ%C3%A9e"><span class="header-section-number">2.6.1</span> Calcul des poids à affecter aux mesures suivant la latitude associée</a></li>
+  </ul>
+</li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/a-lambda/sst/edit/main/SST_00_example.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Données SST du 1er janvier 2025</span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Données SST du 1er janvier 2025</span>
+</h1>
 </div>
 
 
@@ -273,151 +256,145 @@ window.Quarto = {
   
 
 
-</header>
-
-
-<section id="all-required-functions-in-this-qmd-file" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="all-required-functions-in-this-qmd-file"><span class="header-section-number">2.1</span> All required functions in this qmd file</h2>
+</header><section id="install-initial-package-for-package-management" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="install-initial-package-for-package-management">
+<span class="header-section-number">2.1</span> Install initial package for package management</h2>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">################################</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Package management functions #</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">################################</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>install_pkg_not_installed <span class="ot">&lt;-</span> <span class="cf">function</span>(pkg_names) {</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  pkg_not_installed <span class="ot">&lt;-</span> </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    pkg_names[<span class="sc">!</span>(pkg_names <span class="sc">%in%</span> <span class="fu">rownames</span>(<span class="fu">installed.packages</span>()))]</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(pkg_not_installed)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#-------------------------------------------------------------------------------</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>load_pkg <span class="ot">&lt;-</span> <span class="cf">function</span>(pkg_names) {</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(<span class="fu">lapply</span>(pkg_names, <span class="at">FUN =</span> library, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#-------------------------------------------------------------------------------</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>install_pkg_if_needed_and_load_it <span class="ot">&lt;-</span> <span class="cf">function</span>(pkg_names) {</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install_pkg_not_installed</span>(pkg_names)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">load_pkg</span>(pkg_names)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="do">################################################################</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># ncdf files specific dimension variables management functions #</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="do">################################################################</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>nc_get_dim_var_qty <span class="ot">&lt;-</span> <span class="cf">function</span>(nc_file) { <span class="fu">return</span>(nc_file<span class="sc">$</span>ndims) }</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">#-------------------------------------------------------------------------------</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>nc_get_dim_var_names <span class="ot">&lt;-</span> <span class="cf">function</span>(nc_file) {</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">nc_get_dim_var_qty</span>(nc)</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  dim_names <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>n, \(x) nc_file<span class="sc">$</span>dim[[x]]<span class="sc">$</span>name)</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(dim_names)</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co">#-------------------------------------------------------------------------------</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>nc_get_dim_var_units <span class="ot">&lt;-</span> <span class="cf">function</span>(nc_file) {</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  dim_names <span class="ot">&lt;-</span> <span class="fu">nc_get_dim_var_names</span>(nc_file)</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  dim_units <span class="ot">&lt;-</span> <span class="fu">sapply</span>(dim_names, \(x) <span class="fu">ncatt_get</span>(nc_file, x, <span class="st">"units"</span>)<span class="sc">$</span>value)</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(dim_units)</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="do">#################################################</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co"># ncdf files all variables management functions #</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="do">#################################################</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>nc_get_var_data_and_assign_to_symbol_named_like_var <span class="ot">&lt;-</span> <span class="cf">function</span>(var, nc_file) {</span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  nc_var_data <span class="ot">&lt;-</span> <span class="fu">ncvar_get</span>(<span class="at">nc =</span> nc_file, <span class="at">varid =</span> var )</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  envir <span class="ot">&lt;-</span> <span class="fu">globalenv</span>()</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(var, nc_var_data, <span class="at">envir =</span> envir)</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="co">#-------------------------------------------------------------------------------</span></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>nc_get_all_var_all_attributes <span class="ot">&lt;-</span> <span class="cf">function</span>(nc_file) {</span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  nc_var <span class="ot">&lt;-</span> <span class="fu">names</span>(nc_file<span class="sc">$</span>var)</span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  list_of_attributes <span class="ot">&lt;-</span> nc_var <span class="sc">|&gt;</span> purrr<span class="sc">::</span><span class="fu">map</span>(ncatt_get, <span class="at">nc =</span> nc_file)</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  attribute_names <span class="ot">&lt;-</span> <span class="fu">names</span>(list_of_attributes[[<span class="dv">1</span>]])</span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  matrix_of_attributes <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    nc_var,</span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>    <span class="fu">t</span>(<span class="fu">matrix</span>(<span class="fu">unlist</span>(list_of_attributes), <span class="at">ncol =</span> <span class="fu">length</span>(nc_var)))</span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>  tib_of_attributes <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(matrix_of_attributes)</span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(tib_of_attributes) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"variable"</span>, attribute_names)</span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(tib_of_attributes)</span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a><span class="co">#-------------------------------------------------------------------------------</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org">"remotes"</a></span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"a-lambda/pkg"</span>,</span>
+<span>                        force <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using GitHub PAT from the git credential store.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Downloading GitHub repo a-lambda/pkg@HEAD</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>── R CMD build ─────────────────────────────────────────────────────────────────
+* checking for file ‘/tmp/Rtmp4PcB3I/remotes25d7a24465aa5/a-lambda-pkg-74f4811/DESCRIPTION’ ... OK
+* preparing ‘pkg’:
+* checking DESCRIPTION meta-information ... OK
+* checking for LF line-endings in source and make files and shell scripts
+* checking for empty or unneeded directories
+* building ‘pkg_0.0.0.9000.tar.gz’</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Installation du package dans '/home/alcor/R/x86_64-redhat-linux-gnu-library/4.5'
+(car 'lib' n'est pas spécifié)</code></pre>
+</div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"pkg"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="all-required-functions-in-this-qmd-file" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="all-required-functions-in-this-qmd-file">
+<span class="header-section-number">2.2</span> All required functions in this qmd file</h2>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">################################</span></span>
+<span><span class="co"># Package management functions #</span></span>
+<span><span class="co">################################</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org">"remotes"</a></span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"a-lambda/pkg"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">################################################################</span></span>
+<span><span class="co"># ncdf files specific dimension variables management functions #</span></span>
+<span><span class="co">################################################################</span></span>
+<span></span>
+<span><span class="va">nc_get_dim_var_qty</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">nc_file</span><span class="op">)</span> <span class="op">{</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">nc_file</span><span class="op">$</span><span class="va">ndims</span><span class="op">)</span> <span class="op">}</span></span>
+<span></span>
+<span><span class="co">#-------------------------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="va">nc_get_dim_var_names</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">nc_file</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">n</span> <span class="op">&lt;-</span> <span class="fu">nc_get_dim_var_qty</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span>
+<span>  <span class="va">dim_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">n</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">nc_file</span><span class="op">$</span><span class="va">dim</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">name</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">dim_names</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co">#-------------------------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="va">nc_get_dim_var_units</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">nc_file</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">dim_names</span> <span class="op">&lt;-</span> <span class="fu">nc_get_dim_var_names</span><span class="op">(</span><span class="va">nc_file</span><span class="op">)</span></span>
+<span>  <span class="va">dim_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">dim_names</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc_file</span>, <span class="va">x</span>, <span class="st">"units"</span><span class="op">)</span><span class="op">$</span><span class="va">value</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">dim_units</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co">#################################################</span></span>
+<span><span class="co"># ncdf files all variables management functions #</span></span>
+<span><span class="co">#################################################</span></span>
+<span></span>
+<span><span class="va">nc_get_var_data_and_assign_to_symbol_named_like_var</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span>, <span class="va">nc_file</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">nc_var_data</span> <span class="op">&lt;-</span> <span class="fu">ncvar_get</span><span class="op">(</span>nc <span class="op">=</span> <span class="va">nc_file</span>, varid <span class="op">=</span> <span class="va">var</span> <span class="op">)</span></span>
+<span>  <span class="va">envir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html">globalenv</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/assign.html">assign</a></span><span class="op">(</span><span class="va">var</span>, <span class="va">nc_var_data</span>, envir <span class="op">=</span> <span class="va">envir</span><span class="op">)</span></span>
+<span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co">#-------------------------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="va">nc_get_all_var_all_attributes</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">nc_file</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">nc_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc_file</span><span class="op">$</span><span class="va">var</span><span class="op">)</span></span>
+<span>  <span class="va">list_of_attributes</span> <span class="op">&lt;-</span> <span class="va">nc_var</span> <span class="op">|&gt;</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">ncatt_get</span>, nc <span class="op">=</span> <span class="va">nc_file</span><span class="op">)</span></span>
+<span>  <span class="va">attribute_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">list_of_attributes</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="va">matrix_of_attributes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span></span>
+<span>    <span class="va">nc_var</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">list_of_attributes</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">nc_var</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="va">tib_of_attributes</span> <span class="op">&lt;-</span> <span class="fu">as_tibble</span><span class="op">(</span><span class="va">matrix_of_attributes</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">tib_of_attributes</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="va">attribute_names</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">tib_of_attributes</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co">#-------------------------------------------------------------------------------</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</section>
-<section id="exploration-du-fichier-netcdf" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="exploration-du-fichier-netcdf"><span class="header-section-number">2.2</span> Exploration du fichier NetCDF</h2>
+</section><section id="exploration-du-fichier-netcdf" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="exploration-du-fichier-netcdf">
+<span class="header-section-number">2.3</span> Exploration du fichier NetCDF</h2>
 <p>Il est possible de trouver de plus amples informations sur le traitement des fichiers netCDF avec R <span class="citation" data-cites="netcdfi">(<a href="references.html#ref-netcdfi" role="doc-biblioref"><span>«&nbsp;netCDF in R&nbsp;»</span>, s.&nbsp;d.</a>)</span></p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pkg_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"ncdf4"</span>, <span class="st">"tidyverse"</span>, <span class="st">"terra"</span>, <span class="st">"sf"</span>, <span class="st">"gt"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_pkg_if_needed_and_load_it</span>(pkg_names)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pkg_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ncdf4"</span>, <span class="st">"tidyverse"</span>, <span class="st">"terra"</span>, <span class="st">"sf"</span>, <span class="st">"gt"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/pkg/man/install_packages_if_needed_and_load.html">install_packages_if_needed_and_load</a></span><span class="op">(</span><span class="va">pkg_names</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>La connexion au fichier NetCDF s’opère via la commande nc_open.</p>
 <p>Grâce à elle nous pouvons déjà voir quel type d’informations sont enregistrées.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>nc <span class="ot">&lt;-</span> <span class="fu">nc_open</span>(<span class="st">"data/raw/oisst-avhrr-v02r01.20250101.nc"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">nc_open</span><span class="op">(</span><span class="st">"data/raw/oisst-avhrr-v02r01.20250101.nc"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="les-dimensions-associées-aux-variables-principales" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="les-dimensions-associées-aux-variables-principales"><span class="header-section-number">2.2.1</span> Les dimensions associées aux variables principales</h3>
+<section id="les-dimensions-associées-aux-variables-principales" class="level3" data-number="2.3.1"><h3 data-number="2.3.1" class="anchored" data-anchor-id="les-dimensions-associées-aux-variables-principales">
+<span class="header-section-number">2.3.1</span> Les dimensions associées aux variables principales</h3>
 <p>les variables d’intérêt sont discriminées suivant plusieurs dimensions.</p>
 <p>Il est possible d’avoir accès aux données des dimensions via la fonction <code>ncvar_get</code></p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">name =</span> <span class="fu">nc_get_dim_var_names</span>(<span class="at">nc_file =</span> nc), </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">unit =</span> <span class="fu">nc_get_dim_var_units</span>(<span class="at">nc_file =</span> nc)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title    =</span> <span class="fu">md</span>(<span class="st">"**Nom et unités des dimensions**"</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">md</span>(<span class="fu">paste</span>(<span class="st">"(fichier :"</span>, <span class="fu">basename</span>(nc<span class="sc">$</span>filename), <span class="st">")"</span>))</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_stylize</span>(<span class="at">style =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"cyan"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div id="hsoxijgbih" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#hsoxijgbih table {
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span>name <span class="op">=</span> <span class="fu">nc_get_dim_var_names</span><span class="op">(</span>nc_file <span class="op">=</span> <span class="va">nc</span><span class="op">)</span>, </span>
+<span>       unit <span class="op">=</span> <span class="fu">nc_get_dim_var_units</span><span class="op">(</span>nc_file <span class="op">=</span> <span class="va">nc</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">gt</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">tab_header</span><span class="op">(</span></span>
+<span>    title    <span class="op">=</span> <span class="fu">md</span><span class="op">(</span><span class="st">"**Nom et unités des dimensions**"</span><span class="op">)</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="fu">md</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"(fichier :"</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">filename</span><span class="op">)</span>, <span class="st">")"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">opt_stylize</span><span class="op">(</span>style <span class="op">=</span> <span class="fl">4</span>, color <span class="op">=</span> <span class="st">"cyan"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div id="hapujbjojp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hapujbjojp table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#hsoxijgbih thead, #hsoxijgbih tbody, #hsoxijgbih tfoot, #hsoxijgbih tr, #hsoxijgbih td, #hsoxijgbih th {
+#hapujbjojp thead, #hapujbjojp tbody, #hapujbjojp tfoot, #hapujbjojp tr, #hapujbjojp td, #hapujbjojp th {
   border-style: none;
 }
 
-#hsoxijgbih p {
+#hapujbjojp p {
   margin: 0;
   padding: 0;
 }
 
-#hsoxijgbih .gt_table {
+#hapujbjojp .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -443,12 +420,12 @@ window.Quarto = {
   border-left-color: #D5D5D5;
 }
 
-#hsoxijgbih .gt_caption {
+#hapujbjojp .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#hsoxijgbih .gt_title {
+#hapujbjojp .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -460,7 +437,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#hsoxijgbih .gt_subtitle {
+#hapujbjojp .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -472,7 +449,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#hsoxijgbih .gt_heading {
+#hapujbjojp .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -484,13 +461,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#hsoxijgbih .gt_bottom_border {
+#hapujbjojp .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D5D5D5;
 }
 
-#hsoxijgbih .gt_col_headings {
+#hapujbjojp .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D5D5D5;
@@ -505,7 +482,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#hsoxijgbih .gt_col_heading {
+#hapujbjojp .gt_col_heading {
   color: #FFFFFF;
   background-color: #01837B;
   font-size: 100%;
@@ -525,7 +502,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#hsoxijgbih .gt_column_spanner_outer {
+#hapujbjojp .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #01837B;
   font-size: 100%;
@@ -537,15 +514,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#hsoxijgbih .gt_column_spanner_outer:first-child {
+#hapujbjojp .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#hsoxijgbih .gt_column_spanner_outer:last-child {
+#hapujbjojp .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#hsoxijgbih .gt_column_spanner {
+#hapujbjojp .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D5D5D5;
@@ -557,11 +534,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#hsoxijgbih .gt_spanner_row {
+#hapujbjojp .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#hsoxijgbih .gt_group_heading {
+#hapujbjojp .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -587,7 +564,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#hsoxijgbih .gt_empty_group_heading {
+#hapujbjojp .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -602,15 +579,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#hsoxijgbih .gt_from_md > :first-child {
+#hapujbjojp .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#hsoxijgbih .gt_from_md > :last-child {
+#hapujbjojp .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#hsoxijgbih .gt_row {
+#hapujbjojp .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -629,7 +606,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#hsoxijgbih .gt_stub {
+#hapujbjojp .gt_stub {
   color: #FFFFFF;
   background-color: #929292;
   font-size: 100%;
@@ -642,7 +619,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#hsoxijgbih .gt_stub_row_group {
+#hapujbjojp .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -656,15 +633,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#hsoxijgbih .gt_row_group_first td {
+#hapujbjojp .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#hsoxijgbih .gt_row_group_first th {
+#hapujbjojp .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#hsoxijgbih .gt_summary_row {
+#hapujbjojp .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -674,16 +651,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#hsoxijgbih .gt_first_summary_row {
+#hapujbjojp .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D5D5D5;
 }
 
-#hsoxijgbih .gt_first_summary_row.thick {
+#hapujbjojp .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#hsoxijgbih .gt_last_summary_row {
+#hapujbjojp .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -693,7 +670,7 @@ window.Quarto = {
   border-bottom-color: #D5D5D5;
 }
 
-#hsoxijgbih .gt_grand_summary_row {
+#hapujbjojp .gt_grand_summary_row {
   color: #FFFFFF;
   background-color: #01837B;
   text-transform: inherit;
@@ -703,7 +680,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#hsoxijgbih .gt_first_grand_summary_row {
+#hapujbjojp .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -713,7 +690,7 @@ window.Quarto = {
   border-top-color: #D5D5D5;
 }
 
-#hsoxijgbih .gt_last_grand_summary_row_top {
+#hapujbjojp .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -723,11 +700,11 @@ window.Quarto = {
   border-bottom-color: #D5D5D5;
 }
 
-#hsoxijgbih .gt_striped {
+#hapujbjojp .gt_striped {
   background-color: #F4F4F4;
 }
 
-#hsoxijgbih .gt_table_body {
+#hapujbjojp .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D5D5D5;
@@ -736,7 +713,7 @@ window.Quarto = {
   border-bottom-color: #D5D5D5;
 }
 
-#hsoxijgbih .gt_footnotes {
+#hapujbjojp .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -750,7 +727,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#hsoxijgbih .gt_footnote {
+#hapujbjojp .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -759,7 +736,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#hsoxijgbih .gt_sourcenotes {
+#hapujbjojp .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -773,7 +750,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#hsoxijgbih .gt_sourcenote {
+#hapujbjojp .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -781,76 +758,75 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#hsoxijgbih .gt_left {
+#hapujbjojp .gt_left {
   text-align: left;
 }
 
-#hsoxijgbih .gt_center {
+#hapujbjojp .gt_center {
   text-align: center;
 }
 
-#hsoxijgbih .gt_right {
+#hapujbjojp .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#hsoxijgbih .gt_font_normal {
+#hapujbjojp .gt_font_normal {
   font-weight: normal;
 }
 
-#hsoxijgbih .gt_font_bold {
+#hapujbjojp .gt_font_bold {
   font-weight: bold;
 }
 
-#hsoxijgbih .gt_font_italic {
+#hapujbjojp .gt_font_italic {
   font-style: italic;
 }
 
-#hsoxijgbih .gt_super {
+#hapujbjojp .gt_super {
   font-size: 65%;
 }
 
-#hsoxijgbih .gt_footnote_marks {
+#hapujbjojp .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#hsoxijgbih .gt_asterisk {
+#hapujbjojp .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#hsoxijgbih .gt_indent_1 {
+#hapujbjojp .gt_indent_1 {
   text-indent: 5px;
 }
 
-#hsoxijgbih .gt_indent_2 {
+#hapujbjojp .gt_indent_2 {
   text-indent: 10px;
 }
 
-#hsoxijgbih .gt_indent_3 {
+#hapujbjojp .gt_indent_3 {
   text-indent: 15px;
 }
 
-#hsoxijgbih .gt_indent_4 {
+#hapujbjojp .gt_indent_4 {
   text-indent: 20px;
 }
 
-#hsoxijgbih .gt_indent_5 {
+#hapujbjojp .gt_indent_5 {
   text-indent: 25px;
 }
 
-#hsoxijgbih .katex-display {
+#hapujbjojp .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#hsoxijgbih div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#hapujbjojp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
-
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="gt_heading header">
@@ -883,15 +859,12 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-
 </div>
 </div>
 </div>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(<span class="fu">nc_get_dim_var_names</span>(nc), </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>     nc_get_var_data_and_assign_to_symbol_named_like_var, <span class="at">nc_file =</span> nc)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">walk</span><span class="op">(</span><span class="fu">nc_get_dim_var_names</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>, </span>
+<span>     <span class="va">nc_get_var_data_and_assign_to_symbol_named_like_var</span>, nc_file <span class="op">=</span> <span class="va">nc</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Ici, ce sont :</p>
@@ -921,12 +894,11 @@ Note
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>time_as_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(time, <span class="at">origin =</span> <span class="st">"1978-01-01 12:00:0"</span>, <span class="at">tz =</span> <span class="st">"UTC"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">time_as_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="va">time</span>, origin <span class="op">=</span> <span class="st">"1978-01-01 12:00:0"</span>, tz <span class="op">=</span> <span class="st">"UTC"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le fichier pris pour exemple daté au 2025-01-01 est le 17167 <span class="math inline">\(^{ème}\)</span> depuis le début du recensement.</p>
-</section>
-<section id="les-variables-dintérêt-et-leurs-attributs" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="les-variables-dintérêt-et-leurs-attributs"><span class="header-section-number">2.2.2</span> Les variables d’intérêt et leurs attributs</h3>
+</section><section id="les-variables-dintérêt-et-leurs-attributs" class="level3" data-number="2.3.2"><h3 data-number="2.3.2" class="anchored" data-anchor-id="les-variables-dintérêt-et-leurs-attributs">
+<span class="header-section-number">2.3.2</span> Les variables d’intérêt et leurs attributs</h3>
 <p>Nous avons 4 variables d’intérêt :</p>
 <ul>
 <li>sst : la température quotidienne de la surface de l’eau</li>
@@ -936,33 +908,30 @@ Note
 </ul>
 <p>Il est possible d’avoir accès aux données des attributs avec la fonction <code>ncatt_get</code></p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nc_get_all_var_all_attributes</span>(nc) <span class="sc">|&gt;</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title    =</span> <span class="fu">md</span>(<span class="st">"**Nom et valeur des variables d'intérêts et des attributs associés**"</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_stylize</span>(<span class="at">style =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"cyan"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div id="ujyffofdjx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ujyffofdjx table {
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">nc_get_all_var_all_attributes</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">gt</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">tab_header</span><span class="op">(</span></span>
+<span>    title    <span class="op">=</span> <span class="fu">md</span><span class="op">(</span><span class="st">"**Nom et valeur des variables d'intérêts et des attributs associés**"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">opt_stylize</span><span class="op">(</span>style <span class="op">=</span> <span class="fl">4</span>, color <span class="op">=</span> <span class="st">"cyan"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div id="svdnnbeqgs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#svdnnbeqgs table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ujyffofdjx thead, #ujyffofdjx tbody, #ujyffofdjx tfoot, #ujyffofdjx tr, #ujyffofdjx td, #ujyffofdjx th {
+#svdnnbeqgs thead, #svdnnbeqgs tbody, #svdnnbeqgs tfoot, #svdnnbeqgs tr, #svdnnbeqgs td, #svdnnbeqgs th {
   border-style: none;
 }
 
-#ujyffofdjx p {
+#svdnnbeqgs p {
   margin: 0;
   padding: 0;
 }
 
-#ujyffofdjx .gt_table {
+#svdnnbeqgs .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -988,12 +957,12 @@ Note
   border-left-color: #D5D5D5;
 }
 
-#ujyffofdjx .gt_caption {
+#svdnnbeqgs .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ujyffofdjx .gt_title {
+#svdnnbeqgs .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1005,7 +974,7 @@ Note
   border-bottom-width: 0;
 }
 
-#ujyffofdjx .gt_subtitle {
+#svdnnbeqgs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1017,7 +986,7 @@ Note
   border-top-width: 0;
 }
 
-#ujyffofdjx .gt_heading {
+#svdnnbeqgs .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1029,13 +998,13 @@ Note
   border-right-color: #D3D3D3;
 }
 
-#ujyffofdjx .gt_bottom_border {
+#svdnnbeqgs .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D5D5D5;
 }
 
-#ujyffofdjx .gt_col_headings {
+#svdnnbeqgs .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D5D5D5;
@@ -1050,7 +1019,7 @@ Note
   border-right-color: #D3D3D3;
 }
 
-#ujyffofdjx .gt_col_heading {
+#svdnnbeqgs .gt_col_heading {
   color: #FFFFFF;
   background-color: #01837B;
   font-size: 100%;
@@ -1070,7 +1039,7 @@ Note
   overflow-x: hidden;
 }
 
-#ujyffofdjx .gt_column_spanner_outer {
+#svdnnbeqgs .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #01837B;
   font-size: 100%;
@@ -1082,15 +1051,15 @@ Note
   padding-right: 4px;
 }
 
-#ujyffofdjx .gt_column_spanner_outer:first-child {
+#svdnnbeqgs .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ujyffofdjx .gt_column_spanner_outer:last-child {
+#svdnnbeqgs .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ujyffofdjx .gt_column_spanner {
+#svdnnbeqgs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D5D5D5;
@@ -1102,11 +1071,11 @@ Note
   width: 100%;
 }
 
-#ujyffofdjx .gt_spanner_row {
+#svdnnbeqgs .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ujyffofdjx .gt_group_heading {
+#svdnnbeqgs .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1132,7 +1101,7 @@ Note
   text-align: left;
 }
 
-#ujyffofdjx .gt_empty_group_heading {
+#svdnnbeqgs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1147,15 +1116,15 @@ Note
   vertical-align: middle;
 }
 
-#ujyffofdjx .gt_from_md > :first-child {
+#svdnnbeqgs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ujyffofdjx .gt_from_md > :last-child {
+#svdnnbeqgs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ujyffofdjx .gt_row {
+#svdnnbeqgs .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1174,7 +1143,7 @@ Note
   overflow-x: hidden;
 }
 
-#ujyffofdjx .gt_stub {
+#svdnnbeqgs .gt_stub {
   color: #FFFFFF;
   background-color: #929292;
   font-size: 100%;
@@ -1187,7 +1156,7 @@ Note
   padding-right: 5px;
 }
 
-#ujyffofdjx .gt_stub_row_group {
+#svdnnbeqgs .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1201,15 +1170,15 @@ Note
   vertical-align: top;
 }
 
-#ujyffofdjx .gt_row_group_first td {
+#svdnnbeqgs .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ujyffofdjx .gt_row_group_first th {
+#svdnnbeqgs .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ujyffofdjx .gt_summary_row {
+#svdnnbeqgs .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1219,16 +1188,16 @@ Note
   padding-right: 5px;
 }
 
-#ujyffofdjx .gt_first_summary_row {
+#svdnnbeqgs .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D5D5D5;
 }
 
-#ujyffofdjx .gt_first_summary_row.thick {
+#svdnnbeqgs .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ujyffofdjx .gt_last_summary_row {
+#svdnnbeqgs .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1238,7 +1207,7 @@ Note
   border-bottom-color: #D5D5D5;
 }
 
-#ujyffofdjx .gt_grand_summary_row {
+#svdnnbeqgs .gt_grand_summary_row {
   color: #FFFFFF;
   background-color: #01837B;
   text-transform: inherit;
@@ -1248,7 +1217,7 @@ Note
   padding-right: 5px;
 }
 
-#ujyffofdjx .gt_first_grand_summary_row {
+#svdnnbeqgs .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1258,7 +1227,7 @@ Note
   border-top-color: #D5D5D5;
 }
 
-#ujyffofdjx .gt_last_grand_summary_row_top {
+#svdnnbeqgs .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1268,11 +1237,11 @@ Note
   border-bottom-color: #D5D5D5;
 }
 
-#ujyffofdjx .gt_striped {
+#svdnnbeqgs .gt_striped {
   background-color: #F4F4F4;
 }
 
-#ujyffofdjx .gt_table_body {
+#svdnnbeqgs .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D5D5D5;
@@ -1281,7 +1250,7 @@ Note
   border-bottom-color: #D5D5D5;
 }
 
-#ujyffofdjx .gt_footnotes {
+#svdnnbeqgs .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1295,7 +1264,7 @@ Note
   border-right-color: #D3D3D3;
 }
 
-#ujyffofdjx .gt_footnote {
+#svdnnbeqgs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1304,7 +1273,7 @@ Note
   padding-right: 5px;
 }
 
-#ujyffofdjx .gt_sourcenotes {
+#svdnnbeqgs .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1318,7 +1287,7 @@ Note
   border-right-color: #D3D3D3;
 }
 
-#ujyffofdjx .gt_sourcenote {
+#svdnnbeqgs .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1326,76 +1295,75 @@ Note
   padding-right: 5px;
 }
 
-#ujyffofdjx .gt_left {
+#svdnnbeqgs .gt_left {
   text-align: left;
 }
 
-#ujyffofdjx .gt_center {
+#svdnnbeqgs .gt_center {
   text-align: center;
 }
 
-#ujyffofdjx .gt_right {
+#svdnnbeqgs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ujyffofdjx .gt_font_normal {
+#svdnnbeqgs .gt_font_normal {
   font-weight: normal;
 }
 
-#ujyffofdjx .gt_font_bold {
+#svdnnbeqgs .gt_font_bold {
   font-weight: bold;
 }
 
-#ujyffofdjx .gt_font_italic {
+#svdnnbeqgs .gt_font_italic {
   font-style: italic;
 }
 
-#ujyffofdjx .gt_super {
+#svdnnbeqgs .gt_super {
   font-size: 65%;
 }
 
-#ujyffofdjx .gt_footnote_marks {
+#svdnnbeqgs .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ujyffofdjx .gt_asterisk {
+#svdnnbeqgs .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ujyffofdjx .gt_indent_1 {
+#svdnnbeqgs .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ujyffofdjx .gt_indent_2 {
+#svdnnbeqgs .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ujyffofdjx .gt_indent_3 {
+#svdnnbeqgs .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ujyffofdjx .gt_indent_4 {
+#svdnnbeqgs .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ujyffofdjx .gt_indent_5 {
+#svdnnbeqgs .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ujyffofdjx .katex-display {
+#svdnnbeqgs .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ujyffofdjx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#svdnnbeqgs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
-
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="gt_heading header">
@@ -1455,19 +1423,17 @@ Note
 </tr>
 </tbody>
 </table>
-
 </div>
 </div>
 </div>
-</section>
-<section id="les-attributs-globaux-du-fichier" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="les-attributs-globaux-du-fichier"><span class="header-section-number">2.2.3</span> Les attributs globaux du fichier</h3>
+</section><section id="les-attributs-globaux-du-fichier" class="level3" data-number="2.3.3"><h3 data-number="2.3.3" class="anchored" data-anchor-id="les-attributs-globaux-du-fichier">
+<span class="header-section-number">2.3.3</span> Les attributs globaux du fichier</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>att <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"title"</span>, <span class="st">"institution"</span>, <span class="st">"source"</span>, <span class="st">"references"</span>, <span class="st">"history"</span>, <span class="st">"Conventions"</span>) </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>get_global_attribute <span class="ot">&lt;-</span> <span class="cf">function</span>(att) {</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ncatt_get</span>(nc, <span class="dv">0</span>, att)<span class="sc">$</span>value</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>(global_attributes <span class="ot">&lt;-</span> <span class="fu">vapply</span>(att, get_global_attribute, <span class="at">FUN.VALUE =</span> <span class="fu">character</span>(<span class="dv">1</span>)))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">att</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"title"</span>, <span class="st">"institution"</span>, <span class="st">"source"</span>, <span class="st">"references"</span>, <span class="st">"history"</span>, <span class="st">"Conventions"</span><span class="op">)</span> </span>
+<span><span class="va">get_global_attribute</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">att</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">ncatt_get</span><span class="op">(</span><span class="va">nc</span>, <span class="fl">0</span>, <span class="va">att</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
+<span><span class="op">}</span></span>
+<span><span class="op">(</span><span class="va">global_attributes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">att</span>, <span class="va">get_global_attribute</span>, FUN.VALUE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        title 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              "NOAA/NCEI 1/4 Degree Daily Optimum Interpolation Sea Surface Temperature (OISST) Analysis, Version 2.1 - Final" 
@@ -1483,15 +1449,13 @@ Note
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "CF-1.6, ACDD-1.3" </code></pre>
 </div>
 </div>
-</section>
-</section>
-<section id="exploration-des-variables" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="exploration-des-variables"><span class="header-section-number">2.3</span> Exploration des variables</h2>
+</section></section><section id="exploration-des-variables" class="level2" data-number="2.4"><h2 data-number="2.4" class="anchored" data-anchor-id="exploration-des-variables">
+<span class="header-section-number">2.4</span> Exploration des variables</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># names(nc$var) : vecteur des noms des variables d'intérêt du fichier ncdf 'nc'</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(<span class="fu">names</span>(nc<span class="sc">$</span>var),</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>     nc_get_var_data_and_assign_to_symbol_named_like_var, <span class="at">nc_file =</span> nc)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># names(nc$var) : vecteur des noms des variables d'intérêt du fichier ncdf 'nc'</span></span>
+<span></span>
+<span><span class="fu">walk</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nc</span><span class="op">$</span><span class="va">var</span><span class="op">)</span>,</span>
+<span>     <span class="va">nc_get_var_data_and_assign_to_symbol_named_like_var</span>, nc_file <span class="op">=</span> <span class="va">nc</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La variable sst est enregistrée en tant que matrix, array avec les dimensions 1440, 720</p>
 <ul>
@@ -1500,10 +1464,10 @@ Note
 <li><p>Le vecteur associé est obtenu en parcourant d’abord les 1440 longitudes d’un parallèle avant de passer à la latitude suivante.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lonlat <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(lon, lat)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df_sst <span class="ot">&lt;-</span> <span class="fu">cbind</span>(lonlat, <span class="fu">as.vector</span>(sst))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df_sst) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>, <span class="st">"sst"</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_sst)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lonlat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span>
+<span><span class="va">df_sst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">lonlat</span>, <span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="va">sst</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_sst</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span>, <span class="st">"sst"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df_sst</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    lon     lat sst
 1 0.125 -89.875  NA
@@ -1514,107 +1478,104 @@ Note
 6 1.375 -89.875  NA</code></pre>
 </div>
 </div>
-</section>
-<section id="affichage-de-la-carte-des-données-sst" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="affichage-de-la-carte-des-données-sst"><span class="header-section-number">2.4</span> Affichage de la carte des données sst</h2>
+</section><section id="affichage-de-la-carte-des-données-sst" class="level2" data-number="2.5"><h2 data-number="2.5" class="anchored" data-anchor-id="affichage-de-la-carte-des-données-sst">
+<span class="header-section-number">2.5</span> Affichage de la carte des données sst</h2>
 <p>Avec positionnement en rouge du point de test donné en exemple :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|label: plot_sst</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>df_sst <span class="sc">|&gt;</span> </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> lon, <span class="at">y =</span> lat, <span class="at">color =</span> sst)) <span class="sc">+</span> </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>) <span class="sc">+</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Sea Surface Temperature"</span>,</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> time_as_date,</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"°C"</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|label: plot_sst</span></span>
+<span></span>
+<span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lon</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_fixed</span><span class="op">(</span>expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_colour_distiller</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Sea Surface Temperature"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="va">time_as_date</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"°C"</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="SST_00_example_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="SST_00_example_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="calcul-de-moyenne-globale" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="calcul-de-moyenne-globale"><span class="header-section-number">2.5</span> Calcul de moyenne globale</h2>
+</section><section id="calcul-de-moyenne-globale" class="level2" data-number="2.6"><h2 data-number="2.6" class="anchored" data-anchor-id="calcul-de-moyenne-globale">
+<span class="header-section-number">2.6</span> Calcul de moyenne globale</h2>
 <p>Il semble qu’il faille appliquer un poids fonction de <span class="math inline">\(\alpha\)</span> en radians pour pondérer les mesures de surface en fonction de la latitude considérée.</p>
 <p>Pour calculer ces poids j’ai construit tous les polygones “carrés” de 0.25° de côté suivant un même méridien.</p>
 <p>Ces polygones ont pour centre les coordonnées (longitude et latitude) de la mesure SST correspondante.</p>
 <p>J’ai ensuite calculé les aires de ces polygones avec le système de coordonnées de référence EPSG:4326 (WGS84).</p>
 <p>Les poids relatifs à chaque mesure ont été fixés comme étant les ratio des aires obtenues avec celle de la plus grande aire (aire du polygone situé à l’équateur).</p>
-<section id="calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée" class="level3" data-number="2.5.1">
-<h3 data-number="2.5.1" class="anchored" data-anchor-id="calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée"><span class="header-section-number">2.5.1</span> Calcul des poids à affecter aux mesures suivant la latitude associée</h3>
+<section id="calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée" class="level3" data-number="2.6.1"><h3 data-number="2.6.1" class="anchored" data-anchor-id="calcul-des-poids-à-affecter-aux-mesures-suivant-la-latitude-associée">
+<span class="header-section-number">2.6.1</span> Calcul des poids à affecter aux mesures suivant la latitude associée</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fonction génératrice de "carré géographique" de n degrés de côté</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># le point de base (lon, lat) est le point inférieur gauche. </span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>get_geo_square <span class="ot">&lt;-</span> <span class="cf">function</span>(lon, lat, alpha) {</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  points <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matrix</span>(</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(lon, lat,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        lon <span class="sc">+</span> alpha, lat,</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        lon <span class="sc">+</span> alpha, lat <span class="sc">+</span> alpha,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        lon, lat <span class="sc">+</span> alpha,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        lon, lat),</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">ncol =</span> <span class="dv">2</span>,</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_polygon</span>(points)</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>get_geo_squares_sf <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">lon =</span> <span class="dv">0</span>) {</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">90</span>, <span class="fl">89.75</span>, <span class="at">by =</span> <span class="fl">0.25</span>) <span class="sc">|&gt;</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) <span class="fu">get_geo_square</span>(<span class="at">lon =</span> lon, <span class="at">lat =</span> x, <span class="at">alpha =</span> <span class="fl">0.25</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_sfc</span>(<span class="at">crs =</span> <span class="st">"EPSG:4326"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>()</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co"># polygone_sf_world &lt;- seq(0, 359.75, by = 0.25) |&gt; </span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="co">#   map(get_polygone_sf) |&gt; </span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   data.table::rbindlist() |&gt; </span></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="co">#   st_as_sf()</span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>squares_sf <span class="ot">&lt;-</span> <span class="fu">get_geo_squares_sf</span>()</span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>area_weights <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(squares_sf) <span class="sc">/</span> <span class="fu">max</span>(<span class="fu">st_area</span>(squares_sf)))</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>tib_area_weights <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(area_weights)</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tib_area_weights) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"w"</span>)</span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(tib_area_weights, </span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>           <span class="at">file =</span> <span class="st">"data/area_weights"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># fonction génératrice de "carré géographique" de n degrés de côté</span></span>
+<span><span class="co"># le point de base (lon, lat) est le point inférieur gauche. </span></span>
+<span></span>
+<span><span class="va">get_geo_square</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">alpha</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>,</span>
+<span>        <span class="va">lon</span> <span class="op">+</span> <span class="va">alpha</span>, <span class="va">lat</span>,</span>
+<span>        <span class="va">lon</span> <span class="op">+</span> <span class="va">alpha</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">alpha</span>,</span>
+<span>        <span class="va">lon</span>, <span class="va">lat</span> <span class="op">+</span> <span class="va">alpha</span>,</span>
+<span>        <span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span>,</span>
+<span>      ncol <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>      byrow <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="fu">st_polygon</span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">get_geo_squares_sf</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lon</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span>, <span class="fl">89.75</span>, by <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">map</span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">get_geo_square</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">lon</span>, lat <span class="op">=</span> <span class="va">x</span>, alpha <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">st_sfc</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">st_as_sf</span><span class="op">(</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># polygone_sf_world &lt;- seq(0, 359.75, by = 0.25) |&gt; </span></span>
+<span><span class="co">#   map(get_polygone_sf) |&gt; </span></span>
+<span><span class="co">#   data.table::rbindlist() |&gt; </span></span>
+<span><span class="co">#   st_as_sf()</span></span>
+<span></span>
+<span><span class="va">squares_sf</span> <span class="op">&lt;-</span> <span class="fu">get_geo_squares_sf</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">area_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">squares_sf</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">squares_sf</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tib_area_weights</span> <span class="op">&lt;-</span> <span class="fu">as_tibble</span><span class="op">(</span><span class="va">area_weights</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">tib_area_weights</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"w"</span><span class="op">)</span></span>
+<span><span class="fu">write_csv2</span><span class="op">(</span><span class="va">tib_area_weights</span>, </span>
+<span>           file <span class="op">=</span> <span class="st">"data/area_weights"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_area_weights <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(lon, area_weights)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df_area_weights) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"w"</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> df_area_weights<span class="sc">$</span>w</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>df_sst_weights <span class="ot">&lt;-</span> <span class="fu">cbind</span>(df_sst, w)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># moyenne pondérée globale</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>sst_weighted_mean <span class="ot">&lt;-</span> df_sst_weights <span class="sc">|&gt;</span> </span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">wm_sst =</span> <span class="fu">weighted.mean</span>(sst, w, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>sst_weighted_mean</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_area_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">area_weights</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_area_weights</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"w"</span><span class="op">)</span></span>
+<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="va">df_area_weights</span><span class="op">$</span><span class="va">w</span></span>
+<span><span class="va">df_sst_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">df_sst</span>, <span class="va">w</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># moyenne pondérée globale</span></span>
+<span><span class="va">sst_weighted_mean</span> <span class="op">&lt;-</span> <span class="va">df_sst_weights</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">summarize</span><span class="op">(</span>wm_sst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span><span class="op">(</span><span class="va">sst</span>, <span class="va">w</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">sst_weighted_mean</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    wm_sst
 1 18.56014</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># moyenne pondérée entre -60°S et +60°N</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df_sst_60S_60N <span class="ot">&lt;-</span> df_sst_weights <span class="sc">|&gt;</span> </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(lat <span class="sc">&gt;=</span> <span class="sc">-</span><span class="dv">60</span> <span class="sc">&amp;</span> lat <span class="sc">&lt;=</span> <span class="dv">60</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>sst_weighted_mean_60S_60N <span class="ot">&lt;-</span> df_sst_60S_60N <span class="sc">|&gt;</span> </span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">wm_sst_60S_60N =</span> <span class="fu">weighted.mean</span>(sst, w, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>sst_weighted_mean_60S_60N</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># moyenne pondérée entre -60°S et +60°N</span></span>
+<span><span class="va">df_sst_60S_60N</span> <span class="op">&lt;-</span> <span class="va">df_sst_weights</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&gt;=</span> <span class="op">-</span><span class="fl">60</span> <span class="op">&amp;</span> <span class="va">lat</span> <span class="op">&lt;=</span> <span class="fl">60</span><span class="op">)</span></span>
+<span><span class="va">sst_weighted_mean_60S_60N</span> <span class="op">&lt;-</span> <span class="va">df_sst_60S_60N</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">summarize</span><span class="op">(</span>wm_sst_60S_60N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span><span class="op">(</span><span class="va">sst</span>, <span class="va">w</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">sst_weighted_mean_60S_60N</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  wm_sst_60S_60N
 1        20.7527</code></pre>
@@ -1622,47 +1583,46 @@ Note
 </div>
 <p>Si nous souhaitons centrer la carte sur le méridien de Greenwich, il est nécessaire de translater les longitudes.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|label: plot_sst_greenwich</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>df_sst <span class="sc">|&gt;</span> </span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lon =</span> <span class="fu">if_else</span>(lon <span class="sc">&gt;</span> <span class="dv">180</span>, lon <span class="sc">-</span> <span class="dv">360</span>, lon)) <span class="sc">|&gt;</span> </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> lon, <span class="at">y =</span> lat, <span class="at">fill =</span> sst)) <span class="sc">+</span> </span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">low =</span> <span class="st">"darkblue"</span>,</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">mid =</span> <span class="st">"white"</span>,</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">high =</span> <span class="st">"darkred"</span>,</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">midpoint =</span> <span class="dv">15</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">#scale_colour_distiller(palette = "RdBu") +</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Sea Surface Temperature"</span>,</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste0</span>(</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>      time_as_date,</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>      <span class="st">" - mean global = "</span>,</span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(sst_weighted_mean, <span class="dv">2</span>),</span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">" °Celsius"</span>,</span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">" | "</span>,</span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">" mean World(60°S-60°N) = "</span>,</span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(sst_weighted_mean_60S_60N, <span class="dv">2</span>),</span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>      <span class="st">" °Celsius"</span></span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"°C"</span>,</span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># panel.background = element_rect(fill = "black"),</span></span>
-<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plot.background = element_rect(fill = "black")</span></span>
-<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|label: plot_sst_greenwich</span></span>
+<span></span>
+<span><span class="va">df_sst</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>lon <span class="op">=</span> <span class="fu">if_else</span><span class="op">(</span><span class="va">lon</span> <span class="op">&gt;</span> <span class="fl">180</span>, <span class="va">lon</span> <span class="op">-</span> <span class="fl">360</span>, <span class="va">lon</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lon</span>, y <span class="op">=</span> <span class="va">lat</span>, fill <span class="op">=</span> <span class="va">sst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_raster</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_gradient2</span><span class="op">(</span></span>
+<span>    low <span class="op">=</span> <span class="st">"darkblue"</span>,</span>
+<span>    mid <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>    high <span class="op">=</span> <span class="st">"darkred"</span>,</span>
+<span>    midpoint <span class="op">=</span> <span class="fl">15</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_fixed</span><span class="op">(</span>expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co">#scale_colour_distiller(palette = "RdBu") +</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Sea Surface Temperature"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
+<span>      <span class="va">time_as_date</span>,</span>
+<span>      <span class="st">" - mean global = "</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">sst_weighted_mean</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>      <span class="st">" °Celsius"</span>,</span>
+<span>      <span class="st">" | "</span>,</span>
+<span>      <span class="st">" mean World(60°S-60°N) = "</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">sst_weighted_mean_60S_60N</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>      <span class="st">" °Celsius"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">"Dataset: NOAA OISST V2.1"</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">"°C"</span>,</span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span></span>
+<span>    axis.text <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    axis.ticks <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    <span class="co"># panel.background = element_rect(fill = "black"),</span></span>
+<span>    <span class="co"># plot.background = element_rect(fill = "black")</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="SST_00_example_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="SST_00_example_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1674,11 +1634,7 @@ Note
 <span>«&nbsp;netCDF in R&nbsp;»</span>. s.&nbsp;d. <a href="https://pjbartlein.github.io/REarthSysSci/netCDF.html">https://pjbartlein.github.io/REarthSysSci/netCDF.html</a>.
 </div>
 </div>
-</section>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -2099,9 +2055,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./intro.html" class="pagination-link" aria-label="Introduction">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
       </a>          
@@ -2113,7 +2067,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-
 
 
 
