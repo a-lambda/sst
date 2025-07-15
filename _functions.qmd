@@ -3,13 +3,6 @@
 #| message: false
 #| code-fold: true
 
-################################
-# Package management functions #
-################################
-
-library("remotes")
-remotes::install_github("a-lambda/pkg")
-
 ################################################################
 # ncdf files specific dimension variables management functions #
 ################################################################
