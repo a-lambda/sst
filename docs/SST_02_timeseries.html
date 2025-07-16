@@ -230,7 +230,8 @@ window.Quarto = {
 </header><section id="chargement-librairies-utiles" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="chargement-librairies-utiles">
 <span class="header-section-number">4.1</span> chargement librairies utiles</h2>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">libs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"pkg"</span><span class="op">)</span></span>
+<span><span class="va">pkg_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"ncdf4"</span>,</span>
 <span>  <span class="st">"tidyverse"</span>,</span>
 <span>  <span class="st">"data.table"</span>,</span>
@@ -239,13 +240,7 @@ window.Quarto = {
 <span>  <span class="st">"fpp3"</span>,</span>
 <span>  <span class="st">"stringi"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#install missing libraries</span></span>
-<span><span class="va">installed_libs</span> <span class="op">&lt;-</span> <span class="va">libs</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="va">installed_libs</span> <span class="op">==</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">libs</span><span class="op">[</span><span class="op">!</span><span class="va">installed_libs</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="co">#load libraries</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">libs</span>, <span class="va">library</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/pkg/man/install_packages_if_needed_and_load.html">install_packages_if_needed_and_load</a></span><span class="op">(</span><span class="va">pkg_names</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="fonctions-de-base-peut-être-disponibles-dans-lubridate" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="fonctions-de-base-peut-être-disponibles-dans-lubridate">
 <span class="header-section-number">4.2</span> fonctions de base (peut-être disponibles dans lubridate)</h2>

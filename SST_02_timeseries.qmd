@@ -6,10 +6,12 @@ format: html
 ## chargement librairies utiles
 
 ```{r}
-#| label: load_libraries
+#| label: install_and_load_packages
 #| message: false
 #| 
-libs <- c(
+
+library("pkg")
+pkg_names <- c(
   "ncdf4",
   "tidyverse",
   "data.table",
@@ -18,13 +20,7 @@ libs <- c(
   "fpp3",
   "stringi"
 )
-#install missing libraries
-installed_libs <- libs %in% rownames(installed.packages())
-if (any(installed_libs == FALSE)) {
-  install.packages(libs[!installed_libs])
-}
-#load libraries
-invisible(lapply(libs, library, character.only = TRUE))
+install_packages_if_needed_and_load(pkg_names)
 
 ```
 

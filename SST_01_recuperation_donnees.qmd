@@ -13,18 +13,13 @@
 -   `gt` pour la représentation tabulaire
 
 ```{r}
-#| label: install_and_load_libraries
+#| label: install_and_load_packages
 #| message: false
 #| code-fold: true
 
-libs <- c("glue", "httr", "tidyverse", "terra", "ncdf4", "stringi", "gt")
-
-installed_libs <- libs %in% rownames(installed.packages())
-if (any(installed_libs == FALSE)) {
-  install.packages(libs[!installed_libs])
-}
-
-invisible(lapply(libs, library, character.only = TRUE))
+library("pkg")
+pkg_names <- c("glue", "httr", "tidyverse", "terra", "ncdf4", "stringi", "gt")
+install_packages_if_needed_and_load(pkg_names)
 
 ```
 
